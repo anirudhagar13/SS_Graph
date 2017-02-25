@@ -97,7 +97,3 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
         	handle_error()
         	sys.exit(0)
-
-    Pickledump(hash1, 'Hash#1.pkl')
-    Pickledump(hash2, 'Hash#2.pkl')
-   	'''
