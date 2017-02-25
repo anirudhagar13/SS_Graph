@@ -29,7 +29,7 @@ def Syn_factory(wn_synset):
         synset = Adverb_Synset(wn_synset)
         hash2[synset.name()] = synset
     else:
-        print 'Wrong POS tag'
+        print 'Wrong POS tag !'
 
 def Word_factory(word, synset):
     '''
@@ -50,8 +50,3 @@ if __name__ == '__main__':
 
     Pickledump(hash1, 'Hash#1.pkl')
     Pickledump(hash2, 'Hash#2.pkl')
-
-    unserialized_hash1 = Pickleload('Hash#1.pkl')
-    unserialized_hash2 = Pickleload('Hash#2.pkl')
-    print unserialized_hash1
-    print unserialized_hash2
