@@ -4,6 +4,8 @@ Custom Semantic Graph based on Wordnet
 #Steps to Create:
 -------------------
     > Get wordnet from nltk corpus in python
+    > Run Hashcreate to create intermediate hashes
+    > Run Hashprocess to create custom wordnet
 
 #About files:
 ---------------
