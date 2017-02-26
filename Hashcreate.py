@@ -64,7 +64,7 @@ if __debug__:
 	    else:
 	        print 'Wrong POS tag'
 else:
-	print 'Syn_factory not executing'	        
+	print 'Syn_factory not executing'
 
 def Word_factory(word, synset):
     '''
@@ -72,11 +72,16 @@ def Word_factory(word, synset):
     '''
     word.populate(synset)
 
-def handle_error():
-    print 'all words done, closing dictionary'
+def handle_keyboard_interrupt():
+    print 'Keyboard interrupt, saving all files, exiting'
     Pickledump(hash1, 'Hash#1.pkl')
     Pickledump(hash2, 'Hash#2.pkl')
     #label_to_word_object.close()
+
+def handle_stop_iteration():
+    print 'All words done, saving all files, exiting'
+    Pickledump(hash1, 'Hash#1.pkl')
+    Pickledump(hash2, 'Hash#2.pkl')
 
 def print_dictionary(filename):
 	unserialized_hash = Pickleload(filename)
@@ -84,8 +89,8 @@ def print_dictionary(filename):
 
 if __name__ == '__main__':
 
-	print_dictionary(filename='Hash#1.pkl')
-	'''
+	#print_dictionary(filename='Hash#1.pkl')
+
     #Words loop here
     wordnet = Wordnet(make_words_and_synsets)
     wordnet.initiliaze_lemma_list()
@@ -93,7 +98,7 @@ if __name__ == '__main__':
         try:
             wordnet.get_word()
         except StopIteration as e:
-            handle_error()
+            handle_stop_iteration()
         except KeyboardInterrupt:
-        	handle_error()
+        	handle_keyboard_interrupt()
         	sys.exit(0)
