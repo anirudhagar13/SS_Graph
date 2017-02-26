@@ -3,41 +3,52 @@ from Commons import *
 #Global hash
 hash2 = {}
 
-def Hashprocess():
+def Hashprocess(synset):
     '''
     To Process each Hashentry one by one
     '''
-    global hash2
-    hash2 = Pickleload('Hash#2.pkl')
+    #Initialize wordnet object for property access
+    wn_synset = wn.synset(synset.name())
 
-    for synset in hash2.values():
-        #Initialize wordnet object for property access
-        wn_synset = wn.synset(synset.name())
-
-        if synset.pos() == 'n':
-            Nounhash(wn_synset, synset)
-        elif synset.pos() == 'v':
-            Verbhash(wn_synset, synset)
-        elif synset.pos() == 'a':
-            Adjhash(wn_synset, synset)
-        elif synset.pos() == 'r':
-            Advhash(wn_synset, synset)
-        else:
-            print 'Wrong POS tag !'
+    if synset.pos() == 'n':
+        Nounhash(wn_synset, synset)
+    elif synset.pos() == 'v':
+        Verbhash(wn_synset, synset)
+    elif synset.pos() == 'a':
+        Adjhash(wn_synset, synset)
+    elif synset.pos() == 'r':
+        Advhash(wn_synset, synset)
+    else:
+        print 'Wrong POS tag !'
 
 def Synsets(data):
     '''
     Returns custom synset objects from hash
     '''
+    global hash2
     custom_synsets = list()
     for wn_synset in data:
-        name = wn_synset.name()
+        name = Unicode(wn_synset.name())
 
         #Filling only properties which exist in hash
         if name in hash2:
+            print 'Match Found - ',name
             custom_synsets.append(hash2[name])
 
     return custom_synsets
+
+def Error(error):
+    '''
+    To handle midway processing stop
+    '''
+    if error == 'Stop':
+        print 'Processing done, closing Hash !'
+    elif error == 'Key':
+        print 'Key Interrupt, closing Hash !'
+    else:
+        print 'Some Other Exception !'
+
+    Shelveclose(hash2)
 
 def Nounhash(wn_synset, synset):
     '''
@@ -76,7 +87,15 @@ def Hashaccess(data):
     return [hash2[x] for x in data]
 
 if __name__ == '__main__':
-    Hashprocess()
-
-    #Load update Hash
-    Pickledump(hash2, 'Hash#2.pkl')
+    hash2 = Shelveopen('Hash#2.shelve')
+    while True:
+        try:
+            for synset in hash2.values():
+                Hashprocess(synset)
+        except StopIteration:
+            Error('Stop')
+        except KeyboardInterrupt:
+            Error('Key')
+            sys.exit(0)
+        except Exception:
+            Error('Other')
