@@ -1,5 +1,6 @@
 from nltk.corpus import wordnet as wn
 import pickle
+import shelve
 
 def Unicode(data):
         '''
@@ -25,3 +26,15 @@ def Pickleload(file):
     with open(file, 'rb') as handle:
         unserialized_data = pickle.load(handle)
         return unserialized_data
+
+def Shelveopen(filename):
+    '''
+    Open shelve dictionary
+    '''
+    return shelve.open(filename)
+
+def Shelveclose(shelve):
+    '''
+    close shelve dictionary
+    '''
+    shelve.close()

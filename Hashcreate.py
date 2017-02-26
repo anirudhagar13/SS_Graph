@@ -19,15 +19,15 @@ def make_words_and_synsets(word):
 			synset = Noun_Synset(wn_synset)
 			hash2[synset.name()] = synset
 		elif pos == 'v':
-			#Create Noun synset
+			#Create Verb synset
 			synset = Verb_Synset(wn_synset)
 			hash2[synset.name()] = synset
 		elif pos == 'a':
-			#Create Noun synset
+			#Create Adjective synset
 			synset = Adjective_Synset(wn_synset)
 			hash2[synset.name()] = synset
 		elif pos == 'r':
-			#Create Noun synset
+			#Create Adverb synset
 			synset = Adverb_Synset(wn_synset)
 			hash2[synset.name()] = synset
 		elif pos == 's':
@@ -64,7 +64,7 @@ if __debug__:
 	    else:
 	        print 'Wrong POS tag'
 else:
-	print 'Syn_factory not executing'	        
+	print 'Syn_factory not executing'
 
 def Word_factory(word, synset):
     '''
@@ -73,20 +73,21 @@ def Word_factory(word, synset):
     word.populate(synset)
 
 def handle_error():
-    print 'all words done, closing dictionary'
-    Pickledump(hash1, 'Hash#1.pkl')
-    Pickledump(hash2, 'Hash#2.pkl')
-    #label_to_word_object.close()
+    print 'Words done, closing dictionary'
+    Shelveclose(hash2)
+    Shelveclose(hash1)
 
 def print_dictionary(filename):
 	unserialized_hash = Pickleload(filename)
 	print unserialized_hash
 
 if __name__ == '__main__':
-
+    '''
 	print_dictionary(filename='Hash#1.pkl')
 	'''
     #Words loop here
+    hash1 = Shelveopen('Hash#1.shelve')
+    hash2 = Shelveopen('Hash#2.shelve')
     wordnet = Wordnet(make_words_and_synsets)
     wordnet.initiliaze_lemma_list()
     while True:
