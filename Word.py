@@ -56,4 +56,3 @@ class Word:
             self._advsyn.append(synset.name())
         else:
             print 'Invalid Type, not exists!'
-
