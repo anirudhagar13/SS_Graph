@@ -1,6 +1,7 @@
 from nltk.corpus import wordnet as wn
 import pickle
 import shelve
+import sys
 
 def Unicode(data):
         '''

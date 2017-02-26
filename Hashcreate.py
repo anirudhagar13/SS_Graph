@@ -2,38 +2,36 @@ from Commons import *
 from Synset import *
 from Word import *
 from wordnet_script import Wordnet
-import sys
 
 #Global hashes
 hash1 = {}
 hash2 = {}
 
 def make_words_and_synsets(word):
-	new_word = Word(name=word,category='wordnet')
-	word = str(word)
-	global hash2
-	for wn_synset in wn.synsets(word):
-		pos = str(wn_synset.pos())
-		if pos == 'n':
+    new_word = Word(name=word,category='wordnet')
+    word = Unicode(word)
+    for wn_synset in wn.synsets(word):
+        pos = Unicode(wn_synset.pos())
+        if pos == 'n':
 			#Create Noun synset
 			synset = Noun_Synset(wn_synset)
 			hash2[synset.name()] = synset
-		elif pos == 'v':
+        elif pos == 'v':
 			#Create Verb synset
 			synset = Verb_Synset(wn_synset)
 			hash2[synset.name()] = synset
-		elif pos == 'a':
+        elif pos == 'a':
 			#Create Adjective synset
 			synset = Adjective_Synset(wn_synset)
 			hash2[synset.name()] = synset
-		elif pos == 'r':
+        elif pos == 'r':
 			#Create Adverb synset
 			synset = Adverb_Synset(wn_synset)
 			hash2[synset.name()] = synset
-		elif pos == 's':
+        elif pos == 's':
 			#print 'Not yet decided!'
 			pass
-		else:
+        else:
 			print 'Wrong POS tag'
 
 	hash1[word] = new_word
@@ -72,29 +70,39 @@ def Word_factory(word, synset):
     '''
     word.populate(synset)
 
-def handle_error():
-    print 'Words done, closing dictionary'
-    Shelveclose(hash2)
-    Shelveclose(hash1)
+def handle_error(error):
+    if error == 'Stop':
+        print 'Words done, closing Hash !'
+    elif error == 'Key':
+        print 'Key Interrupt, closing Hash !'
+    else:
+        print 'Some Other Exception !'
 
-def print_dictionary(filename):
-	unserialized_hash = Pickleload(filename)
-	print unserialized_hash
+    print 'Words Processed - ',len(hash1.keys())
+    print 'Synset Processed - ',len(hash2.keys())
+    Shelveclose(hash1)
+    Shelveclose(hash2)
+
+def print_hash(filename):
+	unserialized_hash = Shelveopen(filename)
+	print len(unserialized_hash.keys())
 
 if __name__ == '__main__':
-    '''
-	print_dictionary(filename='Hash#1.pkl')
-	'''
-    #Words loop here
+	# print_hash(filename='Hash#2.shelve')
+
+    #Feed Hashes
     hash1 = Shelveopen('Hash#1.shelve')
     hash2 = Shelveopen('Hash#2.shelve')
+
     wordnet = Wordnet(make_words_and_synsets)
     wordnet.initiliaze_lemma_list()
     while True:
         try:
             wordnet.get_word()
         except StopIteration as e:
-            handle_error()
+            handle_error('Stop')
         except KeyboardInterrupt:
-        	handle_error()
-        	sys.exit(0)
+            handle_error('Key')
+            sys.exit(0)
+        except Exception:
+            handle_error('Other')
