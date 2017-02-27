@@ -46,14 +46,15 @@ class Word:
         return self._advsyn
 
     def populate(self, synset):
-        if synset.pos() == 'n':
+        pos = synset.pos()
+        if pos == 'n':
             self._nounsyn.append(synset.name())
-        elif synset.pos() == 'v':
+        elif pos == 'v':
             self._verbsyn.append(synset.name())
-        elif synset.pos() == 'a':
+        elif pos == 'a':
             self._adjsyn.append(synset.name())
-        elif synset.pos() == 'r':
+        elif pos == 'r':
             self._advsyn.append(synset.name())
         else:
-            print 'Invalid Type, not exists!'
+            print 'Invalid POS - ',pos
 
