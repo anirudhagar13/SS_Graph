@@ -54,6 +54,8 @@ class Noun_Synset(Synset):
         Synset.__init__(self, synset)
         self._hypernyms = list()
         self._hyponyms = list()
+        self._meronyms = list()
+        self._holonyms = list()
 
     def hypernyms(self):
         '''
@@ -67,11 +69,27 @@ class Noun_Synset(Synset):
         '''
         return self._hyponyms
 
+    def meronyms(self):
+        '''
+            Getter for meronyms
+        '''
+        return self._meronyms
+
+    def holonyms(self):
+        '''
+            Getter for holonyms
+        '''
+        return self._holonyms
+
     def populate(self, type, data):
         if type == 'hypernyms':
             self._hypernyms.extend(data)
         elif type == 'hyponyms':
             self._hyponyms.extend(data)
+        elif type == 'meronyms':
+            self._meronyms.extend(data)
+        elif type == 'holonyms':
+            self._holonyms.extend(data)
         else:
             print 'Invalid Property, not exists!'
 
