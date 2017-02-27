@@ -76,11 +76,15 @@ def Advhash(wn_synset, synset):
 
 if __name__ == '__main__':
     hash2 = Shelveopen('Hash#2.shelve')
+    noun = 0
+    hyper = 0
     try:
         for synset in hash2.values():
             Hashprocess(synset)
+
             #Replace in Hash
             hash2[synset.name()] = synset
+        raise StopIteration('Stop Iteration')
     except StopIteration as s:
         Error(s)
     except KeyboardInterrupt as k:

@@ -77,7 +77,7 @@ if __name__ == '__main__':
             name = Unicode(iterator.next_word())
             word = Word_factory(name, 'wordnet')
             hash1[name] = word
-        raise StopIteration
+        raise StopIteration('Stop Iteration')
     except StopIteration as s:
         handle_error(s)
     except KeyboardInterrupt as k:
