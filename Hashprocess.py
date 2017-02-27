@@ -76,8 +76,6 @@ def Advhash(wn_synset, synset):
 
 if __name__ == '__main__':
     hash2 = Shelveopen('Hash#2.shelve')
-    noun = 0
-    hyper = 0
     try:
         for synset in hash2.values():
             Hashprocess(synset)
