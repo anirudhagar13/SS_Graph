@@ -54,13 +54,25 @@ def Nounhash(wn_synset, synset):
     '''
     Fixed property template for Noun_Synsets
     '''
-    #Filling Hypernyms
-    custom_synsets = Synsets(wn_synset.hypernyms())
-    synset.populate('hypernyms', custom_synsets)
+    if wn_synset.hypernyms():
+        #Filling Hypernyms
+        custom_synsets = Synsets(wn_synset.hypernyms())
+        synset.populate('hypernyms', custom_synsets)
 
-    #Filling Hyponyms
-    custom_synsets = Synsets(wn_synset.hyponyms())
-    synset.populate('hyponyms', custom_synsets)
+    if wn_synset.hyponyms():
+        #Filling Hyponyms
+        custom_synsets = Synsets(wn_synset.hyponyms())
+        synset.populate('hyponyms', custom_synsets)
+
+    if wn_synset.meronyms():
+        #Filling meronyms
+        custom_synsets = Synsets(wn_synset.meronyms())
+        synset.populate('meronyms', custom_synsets)
+
+    if wn_synset.holonyms():
+        #Filling holonyms
+        custom_synsets = Synsets(wn_synset.holonyms())
+        synset.populate('holonyms', custom_synsets)
 
 def Verbhash(wn_synset, synset):
     '''
