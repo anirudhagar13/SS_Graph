@@ -2,6 +2,7 @@ from Commons import *
 
 #Global hash
 hash2 = {}
+count = 0
 
 def Hashprocess(synset):
     '''
@@ -40,7 +41,9 @@ def Error(error):
     '''
     To handle midway processing stop
     '''
+    global count
     print 'Error - ',error
+    print 'Hash Updated - ',count
     Shelveclose(hash2)
 
 def Nounhash(wn_synset, synset):
@@ -57,15 +60,15 @@ def Nounhash(wn_synset, synset):
         custom_synsets = Synsets(wn_synset.hyponyms())
         synset.populate('hyponyms', custom_synsets)
 
-    if wn_synset.meronyms():
-        #Filling meronyms
-        custom_synsets = Synsets(wn_synset.meronyms())
-        synset.populate('meronyms', custom_synsets)
+    # if wn_synset.meronyms():
+    #     #Filling meronyms
+    #     custom_synsets = Synsets(wn_synset.meronyms())
+    #     synset.populate('meronyms', custom_synsets)
 
-    if wn_synset.holonyms():
-        #Filling holonyms
-        custom_synsets = Synsets(wn_synset.holonyms())
-        synset.populate('holonyms', custom_synsets)
+    # if wn_synset.holonyms():
+    #     #Filling holonyms
+    #     custom_synsets = Synsets(wn_synset.holonyms())
+    #     synset.populate('holonyms', custom_synsets)
 
 def Verbhash(wn_synset, synset):
     '''
@@ -93,6 +96,7 @@ if __name__ == '__main__':
 
             #Replace in Hash
             hash2[synset.name()] = synset
+            count += 1  #to keep track of updates
         raise StopIteration('Stop Iteration')
     except StopIteration as s:
         Error(s)
