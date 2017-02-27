@@ -9,17 +9,17 @@ def Hashprocess(synset):
     '''
     #Initialize wordnet object for property access
     wn_synset = wn.synset(synset.name())
-
-    if synset.pos() == 'n':
+    pos = synset.pos()
+    if pos == 'n':
         Nounhash(wn_synset, synset)
-    elif synset.pos() == 'v':
+    elif pos == 'v':
         Verbhash(wn_synset, synset)
-    elif synset.pos() == 'a':
+    elif pos == 'a':
         Adjhash(wn_synset, synset)
-    elif synset.pos() == 'r':
+    elif pos == 'r':
         Advhash(wn_synset, synset)
     else:
-        print 'Wrong POS tag !'
+        print 'Wrong POS tag - ',pos
 
 def Synsets(data):
     '''
@@ -32,8 +32,7 @@ def Synsets(data):
 
         #Filling only properties which exist in hash
         if name in hash2:
-            print 'Match Found - ',name
-            custom_synsets.append(hash2[name])
+            custom_synsets.append(name)
 
     return custom_synsets
 
@@ -41,12 +40,7 @@ def Error(error):
     '''
     To handle midway processing stop
     '''
-    if error == 'Stop':
-        print 'Processing done, closing Hash !'
-    elif error == 'Key':
-        print 'Key Interrupt, closing Hash !'
-    else:
-        print 'Some Other Exception !'
+    print 'Error - ',error
 
     Shelveclose(hash2)
 
@@ -80,22 +74,17 @@ def Advhash(wn_synset, synset):
     '''
     pass
 
-def Hashaccess(data):
-    '''
-    Return hashed values for W_synsets
-    '''
-    return [hash2[x] for x in data]
-
 if __name__ == '__main__':
     hash2 = Shelveopen('Hash#2.shelve')
-    while True:
-        try:
-            for synset in hash2.values():
-                Hashprocess(synset)
-        except StopIteration:
-            Error('Stop')
-        except KeyboardInterrupt:
-            Error('Key')
-            sys.exit(0)
-        except Exception:
-            Error('Other')
+    try:
+        for synset in hash2.values():
+            Hashprocess(synset)
+            #Replace in Hash
+            hash2[synset.name()] = synset
+    except StopIteration as s:
+        Error(s)
+    except KeyboardInterrupt as k:
+        Error(k)
+        sys.exit(0)
+    except Exception as e:
+        Error(e)
