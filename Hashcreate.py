@@ -19,17 +19,17 @@ def Syn_factory(wn_synset):
         hash2[synset.name()] = synset
         return synset
     elif pos == 'v':
-        #Create Noun synset
+        #Create Verb synset
         synset = Verb_Synset(wn_synset)
         hash2[synset.name()] = synset
         return synset
     elif pos == 'a':
-        #Create Noun synset
+        #Create Adjective synset
         synset = Adjective_Synset(wn_synset)
         hash2[synset.name()] = synset
         return synset
     elif pos == 'r':
-        #Create Noun synset
+        #Create Adverb synset
         synset = Adverb_Synset(wn_synset)
         hash2[synset.name()] = synset
         return synset
@@ -73,6 +73,7 @@ if __name__ == '__main__':
     iterator.initiliaze_lemma_list()
 
     try:
+        #As to how many words to be processed
         for i in range(1000000):
             name = Unicode(iterator.next_word())
             word = Word_factory(name, 'wordnet')

@@ -74,7 +74,20 @@ def Verbhash(wn_synset, synset):
     '''
     Fixed property template for Verb_Synsets
     '''
-    pass
+    if wn_synset.hypernyms():
+        #Filling Hypernyms
+        custom_synsets = Synsets(wn_synset.hypernyms())
+        synset.populate('hypernyms', custom_synsets)
+
+    if wn_synset.hyponyms():
+        #Filling Hyponyms
+        custom_synsets = Synsets(wn_synset.hyponyms())
+        synset.populate('hyponyms', custom_synsets)
+
+    if wn_synset.entailments():
+        #Filling Hypernyms
+        custom_synsets = Synsets(wn_synset.entailments())
+        synset.populate('entailments', custom_synsets)
 
 def Adjhash(wn_synset, synset):
     '''
