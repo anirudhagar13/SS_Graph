@@ -55,5 +55,8 @@ class Word:
             self._adjsyn.append(synset.name())
         elif pos == 'r':
             self._advsyn.append(synset.name())
+        elif pos == 's':
+            #Means Adjective satellite
+            pass
         else:
             print 'Invalid POS - ',pos
