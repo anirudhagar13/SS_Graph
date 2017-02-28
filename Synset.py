@@ -76,6 +76,12 @@ class Synset:
         '''
         return self._holonyms
 
+    def entailments(self):
+        '''
+        Getter for Entailments
+        '''
+        return self._entailments
+
 
     def __str__(self):
         '''
