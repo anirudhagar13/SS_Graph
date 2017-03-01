@@ -15,6 +15,7 @@ class Synset:
         self._meronyms= list()
         self._holonyms = list()
         self._entailments = list()
+        self._similar_tos = list()
 
     def name(self):
         '''
@@ -82,6 +83,12 @@ class Synset:
         '''
         return self._entailments
 
+    def similar_tos(self):
+        '''
+        Getter for Similar Tos
+        '''
+        return self._similar_tos
+
 
     def __str__(self):
         '''
@@ -100,7 +107,7 @@ class Synset:
         return data
 
     def populate(self, type, data):
-        #Prevent duplicates
+        #Avoid duplicates
         if type == 'hypernyms':
             for synset in data:
                 if synset not in self._hypernyms:
@@ -121,5 +128,9 @@ class Synset:
             for synset in data:
                 if synset not in self._entailments:
                     self._entailments.append(synset)
+        elif type == 'similar':
+            for synset in data:
+                if synset not in self._similar_tos:
+                    self._similar_tos.append(synset)
         else:
             print 'Invalid Property, not exists!'

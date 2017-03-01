@@ -27,6 +27,11 @@ def Hashprocess(synset):
         custom_synsets = Synsets(wn_synset.entailments())
         synset.populate('entailments', custom_synsets)
 
+    if wn_synset.similar_tos():
+        #Filling Similar Tos
+        custom_synsets = Synsets(wn_synset.similar_tos())
+        synset.populate('similar', custom_synsets)
+
     if wn_synset.part_holonyms():
         #Filling Part Holonyms
         custom_synsets = Synsets(wn_synset.part_holonyms())

@@ -8,6 +8,7 @@ class Word:
         self._verbsyn = list()
         self._adjsyn = list()
         self._advsyn = list()
+        self._adjsatsyn = list()
 
     def category(self):
         '''
@@ -39,6 +40,12 @@ class Word:
         '''
         return self._adjsyn
 
+    def Adjsat_synsets(self):
+        '''
+        Getter for adjective satellite synsets attribute
+        '''
+        return self._adjsatsyn
+
     def Adv_synsets(self):
         '''
         Getter for adverb synsets attribute
@@ -47,16 +54,23 @@ class Word:
 
     def populate(self, synset):
         pos = synset.pos()
+        name = synset.name()
+
+        #Avoid duplicates
         if pos == 'n':
-            self._nounsyn.append(synset.name())
+            if name not in self._nounsyn:
+                self._nounsyn.append(name)
         elif pos == 'v':
-            self._verbsyn.append(synset.name())
+            if name not in self._verbsyn:
+                self._verbsyn.append(name)
         elif pos == 'a':
-            self._adjsyn.append(synset.name())
+            if name not in self._adjsyn:
+                self._adjsyn.append(name)
         elif pos == 'r':
-            self._advsyn.append(synset.name())
+            if name not in self._advsyn:
+                self._advsyn.append(name)
         elif pos == 's':
-            #Means Adjective satellite
-            pass
+            if name not in self._adjsatsyn:
+                self._adjsatsyn.append(name)
         else:
             print 'Invalid POS - ',pos
