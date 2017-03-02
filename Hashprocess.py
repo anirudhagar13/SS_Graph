@@ -10,7 +10,7 @@ def Hashprocess(synset):
     '''
     #Initialize wordnet object for property access
     wn_synset = wn.synset(synset.name())
-    pos = synset.pos()
+    pos = Unicode(synset.pos())
     if pos == 'n':
         Nounhash(wn_synset, synset)
     elif pos == 'v':
@@ -19,8 +19,10 @@ def Hashprocess(synset):
         Adjhash(wn_synset, synset)
     elif pos == 'r':
         Advhash(wn_synset, synset)
+    elif pos == 's':
+        pass
     else:
-        print 'Wrong POS tag - ',pos
+        print 'wrong pos here'
 
 def Synsets(data):
     '''

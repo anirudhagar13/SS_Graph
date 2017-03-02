@@ -1,7 +1,7 @@
 from Commons import *
 from Synset import *
 from Word import *
-from Wordnet import *
+from wordnet import Wordnet
 
 #Global hashes
 hash1 = {}
@@ -12,31 +12,37 @@ def Syn_factory(wn_synset):
     To create appropriate subclass as per pos()
     '''
     global hash2
-    pos = Unicode(wn_synset.pos())
-    if pos == 'n':
-        #Create Noun synset
-        synset = Noun_Synset(wn_synset)
-        hash2[synset.name()] = synset
-        return synset
-    elif pos == 'v':
-        #Create Verb synset
-        synset = Verb_Synset(wn_synset)
-        hash2[synset.name()] = synset
-        return synset
-    elif pos == 'a':
-        #Create Adjective synset
-        synset = Adjective_Synset(wn_synset)
-        hash2[synset.name()] = synset
-        return synset
-    elif pos == 'r':
-        #Create Adverb synset
-        synset = Adverb_Synset(wn_synset)
-        hash2[synset.name()] = synset
-        return synset
+    if wn_synset:
+        pos = Unicode(wn_synset.pos())
+        if pos == 'n':
+            #Create Noun synset
+            synset = Noun_Synset(wn_synset)
+            hash2[synset.name()] = synset
+            return synset
+        elif pos == 'v':
+            #Create Verb synset
+            synset = Verb_Synset(wn_synset)
+            hash2[synset.name()] = synset
+            return synset
+        elif pos == 'a':
+            #Create Adjective synset
+            synset = Adjective_Synset(wn_synset)
+            hash2[synset.name()] = synset
+            return synset
+        elif pos == 'r':
+            #Create Adverb synset
+            synset = Adverb_Synset(wn_synset)
+            hash2[synset.name()] = synset
+            return synset
+        elif pos == 's':
+            '''complete this later'''
+            return Synset(wn_synset)
+        else:
+            print 'Wrong POS tag -',pos
+            #return instance of parent class
+            return Synset(wn_synset)
     else:
-        print 'Wrong POS tag -',pos
-        #return instance of parent class
-        return Synset(wn_synset)
+        print 'Nonetype synset object'
 
 def Word_factory(name, category):
     '''
@@ -85,5 +91,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt as k:
         handle_error(k)
         sys.exit(0)
-    except Exception as e:
-        handle_error(e)
+    #except Exception as e:
+    #    handle_error(e)
