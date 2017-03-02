@@ -10,16 +10,12 @@ class Synset:
         self._examples = Unicode(synset.examples())
         self._lemma_names = Unicode(synset.lemma_names())
         self._lemma_count = self.Sensecount(synset)
-
-    def Sensecount(self, wn_synset):
-        '''
-        To fill lemma counts in wordnet
-        '''
-        data = list()
-        for lemma in wn_synset.lemmas():
-            count = 1 + lemma.count()   #to avoid zeros
-            data.append(count)
-        return data
+        self._hypernyms = list()
+        self._hyponyms = list()
+        self._meronyms= list()
+        self._holonyms = list()
+        self._entailments = list()
+        self._similar_tos = list()
 
     def name(self):
         '''
@@ -57,23 +53,6 @@ class Synset:
         '''
         return self._pos
 
-    def __str__(self):
-        '''
-        Each Object represented by Label
-        '''
-        return self._name
-
-class Noun_Synset(Synset):
-    def __init__(self, synset):
-        '''
-        Subclass Constructor
-        '''
-        Synset.__init__(self, synset)
-        self._hypernyms = list()
-        self._hyponyms = list()
-        self._meronyms = list()
-        self._holonyms = list()
-
     def hypernyms(self):
         '''
         Getter for hypernyms
@@ -88,76 +67,70 @@ class Noun_Synset(Synset):
 
     def meronyms(self):
         '''
-            Getter for meronyms
+        Getter for meronyms
         '''
         return self._meronyms
 
     def holonyms(self):
         '''
-            Getter for holonyms
+        Getter for holonyms
         '''
         return self._holonyms
 
-    def populate(self, type, data):
-        if type == 'hypernyms':
-            self._hypernyms.extend(data)
-        elif type == 'hyponyms':
-            self._hyponyms.extend(data)
-        elif type == 'meronyms':
-            self._meronyms.extend(data)
-        elif type == 'holonyms':
-            self._holonyms.extend(data)
-        else:
-            print 'Invalid Property, not exists!'
-
-class Verb_Synset(Synset):
-    def __init__(self, synset):
-        '''
-        Subclass Constructor
-        '''
-        Synset.__init__(self, synset)
-        self._hypernyms = list()
-        self._hyponyms = list()
-        self._entailments = list()
-
-    def hypernyms(self):
-        '''
-        Getter for hypernyms
-        '''
-        return self._hypernyms
-
-    def hyponyms(self):
-        '''
-        Getter for hyponyms
-        '''
-        return self._hyponyms
-
     def entailments(self):
         '''
-            Getter for entailments
+        Getter for Entailments
         '''
         return self._entailments
 
+    def similar_tos(self):
+        '''
+        Getter for Similar Tos
+        '''
+        return self._similar_tos
+
+
+    def __str__(self):
+        '''
+        Each Object represented by Label
+        '''
+        return self._name
+
+    def Sensecount(self, wn_synset):
+        '''
+        To fill lemma counts in wordnet
+        '''
+        data = list()
+        for lemma in wn_synset.lemmas():
+            count = 1 + lemma.count()   #to avoid zeros
+            data.append(count)
+        return data
+
     def populate(self, type, data):
+        #Avoid duplicates
         if type == 'hypernyms':
-            self._hypernyms.extend(data)
+            for synset in data:
+                if synset not in self._hypernyms:
+                    self._hypernyms.append(synset)
         elif type == 'hyponyms':
-            self._hyponyms.extend(data)
+            for synset in data:
+                if synset not in self._hyponyms:
+                    self._hyponyms.append(synset)
+        elif type == 'meronyms':
+            for synset in data:
+                if synset not in self._meronyms:
+                    self._meronyms.append(synset)
+        elif type == 'holonyms':
+            for synset in data:
+                if synset not in self._holonyms:
+                    self._holonyms.append(synset)
         elif type == 'entailments':
-            self._entailments.extend(data)
+            for synset in data:
+                if synset not in self._entailments:
+                    self._entailments.append(synset)
+        elif type == 'similar':
+            for synset in data:
+                if synset not in self._similar_tos:
+                    self._similar_tos.append(synset)
         else:
             print 'Invalid Property, not exists!'
-
-class Adjective_Synset(Synset):
-    def __init__(self, synset):
-        '''
-        Subclass  ctor
-        '''
-        Synset.__init__(self, synset)
-
-class Adverb_Synset(Synset):
-    def __init__(self, synset):
-        '''
-        Subclass ctor
-        '''
-        Synset.__init__(self, synset)

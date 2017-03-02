@@ -12,37 +12,9 @@ def Syn_factory(wn_synset):
     To create appropriate subclass as per pos()
     '''
     global hash2
-    if wn_synset:
-        pos = Unicode(wn_synset.pos())
-        if pos == 'n':
-            #Create Noun synset
-            synset = Noun_Synset(wn_synset)
-            hash2[synset.name()] = synset
-            return synset
-        elif pos == 'v':
-            #Create Verb synset
-            synset = Verb_Synset(wn_synset)
-            hash2[synset.name()] = synset
-            return synset
-        elif pos == 'a':
-            #Create Adjective synset
-            synset = Adjective_Synset(wn_synset)
-            hash2[synset.name()] = synset
-            return synset
-        elif pos == 'r':
-            #Create Adverb synset
-            synset = Adverb_Synset(wn_synset)
-            hash2[synset.name()] = synset
-            return synset
-        elif pos == 's':
-            '''complete this later'''
-            return Synset(wn_synset)
-        else:
-            print 'Wrong POS tag -',pos
-            #return instance of parent class
-            return Synset(wn_synset)
-    else:
-        print 'Nonetype synset object'
+    synset = Synset(wn_synset)
+    hash2[synset.name()] = synset
+    return synset
 
 def Word_factory(name, category):
     '''
