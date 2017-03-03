@@ -1,6 +1,8 @@
 import sys
+import shelve
 from wordnet import Wordnet
 from Commons import Unicode
+from nltk.corpus import wordnet as wn
 try:
     import cPickle as pickle
 except:
@@ -14,7 +16,7 @@ def handle_1():
     output.close()
 
 if __name__ == "__main__":
-    print sys.argv[1]
+    #print sys.argv[1]
     if sys.argv[1] == 'create_lemmas_list':
         iterator = Wordnet()
         iterator.initiliaze_lemma_list()
@@ -27,3 +29,13 @@ if __name__ == "__main__":
             handle_1()
     else:
         print 'here'
+
+    if sys.argv[1] == '2':
+        hash1 = shelve.open('Hash#1.shelve') #open without 'writeback=True'; faster
+        all_lemmas = pickle.load(open('all_lemmas.pkl','rb'))
+        for lemma_name in all_lemmas:
+            hash1 = shelve.open('Hash#1.shelve')
+            assert hash1.has_key(lemma_name)
+            word = hash1[lemma_name]
+
+            wn.synsets(lemma_name)
