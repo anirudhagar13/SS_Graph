@@ -10,6 +10,12 @@ class Word:
         self._advsyn = list()
         self._adjsatsyn = list()
 
+    def __str__(self):
+        '''
+        Each Object represented by name
+        '''
+        return self._name
+
     def category(self):
         '''
         Getter for category attribute
