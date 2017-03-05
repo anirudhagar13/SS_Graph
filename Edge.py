@@ -16,6 +16,7 @@ class Edge(object):
         data = self.src + ' ~>>{0}({1})>>> '.format(self.kind, self.weight) + self.dest
         return data
 
+    #******Word Functions*******
     def W2S(self, **kwargs):
         '''
         Word to Sense Edge
@@ -33,6 +34,7 @@ class Edge(object):
         prod = Hyper3*(freq/tot_freq)
         self.weight = round(prod, 3)
 
+     #******Synset Functions*******
     def S2W(self, **kwargs):
         '''
         Sense to its own wordforms
