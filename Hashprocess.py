@@ -10,21 +10,61 @@ def Hashprocess(synset):
     '''
     #Initialize wordnet object for property access
     wn_synset = wn.synset(synset.name())
-    pos = synset.pos()
-    if pos == 'n':
-        Nounhash(wn_synset, synset)
-    elif pos == 'v':
-        Verbhash(wn_synset, synset)
-    elif pos == 'a':
-        Adjhash(wn_synset, synset)
-    elif pos == 'r':
-        Advhash(wn_synset, synset)
-    else:
-        print 'Wrong POS tag - ',pos
+
+    #All types of synsets have same property
+    if wn_synset.hypernyms():
+        #Filling Hypernyms
+        custom_synsets = Synsets(wn_synset.hypernyms())
+        synset.populate('hypernyms', custom_synsets)
+
+    if wn_synset.hyponyms():
+        #Filling Hyponyms
+        custom_synsets = Synsets(wn_synset.hyponyms())
+        synset.populate('hyponyms', custom_synsets)
+
+    if wn_synset.entailments():
+        #Filling Entailments
+        custom_synsets = Synsets(wn_synset.entailments())
+        synset.populate('entailments', custom_synsets)
+
+    if wn_synset.similar_tos():
+        #Filling Similar Tos
+        custom_synsets = Synsets(wn_synset.similar_tos())
+        synset.populate('similar', custom_synsets)
+
+    if wn_synset.part_holonyms():
+        #Filling Part Holonyms
+        custom_synsets = Synsets(wn_synset.part_holonyms())
+        synset.populate('holonyms', custom_synsets)
+
+    if wn_synset.substance_holonyms():
+        #Filling Substance Holonyms
+        custom_synsets = Synsets(wn_synset.substance_holonyms())
+        synset.populate('holonyms', custom_synsets)
+
+    if wn_synset.member_holonyms():
+        #Filling Member Holonyms
+        custom_synsets = Synsets(wn_synset.member_holonyms())
+        synset.populate('holonyms', custom_synsets)
+
+    if wn_synset.part_meronyms():
+        #Filling Part Meronyms
+        custom_synsets = Synsets(wn_synset.part_meronyms())
+        synset.populate('meronyms', custom_synsets)
+
+    if wn_synset.substance_meronyms():
+        #Filling Substance Meronyms
+        custom_synsets = Synsets(wn_synset.substance_meronyms())
+        synset.populate('meronyms', custom_synsets)
+
+    if wn_synset.member_meronyms():
+        #Filling Member Meronyms
+        custom_synsets = Synsets(wn_synset.member_meronyms())
+        synset.populate('meronyms', custom_synsets)
 
 def Synsets(data):
     '''
-    Returns custom synset objects from hash
+    Returns custom synset objects names present in hash
     '''
     global hash2
     custom_synsets = list()
@@ -45,61 +85,6 @@ def Error(error):
     print 'Error - ',error
     print 'Hash Updated - ',count
     Shelveclose(hash2)
-
-def Nounhash(wn_synset, synset):
-    '''
-    Fixed property template for Noun_Synsets
-    '''
-    if wn_synset.hypernyms():
-        #Filling Hypernyms
-        custom_synsets = Synsets(wn_synset.hypernyms())
-        synset.populate('hypernyms', custom_synsets)
-
-    if wn_synset.hyponyms():
-        #Filling Hyponyms
-        custom_synsets = Synsets(wn_synset.hyponyms())
-        synset.populate('hyponyms', custom_synsets)
-
-    # if wn_synset.meronyms():
-    #     #Filling meronyms
-    #     custom_synsets = Synsets(wn_synset.meronyms())
-    #     synset.populate('meronyms', custom_synsets)
-
-    # if wn_synset.holonyms():
-    #     #Filling holonyms
-    #     custom_synsets = Synsets(wn_synset.holonyms())
-    #     synset.populate('holonyms', custom_synsets)
-
-def Verbhash(wn_synset, synset):
-    '''
-    Fixed property template for Verb_Synsets
-    '''
-    if wn_synset.hypernyms():
-        #Filling Hypernyms
-        custom_synsets = Synsets(wn_synset.hypernyms())
-        synset.populate('hypernyms', custom_synsets)
-
-    if wn_synset.hyponyms():
-        #Filling Hyponyms
-        custom_synsets = Synsets(wn_synset.hyponyms())
-        synset.populate('hyponyms', custom_synsets)
-
-    if wn_synset.entailments():
-        #Filling Hypernyms
-        custom_synsets = Synsets(wn_synset.entailments())
-        synset.populate('entailments', custom_synsets)
-
-def Adjhash(wn_synset, synset):
-    '''
-    Fixed property template for Adjective_Synsets
-    '''
-    pass
-
-def Advhash(wn_synset, synset):
-    '''
-    Fixed property template for Adverb_Synsets
-    '''
-    pass
 
 if __name__ == '__main__':
     hash2 = Shelveopen('Hash#2.shelve')
