@@ -1,5 +1,7 @@
 from Commons import *
 from Edge import *
+# import pdb
+# from data import Create
 
 #Globals
 hash3 = {}
@@ -10,13 +12,13 @@ def Words(src, data):
     '''
     Create Word Edges
     '''
-    #Initializing empty list to store edges
-    graph[src] = list()
     for key, value in data.items():
         if key == 'W2S':
-            W2S(src, value)
+            if value:
+                W2S(src, value)
         elif key == 'D2S':
-            D2S(src, value)
+            if value:
+                D2S(src, value)
         else:
             raise Exception('Word Edge not defined')
 
@@ -24,29 +26,45 @@ def Synsets(src, data):
     '''
     Create Word Edges
     '''
-    #Initializing Empty lists to store edges
-    graph[src] = list()
+    #Only called when value not empty
     for key, value in data.items():
         if key == 'S2W':
-            S2W(src, value)
+            if value:
+                S2W(src, value)
         elif key == 'S2D':
-            S2D(src, value)
+            if value:
+                S2D(src, value)
         elif key == 'S2E':
-            S2E(src, value)
+            if value:
+                S2E(src, value)
         elif key == 'Hyponym':
-            Hyponym(src, value)
+            if value:
+                Hyponym(src, value)
         elif key == 'Hypernym':
-            Hypernym(src, value)
+            if value:
+                Hypernym(src, value)
         elif key == 'Meronym':
-            Meronym(src, value)
+            if value:
+                Meronym(src, value)
         elif key == 'Holonym':
-            Holonym(src, value)
+            if value:
+                Holonym(src, value)
         elif key == 'Similar':
-            Similar(src, value)
+            if value:
+                Similar(src, value)
         elif key == 'Entailment':
-            Entailment(src, value)
+            if value:
+                Entailment(src, value)
         else:
-            raise Exception('Synset Edge not defined')
+            raise Exception('Synset Edge not defined - ',key)
+
+def Insert(src, edge):
+    '''
+    Direct appending not working
+    '''
+    ls = graph[src]
+    ls.append(edge)
+    graph[src] = ls
 
 #******Synset Functions********
 def S2W(src, data):
@@ -58,7 +76,7 @@ def S2W(src, data):
         edge.populate()
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def S2D(src, data):
     '''
@@ -73,7 +91,8 @@ def S2D(src, data):
         edge.populate(frequency=frequency, total_freq=total_freq)
 
         #Adding edge created in graph
-        graph[src].append(edge)
+
+        Insert(src, edge)
 
 def S2E(src, data):
     '''
@@ -88,7 +107,7 @@ def S2E(src, data):
         edge.populate(frequency=frequency, total_freq=total_freq)
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def Hypernym(src, data):
     '''
@@ -99,7 +118,7 @@ def Hypernym(src, data):
         edge.populate()
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def Hyponym(src, data):
     '''
@@ -110,7 +129,7 @@ def Hyponym(src, data):
         edge.populate()
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def Holonym(src, data):
     '''
@@ -121,7 +140,7 @@ def Holonym(src, data):
         edge.populate()
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def Similar(src, data):
     '''
@@ -132,7 +151,7 @@ def Similar(src, data):
         edge.populate()
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def Entailment(src, data):
     '''
@@ -143,7 +162,7 @@ def Entailment(src, data):
         edge.populate()
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def Meronym(src, data):
     '''
@@ -151,11 +170,11 @@ def Meronym(src, data):
     '''
     num_mero = len(data)
     for dest in data:
-        edge = Edge(src=src, dest=dest, kind='Hypernym')
+        edge = Edge(src=src, dest=dest, kind='Meronym')
         edge.populate(num_mero=num_mero)
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 #******Word Functions********
 def W2S(src, data):
@@ -171,7 +190,7 @@ def W2S(src, data):
         edge.populate(frequency=frequency, total_freq=total_freq)
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def D2S(src, data):
     '''
@@ -183,7 +202,7 @@ def D2S(src, data):
         edge.populate(frequency=frequency, total_freq=total_freq)
 
         #Adding edge created in graph
-        graph[src].append(edge)
+        Insert(src, edge)
 
 def handle_error(e):
     '''
@@ -195,11 +214,16 @@ def handle_error(e):
     Shelveclose(graph)
 
 if __name__ == '__main__':
+    #pdb.set_trace()
+    #Create()
+
     hash3 = Shelveopen('Hash#3.shelve')
     graph = Shelveopen('Graph.shelve')
     try:
-        for key in hash3.keys()[:10]:
-            if '.' in key:
+        for key in hash3.keys():
+            #Initialize empty list for each entry
+            graph[key] = list()
+            if '.' not in key:
                 #Distinguish between words and Synsets
                 Words(key, hash3[key])
             else:

@@ -65,7 +65,7 @@ class Edge(object):
         '''
         self.weight = Hyper5
 
-    def Hyperym(self, **kwargs):
+    def Hypernym(self, **kwargs):
         '''
         For hypernyms i.e. supersenses
         '''
