@@ -33,12 +33,14 @@ def get_words(input_str,size_):
         strip words from sentence acc to value of 'size_'
     '''
     input_tokens = input_str.split(' ')
-    tokens = list()
+    if size_ == 1:
+        return input_tokens
     if size_ == 2:
+        tokens = list()
         for i in range(0,len(input_tokens)-1):
             val = str(input_tokens[i:i+size_][0]) + str(' ') + str(input_tokens[i:i+size_][1])
             tokens.append(val)
-    return tokens
+        return tokens
 
 def number_non_noise_words(synset_defn):
     '''
@@ -47,24 +49,29 @@ def number_non_noise_words(synset_defn):
     #TODO
     return len(synset_defn.split(' '))
 
-def sense_to_word_processing(synset_defn,tokens,word_type):
+def sense_to_word_processing(synset_defn,synset_name,tokens,word_type):
     '''
         sense - definition words
-        sense - example words
-        processing
-        words must exist in wordnet
+        sense - example words, processing
+        checks that words must exist in wordnet
+        returns list of words existing in wordnet(vocab_words)
     '''
     hash1 = shelve.open(HASH1)
+    vocab_words = list()
     for tkn in tokens:
         #print '*******************************************************************'
         #print type(tkn)
-        if hash1.has_key(tkn):
+        if hash1.has_key(tkn): #word node exists in wordnet
+            print 'tkn = ' + str(":") + tkn
+            vocab_words.append(tkn)
             if(word_type == 'definition'):
                 #print '*******************************************************************'
-                sense_data[s]['sense_to_defn_word'].append((tkn, synset_defn.count(tkn), number_non_noise_words(synset_defn)))
+                count = sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(tkn), synset_defn))
+                sense_data[synset_name]['sense_to_defn_word'].append((tkn, count, number_non_noise_words(synset_defn)))
             elif(word_type == 'example'):
-                sense_data[s]['sense_to_ex_word'].append(tkn,1)
+                sense_data[synset_name]['sense_to_ex_word'].append((tkn,1))
     hash1.close()
+    return vocab_words
 
 def remove_overlap_words(tokens_1, tokens_2):
     final = list()
@@ -84,7 +91,11 @@ def defn_word_to_sense_processing(synset_defn,synset,tokens_1,tokens_2):
     for word in tokens_1+tokens_2:
         if hash1.has_key(word):
             #-1 => total number of occurences of word in all nodes in the graph; compute this after all ops
-            word_data[word]['defn_word_to_sense'][synset] = (synset_defn.count(word),-1)
+            count = sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(word), synset_defn))
+            word_data[word]['defn_word_to_sense'][synset] = (count,-1)
+        else:
+            #put to logs
+            pass
     hash1.close()
 
 def update_words_frequency(tokens_1,tokens_2):
@@ -103,23 +114,25 @@ def update_words_frequency(tokens_1,tokens_2):
 
 def sense_processing(filename):
     hash2 = shelve.open(filename)
-    for s in hash2.keys()[1:]:
+    for s in hash2.keys()[:1]:
         #print hash2[s]
 
         sense_data[s] = dict()
         synset_ = hash2[s]
 
         synset_defn = synset_.definition()
+        print synset_defn
 
         #sense_data[s]['sense_to_main_word'] =
 
+        #TODO - remove non noise words in definition of sense before creating the 'sense-defn word' connections
         sense_data[s]['sense_to_defn_word'] = list()
         tokens_2 = get_words(synset_defn,2)
-        sense_to_word_processing(synset_defn,tokens_2,'definition')
+        tokens_2 = sense_to_word_processing(synset_defn,s,tokens_2,'definition')
         tokens_1 = get_words(synset_defn,1)
         tokens_1 = remove_overlap_words(tokens_1,tokens_2)
-        sense_to_word_processing(synset_defn,tokens_1,'definition')#change this - pass both tokens_1 and tokens_2 together
-
+        sense_to_word_processing(synset_defn,s,tokens_1,'definition')#change this - pass both tokens_1 and tokens_2 together
+        print sense_data[s]['sense_to_defn_word']
         update_words_frequency(tokens_1,tokens_2)###
 
         defn_word_to_sense_processing(synset_defn,s,tokens_1,tokens_2)
@@ -127,7 +140,7 @@ def sense_processing(filename):
         sense_data[s]['sense_to_example_word'] = list()
         for example in synset_.examples():
             tokens_1 = get_words(example,1)
-            sense_to_word_processing(synset_defn,tokens_1,'example')
+            sense_to_word_processing(synset_defn,s,tokens_1,'example')
 
 
         #sense_data[s]['hyponyms'] =
