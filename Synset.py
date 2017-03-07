@@ -92,7 +92,7 @@ class Synset:
 
     def __str__(self):
         '''
-        Each Object represented by Label
+        Each Object represented by name
         '''
         return self._name
 
