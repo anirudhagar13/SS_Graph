@@ -230,7 +230,7 @@ if __name__ == '__main__':
             word_count += 1
         for key in hash4.keys():
             graph[key] = list()
-            Synsets(key, hash3[key])
+            Synsets(key, hash4[key])
             synset_count += 1
         raise StopIteration('All Entries Processed')
     except Exception as e:
