@@ -6,7 +6,8 @@ from Edge import *
 #Globals
 hash3 = {}
 graph = {}
-count = 0
+word_count = 0
+synset_count = 0
 
 def Words(src, data):
     '''
@@ -209,7 +210,8 @@ def handle_error(e):
     To Catch and show exceptions
     '''
     print 'Log - ',e
-    print 'Entries Processed - ',count
+    print 'Words Processed - ',word_count
+    print 'Synsets Processed - ',synset_count
     Shelveclose(hash3)
     Shelveclose(graph)
 
@@ -218,17 +220,18 @@ if __name__ == '__main__':
     #Create()
 
     hash3 = Shelveopen('Hash#3.shelve')
+    hash4 = Shelveopen('Hash#4.shelve')
     graph = Shelveopen('Graph.shelve')
     try:
         for key in hash3.keys():
             #Initialize empty list for each entry
             graph[key] = list()
-            if '.' not in key:
-                #Distinguish between words and Synsets
-                Words(key, hash3[key])
-            else:
-                Synsets(key, hash3[key])
-            count += 1
+            Words(key, hash3[key])
+            word_count += 1
+        for key in hash4.keys():
+            graph[key] = list()
+            Synsets(key, hash4[key])
+            synset_count += 1
         raise StopIteration('All Entries Processed')
     except Exception as e:
         handle_error(e)
