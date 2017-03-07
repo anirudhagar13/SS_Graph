@@ -84,9 +84,9 @@ def S2D(src, data):
     '''
     #Each edge is a dictionary, data is list of dictionaries
     for item in data:
-        dest = item['dest']
-        frequency = item['frequency']
-        total_freq = item['total_freq']
+        dest = item[0]
+        frequency = item[1]
+        total_freq = item[2]
         edge = Edge(src=src, dest=dest, kind='S2D')
         edge.populate(frequency=frequency, total_freq=total_freq)
 
@@ -100,9 +100,9 @@ def S2E(src, data):
     '''
     #Each edge is a dictionary, data is list of dictionaries
     for item in data:
-        dest = item['dest']
-        frequency = item['frequency']
-        total_freq = item['total_freq']
+        dest = item[0]
+        frequency = item[1]
+        total_freq = item[2]
         edge = Edge(src=src, dest=dest, kind='S2E')
         edge.populate(frequency=frequency, total_freq=total_freq)
 
@@ -183,9 +183,9 @@ def W2S(src, data):
     '''
     #Each edge is a dictionary, data list of dictionaries
     for item in data:
-        dest = item['dest']
-        frequency = item['frequency']
-        total_freq = item['total_freq']
+        dest = item[0]
+        frequency = item[1]
+        total_freq = item[2]
         edge = Edge(src=src, dest=dest, kind='W2S')
         edge.populate(frequency=frequency, total_freq=total_freq)
 
