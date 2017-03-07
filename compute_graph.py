@@ -4,6 +4,7 @@ try:
     import cPickle as pickle
 except:
     import pickle
+from nltk.corpus import stopwords
 
 HASH1 = 'Hash#1.shelve'
 #word_data = dict()
@@ -39,14 +40,14 @@ def get_words(input_str,size_):
     input_tokens = input_str.split(' ')
     if size_ == 1:
         for tkn in input_tokens:
-            if not hash1.has_key(tkn):
+            if not hash1.has_key(tkn.lower()):
                 input_tokens.remove(tkn)
         return input_tokens
     if size_ == 2:
         tokens = list()
         for i in range(0,len(input_tokens)-1):
-            val = str(input_tokens[i:i+size_][0]) + str(' ') + str(input_tokens[i:i+size_][1])
-            if hash1.has_key(val):
+            val = str(input_tokens[i:i+size_][0]) + str('_') + str(input_tokens[i:i+size_][1])
+            if hash1.has_key(val.lower()):
                 tokens.append(val)
         return tokens
 
@@ -54,8 +55,11 @@ def number_non_noise_words(synset_defn):
     '''
         return the number of non noise words in synset_defn
     '''
-    #TODO
-    return len(synset_defn.split(' '))
+    cnt = 0
+    for word in synset_defn.split():
+        if word not in stopwords.words('english'):
+            cnt += 1
+    return cnt
 
 def count_words(word, input_str):
     return sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(word), input_str))
@@ -90,15 +94,16 @@ def defn_word_to_sense_processing(synset_defn,synset,wd_filename,tokens_1,tokens
     hash1 = shelve.open(HASH1)
     word_data = pickle.load( open(wd_filename,'rb'))
     for word in tokens_1+tokens_2:
-        if hash1.has_key(word):
+        if hash1.has_key(word.lower()):
+            #print 'defn_word_to_sense_processing : ' + str(word.lower())
             #-1 => total number of occurences of word in all nodes in the graph; compute ONLY THIS after all ops are done
             try:
-                word_data[word]['defn_word_to_sense'][synset] = (count_words(word, synset_defn),-1)
+                word_data[word]['defn_word_to_sense'][synset] = (count_words(word, synset_defn))
             except Exception as e:
                 if 'a' not in word_data:
                     print 'Error : Word not found in dict word_data'
                 else:
-                    print e
+                    print 'defn_word_to_sense_processing : ' + str(e)
         else:
             #put to logs
             pass
@@ -118,52 +123,64 @@ def update_words_frequency(tokens_1,tokens_2):
             word_freq[word] = 1
     word_freq.close()
 
+def handle_error(sense_data):
+    print 'something seriously f*cked up'
+    pickle.dump( sense_data, open( 'sense_data.pkl', "wb" ) )
+
 def sense_processing(sd_filename,wd_filename):
     sense_data = dict()
     hash2 = shelve.open('Hash#2.shelve')
-    for s in hash2.keys():
-        sense_data[s] = dict()
-        synset_ = hash2[s]
+    try:
+        for s in hash2.keys()[:10]:
+            print s
+            sense_data[s] = dict()
+            synset_ = hash2[s]
 
-        synset_defn = synset_.definition()
+            synset_defn = synset_.definition()
 
-        #print 'synset_defn = ' + str(synset_defn)
+            #print 'synset_defn = ' + str(synset_defn)
 
-        #sense_data[s]['sense_to_main_word'] =
+            sense_data[s]['sense_to_main_word'] = list()
+            for i in synset_.lemma_names():
+                sense_data[s]['sense_to_main_word'].append((i,1))
 
-        #TODO - remove non noise words in definition of sense before creating the 'sense-defn word' connections
-        sense_data[s]['sense_to_defn_word'] = list()
-        tokens_2 = get_words(synset_defn,2)
-        if tokens_2:
-            sense_to_word_processing(sense_data,synset_defn,s,tokens_2,'definition')
-        tokens_1 = get_words(synset_defn,1)
-        tokens_1 = remove_overlap_words(tokens_1,tokens_2)
-        if tokens_1:
-            sense_to_word_processing(sense_data,synset_defn,s,tokens_1,'definition')#change this - pass both tokens_1 and tokens_2 together
-        #print "\t" + str(s) + str(" : ") + str('***************  sense_to_defn_word done  ************************')
+            #TODO - remove non noise words in definition of sense before creating the 'sense-defn word' connections
+            sense_data[s]['sense_to_defn_word'] = list()
+            tokens_2 = get_words(synset_defn,2)
+            if tokens_2:
+                sense_to_word_processing(sense_data,synset_defn,s,tokens_2,'definition')
 
-        update_words_frequency(tokens_1,tokens_2)###
+            tokens_1 = get_words(synset_defn,1)
+            tokens_1 = remove_overlap_words(tokens_1,tokens_2)
+            if tokens_1:
+                sense_to_word_processing(sense_data,synset_defn,s,tokens_1,'definition')#change this - pass both tokens_1 and tokens_2 together
+            #print "\t" + str(s) + str(" : ") + str('***************  sense_to_defn_word done  ************************')
 
-        if tokens_1 or tokens_2:
-            defn_word_to_sense_processing(synset_defn,s,wd_filename,tokens_1,tokens_2)
-        #print "\t" + str(s) + str(" : ") + str('***************  defn_word_to_sense done  ************************')
+            #update_words_frequency(tokens_1,tokens_2)###
 
-        sense_data[s]['sense_to_example_word'] = list()
-        if synset_.examples():
-            for example in synset_.examples():
-                tokens_1 = get_words(example,1)
-                sense_to_word_processing(sense_data,synset_defn,s,tokens_1,'example')
-        #print "\t" + str(s) + str(" : ") + str('***************  sense_to_example_word done  ************************')
+            if tokens_1 or tokens_2:
+                defn_word_to_sense_processing(synset_defn,s,wd_filename,tokens_1,tokens_2)
+            #print "\t" + str(s) + str(" : ") + str('***************  defn_word_to_sense done  ************************')
 
-        #sense_data[s]['hyponyms'] =
+            sense_data[s]['sense_to_example_word'] = list()
+            if synset_.examples():
+                #print 'inside examples'
+                for example in synset_.examples():
+                    tokens_1 = get_words(example,1)
+                    sense_to_word_processing(sense_data,synset_defn,s,tokens_1,'example')
 
-        sense_data[s]['hypernyms'] = synset_.hypernyms()
-        sense_data[s]['holonyms'] = synset_.holonyms()
-        sense_data[s]['meronyms'] = synset_.meronyms()
-        sense_data[s]['entailments'] = synset_.entailments()
-        sense_data[s]['similar_tos'] = synset_.similar_tos()
-        #print "\t" + str(s) + str(" : ") + str('*************** sense-sense relations done  ************************')
+            #print "\t" + str(s) + str(" : ") + str('***************  sense_to_example_word done  ************************')
 
+            sense_data[s]['hyponyms'] = synset_.hyponyms()
+            sense_data[s]['hypernyms'] = synset_.hypernyms()
+            sense_data[s]['holonyms'] = synset_.holonyms()
+            sense_data[s]['meronyms'] = synset_.meronyms()
+            sense_data[s]['entailments'] = synset_.entailments()
+            sense_data[s]['similar_tos'] = synset_.similar_tos()
+            #print "\t" + str(s) + str(" : ") + str('*************** sense-sense relations done  ************************')
+    except Exception as e:
+        print e
+        handle_error(sense_data)
     pickle.dump( sense_data, open( sd_filename, "wb" ) )
 
 if __name__ == "__main__":
