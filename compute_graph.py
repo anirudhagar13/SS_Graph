@@ -125,7 +125,8 @@ def update_words_frequency(tokens_1,tokens_2):
 
 def handle_error(sense_data):
     print 'something seriously f*cked up'
-    pickle.dump( sense_data, open( 'sense_data.pkl', "wb" ) )
+    #pickle.dump( sense_data, open( 'sense_data.pkl', "wb" ) )
+    pickle.dump( sense_data, open( 'Hash#3.shelve', "wb" ) )
 
 def sense_processing(sd_filename,wd_filename):
     sense_data = dict()
