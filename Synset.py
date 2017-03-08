@@ -6,8 +6,8 @@ class Synset:
         '''
         self._pos = Unicode(synset.pos())
         self._name = Unicode(synset.name())
-        self._definition = Unicode(synset.definition())
-        self._examples = Unicode(synset.examples())
+        self._definition = Unicode(synset.definition()).lower()
+        self._examples = Unicode(synset.examples()).lower()
         self._lemma_names = Unicode(synset.lemma_names())
         self._lemma_count = self.Sensecount(synset)
         self._hypernyms = list()

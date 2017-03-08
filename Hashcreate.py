@@ -53,7 +53,7 @@ if __name__ == '__main__':
     try:
         #As to how many words to be processed
         for i in range(1000000):
-            name = Unicode(iterator.next_word())
+            name = Unicode(iterator.next_word()).lower()
             word = Word_factory(name, 'wordnet')
             hash1[name] = word
 
