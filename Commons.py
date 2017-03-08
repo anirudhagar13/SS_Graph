@@ -11,7 +11,7 @@ def Unicode(data):
         if isinstance(data, (str, unicode)):
             return str(data)
         else:
-            return [str(x) for x in data]
+            return [str(x).lower() for x in data]
 
 def Pickledump(data, file):
     '''
