@@ -1,10 +1,10 @@
 from Commons import *
 from Edge import *
 # import pdb
-# from data import Create
 
 #Globals
 hash3 = {}
+hash4 = {}
 graph = {}
 word_count = 0
 synset_count = 0
@@ -212,12 +212,12 @@ def handle_error(e):
     print 'Log - ',e
     print 'Words Processed - ',word_count
     print 'Synsets Processed - ',synset_count
-    Shelveclose(hash3)
+    Shelveclose(hash3)  #For Words
+    Shelveclose(hash4)  #For Synsets
     Shelveclose(graph)
 
 if __name__ == '__main__':
     #pdb.set_trace()
-    #Create()
 
     hash3 = Shelveopen('Hash#3.shelve')
     hash4 = Shelveopen('Hash#4.shelve')
