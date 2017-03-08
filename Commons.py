@@ -9,7 +9,7 @@ def Unicode(data):
         '''
         #Check if received is string
         if isinstance(data, (str, unicode)):
-            return str(data)
+            return str(data).lower()
         else:
             return [str(x).lower() for x in data]
 
