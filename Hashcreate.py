@@ -1,29 +1,18 @@
 from Commons import *
 from Synset import *
 from Word import *
-from Wordnet import *
+from wordnet import Wordnet
 
 #Global hashes
 hash1 = {}
 hash2 = {}
 
-def Syn_factory(wn_synset):
-    '''
-    To create appropriate subclass as per pos()
-    '''
-    global hash2
-    synset = Synset(wn_synset)
-    hash2[synset.name()] = synset
-    return synset
 
-def Word_factory(name, category):
-    '''
-    Process all synsets of words before hash insertion
-    '''
+def make_word_and_synset(name, category):
     word = Word(name=name, category=category)
-    synsets = wn.synsets(name)
-    for wn_synset in synsets:
-        synset = Syn_factory(wn_synset)
+    for i in wn.synsets(name):
+        synset = Synset(i)
+        hash2[synset.name()] = synset
         word.populate(synset)
     return word
 
@@ -54,7 +43,8 @@ if __name__ == '__main__':
         #As to how many words to be processed
         for i in range(1000000):
             name = Unicode(iterator.next_word())
-            word = Word_factory(name, 'wordnet')
+            #word = Word_factory(name, 'wordnet')
+            word = make_word_and_synset(name, 'wordnet')
             hash1[name] = word
 
         raise StopIteration('Stop Iteration')
@@ -63,5 +53,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt as k:
         handle_error(k)
         sys.exit(0)
-    except Exception as e:
-        handle_error(e)
+    #except Exception as e:
+    #    handle_error(e)
