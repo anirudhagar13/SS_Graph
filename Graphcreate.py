@@ -21,7 +21,7 @@ def Words(src, data):
             if value:
                 D2S(src, value)
         else:
-            raise Exception('Word Edge not defined')
+            raise Exception('Word Edge not defined - ',key)
 
 def Synsets(src, data):
     '''
@@ -216,12 +216,22 @@ def handle_error(e):
     Shelveclose(hash4)  #For Synsets
     Shelveclose(graph)
 
+def Print(graph):
+    '''
+    To print made graph
+    '''
+    for key, value in graph.items():
+        print key,' :: '
+        for edge in value:
+            print edge
+
 if __name__ == '__main__':
     #pdb.set_trace()
 
     hash3 = Shelveopen('Hash#3.shelve')
     hash4 = Shelveopen('Hash#4.shelve')
     graph = Shelveopen('Graph.shelve')
+    # Print(graph)
     try:
         for key in hash3.keys():
             #Initialize empty list for each entry
