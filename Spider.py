@@ -27,21 +27,16 @@ class Spider():
 		try:
 			if '.' not in node:
 				#To distinguish between word and synset
-				self.web[node] = self.path
-
+				self.web[node].append(self.path)
 			edges = self.graph[node]
 			for edge in edges:
 				dest = edge.dest
-				if dest in visited:
-					pass
-				else:
-					if self.depth < self.spread:
-						#To limit recursion depth
-						self.depth += 1
-						self.visited.append(dest)
-						self.path.append(edge)
-						self.DFS(dest)
-						self.depth -= 1
-						pop = self.path.pop()
+				if self.depth < self.spread:
+					#To limit recursion depth
+					self.depth += 1
+					self.path.append(edge)
+					self.DFS(dest)
+					self.depth -= 1
+					pop = self.path.pop()
 		except Exception as e:
 			print 'Error - ',e
