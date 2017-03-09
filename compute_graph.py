@@ -19,39 +19,55 @@ def word_processing(wd_filename):
     hash1 = shelve.open(HASH1)
     hash2 = shelve.open('Hash#2.shelve')
     count = 0
-    try:
-        for w in hash1.keys()[:10]:
-            print w
-            word_data[w] = dict()
-            word_data[w]['W2S'] = list()
+    #try:
+    for w in hash1.keys():
+        print w
+        word_data[w] = dict()
+        word_data[w]['W2S'] = list()
 
-            #word_data[w]['D2S'] = dict()
-            if w in hash1:
-                word_ = hash1[w]
-            else:
-                print 'word_processing : ' + str(w) + ' not found in hash1'
+        #word_data[w]['D2S'] = dict()
+        if w in hash1:
+            word_ = hash1[w]
+        else:
+            print 'word_processing : ' + str(w) + ' not found in hash1'
 
-            for i in word_.Noun_synsets() + word_.Verb_synsets() \
-                + word_.Adj_synsets() + word_.Adv_synsets():
-                if i in hash2:
-                    if w[-1:] == 's':
-                        #simple_w = word_hash[w]
+        for i in word_.Noun_synsets() + word_.Verb_synsets() \
+            + word_.Adj_synsets() + word_.Adv_synsets():
+            if i in hash2:
+                if w[-1:] == 's':
+                    #simple_w = word_hash[w]
+                    if w in hash2[i].lemma_names():
                         freq = hash2[i].lemma_count()[hash2[i].lemma_names().index(w)]
-                        total_freq = 10
-                        word_data[w]['W2S'].append((i,freq,total_freq))
                     else:
-                        pass
+                        print '&&&&&&&&&&&&&&&&word not found in lemma_names&&&&&&&&&&&&&&'
+                        try:
+                            word_hash = shelve.open('Word#.shelve')
+                        except:
+                            print 'cannot open word_hash'
+                        w_mod = word_hash[w]
+                        print w_mod
+                        print '**************************************************'
+                        word_hash.close()
+                        try:
+                            freq = hash2[i].lemma_count()[hash2[i].lemma_names().index(w_mod)]
+                        except:
+                            pass
+                    total_freq = 10
+                    word_data[w]['W2S'].append((i,freq,total_freq))
                 else:
-                    print 'word_processing : ' + str(i) + ' not found in hash2'
+                    pass
+            else:
+                print 'word_processing : ' + str(i) + ' not found in hash2'
 
-            count += 1
+        count += 1
+    '''
     except TypeError as e:
         print 'TypeError : ' + str(e)
     except KeyError as e:
         print 'KeyError : ' + str(e)
     except Exception as e:
         print e
-
+    '''
     hash1.close()
     hash2.close()
     print 'word_processing() - Words processed : ' + str(count)
@@ -186,7 +202,7 @@ def sense_processing(sd_filename,wd_filename):
     #sense_data = shelve.open(sd_filename,writeback=True)
     hash2 = shelve.open('Hash#2.shelve')
     #try:
-    for s in hash2.keys()[:10]:
+    for s in hash2.keys()[:200]:
         sense_data = shelve.open(sd_filename,writeback=True)
         print s
         sense_data[s] = dict()
