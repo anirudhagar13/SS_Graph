@@ -26,7 +26,6 @@ def Score(web, word):
 		path_score = 1
 		for edge in path:
 			path_score *= edge.weight
-		print ('Path ',i, ' : ',path_score)
 		score += path_score
 	return score
 
@@ -35,5 +34,5 @@ if __name__ == '__main__':
 	word = 'dog'
 	sp = Spider(word)
 	answer = sp.crawl()
-	# Printpaths(answer)
+	Printpaths(answer)
 	print (Score(answer,'man'))
