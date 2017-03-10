@@ -32,7 +32,7 @@ def Shelveopen(filename):
     '''
     Open shelve dictionary
     '''
-    return shelve.open(filename)
+    return shelve.open('Shelves/'+filename)
 
 def Shelveclose(shelve):
     '''
