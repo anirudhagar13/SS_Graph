@@ -207,7 +207,7 @@ def sense_processing(sd_filename,wd_filename):
 
         sense_data[s]['S2W'] = list()
         for i in synset_.lemma_names():
-            sense_data[s]['S2W'].append((i,1))
+            sense_data[s]['S2W'].append(i)
 
         #TODO - remove non noise words in definition of sense before creating the 'sense-defn word' connections
         sense_data[s]['S2D'] = list()
