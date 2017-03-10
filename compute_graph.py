@@ -24,38 +24,31 @@ def word_processing(wd_filename):
         print w
         word_data[w] = dict()
         word_data[w]['W2S'] = list()
-
+        word_ = hash1[w]
         #word_data[w]['D2S'] = dict()
-        if w in hash1:
-            word_ = hash1[w]
-        else:
-            print 'word_processing : ' + str(w) + ' not found in hash1'
-
         for i in word_.Noun_synsets() + word_.Verb_synsets() \
             + word_.Adj_synsets() + word_.Adv_synsets():
             if i in hash2:
-                if w[-1:] == 's':
-                    #simple_w = word_hash[w]
-                    if w in hash2[i].lemma_names():
-                        freq = hash2[i].lemma_count()[hash2[i].lemma_names().index(w)]
-                    else:
-                        print '&&&&&&&&&&&&&&&&word not found in lemma_names&&&&&&&&&&&&&&'
-                        try:
-                            word_hash = shelve.open('Word#.shelve')
-                        except:
-                            print 'cannot open word_hash'
-                        w_mod = word_hash[w]
-                        print w_mod
-                        print '**************************************************'
-                        word_hash.close()
-                        try:
-                            freq = hash2[i].lemma_count()[hash2[i].lemma_names().index(w_mod)]
-                        except:
-                            pass
-                    total_freq = 10
-                    word_data[w]['W2S'].append((i,freq,total_freq))
+                if w in hash2[i].lemma_names():
+                    freq = hash2[i].lemma_count()[hash2[i].lemma_names().index(w)]
                 else:
-                    pass
+                    print '&&&&&&&&&&&&&&&&word not found in lemma_names&&&&&&&&&&&&&&'
+                    try:
+                        word_hash = shelve.open('Word#.shelve')
+                    except:
+                        print 'cannot open word_hash'
+                    w_mod = word_hash[w]
+                    print w_mod
+                    print '**************************************************'
+                    word_hash.close()
+                    try:
+                        freq = hash2[i].lemma_count()[hash2[i].lemma_names().index(w_mod)]
+                    except:
+                        '''word_hash does not yet support all kinds of variations eg. 'gripes' -> 'gripe'; ignore for now'''
+                        pass
+
+                total_freq = 10
+                word_data[w]['W2S'].append((i,freq,total_freq))
             else:
                 print 'word_processing : ' + str(i) + ' not found in hash2'
 
@@ -114,7 +107,7 @@ def count_words(word, input_str):
     else:
         return sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(word), input_str))
 
-def sense_to_word_processing(sd_filename,synset_defn,synset_name,tokens,word_type):
+def sense_to_word_processing(sd_filename,string,synset_name,tokens,word_type):
     '''
         sense - definition words
         sense - example words, processing
@@ -123,9 +116,9 @@ def sense_to_word_processing(sd_filename,synset_defn,synset_name,tokens,word_typ
     hash1 = shelve.open(HASH1)
     for tkn in tokens:
         if(word_type == 'definition'):
-            sense_data[synset_name]['S2D'].append((tkn, count_words(tkn,synset_defn), number_non_noise_words(synset_defn)))
+            sense_data[synset_name]['S2D'].append((tkn, count_words(tkn,string), number_non_noise_words(string)))
         elif(word_type == 'example'):
-            sense_data[synset_name]['S2E'].append((tkn,1))
+            sense_data[synset_name]['S2E'].append((tkn, count_words(tkn,string), number_non_noise_words(string)))
     hash1.close()
     sense_data.close()
 
@@ -134,7 +127,7 @@ def remove_overlap_words(tokens_1, tokens_2):
     flag = 0
     for tkn in tokens_1:
         for tkn2 in tokens_2:
-            if tkn in tkn2.split(' '):
+            if tkn in tkn2:
                 flag = 1
                 break
         if flag == 0:
@@ -202,7 +195,7 @@ def sense_processing(sd_filename,wd_filename):
     #sense_data = shelve.open(sd_filename,writeback=True)
     hash2 = shelve.open('Hash#2.shelve')
     #try:
-    for s in hash2.keys()[:200]:
+    for s in hash2.keys()[:300]:
         sense_data = shelve.open(sd_filename,writeback=True)
         print s
         sense_data[s] = dict()
@@ -216,24 +209,24 @@ def sense_processing(sd_filename,wd_filename):
         for i in synset_.lemma_names():
             sense_data[s]['S2W'].append((i,1))
 
-
         #TODO - remove non noise words in definition of sense before creating the 'sense-defn word' connections
         sense_data[s]['S2D'] = list()
         sense_data.close()
         tokens_2 = get_words(synset_defn,2)
         if tokens_2:
-            sense_to_word_processing(sd_filename,synset_defn,s,tokens_2,'definition')
+            sense_to_word_processing(sd_filename=sd_filename,string=synset_defn,synset_name=s,tokens=tokens_2,word_type='definition')
 
         tokens_1 = get_words(synset_defn,1)
         tokens_1 = remove_overlap_words(tokens_1,tokens_2)
+
         if tokens_1:
-            sense_to_word_processing(sd_filename,synset_defn,s,tokens_1,'definition')#change this - pass both tokens_1 and tokens_2 together
+            sense_to_word_processing(sd_filename=sd_filename,string=synset_defn,synset_name=s,tokens=tokens_1,word_type='definition')#change this - pass both tokens_1 and tokens_2 together
         #print "\t" + str(s) + str(" : ") + str('***************  sense_to_defn_word done  ************************')
 
         #update_words_frequency(tokens_1,tokens_2)###
-        if tokens_1 or tokens_2:
+        #if tokens_1 or tokens_2:
             #print '1'
-            defn_word_to_sense_processing(synset_defn,s,wd_filename,tokens_1,tokens_2)
+        #    defn_word_to_sense_processing(synset_defn,s,wd_filename,tokens_1,tokens_2)
         #print "\t" + str(s) + str(" : ") + str('***************  defn_word_to_sense done  ************************')
         #print '2'
         sense_data = shelve.open(sd_filename,writeback=True)
@@ -243,7 +236,7 @@ def sense_processing(sd_filename,wd_filename):
             #print 'inside examples'
             for example in synset_.examples():
                 tokens_1 = get_words(example,1)
-                sense_to_word_processing(sd_filename,synset_defn,s,tokens_1,'example')
+                sense_to_word_processing(sd_filename=sd_filename,string=example,synset_name=s,tokens=tokens_1,word_type='example')
 
         #print "\t" + str(s) + str(" : ") + str('***************  sense_to_example_word done  ************************')
         sense_data = shelve.open(sd_filename,writeback=True)
@@ -262,8 +255,20 @@ def sense_processing(sd_filename,wd_filename):
     hash2.close()
     #sense_data.close()
 
+def hotfix(wd_filename):
+    word_data = shelve.open(wd_filename)
+    word_data_hotfix = shelve.open('Hash#3_hotfix.shelve')
+    for i in word_data:
+        if word_data[i].has_key('D2S'):
+            word_data_hotfix[i] = word_data[i]
+
+    word_data.close()
+    word_data_hotfix.close()
+
+
 if __name__ == "__main__":
 
     #pdb.set_trace()
     #word_processing(wd_filename='Hash#3.shelve')
-    sense_processing(sd_filename='Hash#4.shelve', wd_filename='Hash#3.shelve')
+    sense_processing(sd_filename='Shelves/Hash#4.shelve', wd_filename='Hash#3.shelve')
+    #hotfix(wd_filename='Hash#3.shelve')
