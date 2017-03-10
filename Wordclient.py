@@ -4,8 +4,11 @@ from Spider import *
 from Edge import *
 import pdb
 
-def Printpaths(dic):
-	for key, value in dic.items():
+def Printpaths(web):
+	'''
+	To return web of words around mentioned word
+	'''
+	for key, value in web.items():
 		print ('TO : ',key)
 		for i, path in enumerate(value):
 			print ('PATH',i+1,' :',end='')
@@ -13,8 +16,24 @@ def Printpaths(dic):
 				print (' |',edge, end='')
 			print()
 
+def Score(web, word):
+	'''
+	To compute score of word in web
+	'''
+	paths = web[word]
+	score = 0
+	for i, path in enumerate(paths):
+		path_score = 1
+		for edge in path:
+			path_score *= edge.weight
+		print ('Path ',i, ' : ',path_score)
+		score += path_score
+	return score
+
 if __name__ == '__main__':
 	# pdb.set_trace()
 	word = 'dog'
 	sp = Spider(word)
-	Printpaths(sp.crawl())
+	answer = sp.crawl()
+	# Printpaths(answer)
+	print (Score(answer,'man'))

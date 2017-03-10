@@ -21,7 +21,7 @@ class Spider():
 
 		# Adding first word into visited
 		self.DFS(self.word)
-		return self.web
+		return {key : value for key, value in self.web.items() if '.' not in key}
 
 	def subset(self, paths, path):
 		'''
