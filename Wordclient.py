@@ -30,8 +30,11 @@ def Score(word, paths):
 
 if __name__ == '__main__':
 	# pdb.set_trace()
-	word = 'man'
-	sp = Spider('dog')
+	word = 'cock'
+	sp = Spider('bird')
 	web = sp.crawl()
-	Printpaths(word, web[word])
-	print (Score(word, web[word]))
+	try:
+		Printpaths(word, web[word])
+		print (Score(word, web[word]))
+	except Exception as e:
+		print 'Error - ',e
