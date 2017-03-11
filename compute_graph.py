@@ -15,7 +15,7 @@ HASH1 = 'Hash#1.shelve'
 
 def word_processing(wd_filename):
     #word_data = dict()
-    word_data = Shelveopen(wd_filename, writeback=True)
+    word_data = Shelveopen(wd_filename)
     hash1 = Shelveopen(HASH1)
     hash2 = Shelveopen('Hash#2.shelve')
     count = 0
@@ -257,7 +257,7 @@ def sense_processing(sd_filename,wd_filename):
 
 def hotfix(wd_filename):
     word_data = Shelveopen(wd_filename)
-    word_data_hotfix = Shelveopen('Shelves/Hash#3_hotfix.shelve')
+    word_data_hotfix = Shelveopen('Hash#3_hotfix.shelve')
     for i in word_data:
         if word_data[i].has_key('D2S'):
             word_data_hotfix[i] = word_data[i]
