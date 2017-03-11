@@ -39,24 +39,53 @@ def word_data_d2s_test(wd_filename):
             assert find_substring(keys[index], wn.synset(k).definition())
         print '********PASS********'
 
-def sense_processing_test(sd_filename):
+def compare_lists(l1, l2):
+    if len(l1) != len(l2):
+        return False
+    else:
+        flag = True
+        for x in l1:
+            if x.lower() not in (i.lower() for i in l2):
+                flag = False
+                break
+        return flag
+
+def sense_processing_test(sd_filename, tests):
     sense_data = shelve.open(sd_filename)
     #print len(sense_data.keys())
     keys = sense_data.keys()
     max_rng = len(keys)
     #print keys[:5]
-    print sense_data['christian_holy_day.n.01']['S2W']
-    '''
-    for trials in range(0,10):
-        index = randint(0,max_rng-1)
-        #keys[index] -> string value - sense
-        keys[index] = synset_name
-        assert collections.Counter(sense_data[synset_name]['S2W']) == collections.Counter(wn.synset(synset_name).lemma_names())
-    '''
+    #print sense_data['christian_holy_day.n.01']['S2W']
+    if 's2w' in tests:
+        s2w = 0
+        for trials in range(0,100):
+            index = randint(0,max_rng-1)
+            #keys[index] -> string value - sense
+            synset_name = keys[index]
+            print synset_name
+            assert compare_lists(sense_data[synset_name]['S2W'], wn.synset(synset_name).lemma_names())
+            s2w += 1
+            if s2w % 100 == 0:
+                print s2w
+
+    if 's2d' in tests:
+        s2d = 0
+        for trials in range(0,100):
+            index = randint(0,max_rng-1)
+            synset_name = keys[index]
+            print synset_name
+            assert compare_lists2(sense_data[synset_name]['S2D'], wn.synsets(synset_name).definition()) 
 
 if __name__ == "__main__":
 
     #get_words_test()
     #print 'united' in 'united_states'
     #word_data_d2s_test('Hash#3_hotfix.shelve')
-    sense_processing_test('Shelves/Hash#4.shelve')
+    sense_processing_test('Shelves/Hash#4.shelve', tests=['s2w'])
+'''
+    sense_data = shelve.open('Shelves/Hash#4.shelve')
+    synset_name = 'dog.n.03'
+    print sense_data[synset_name]['S2W']
+    print wn.synset(synset_name).lemma_names()
+'''
