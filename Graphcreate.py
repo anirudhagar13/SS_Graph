@@ -183,10 +183,8 @@ def W2S(src, data):
     To create word to sense edges
     '''
     #Each edge is a dictionary, data list of dictionaries
-    for item in data:
-        dest = item[0]
-        frequency = item[1]
-        total_freq = item[2]
+    total_freq = sum(data.values())
+    for dest, frequency in data.items():
         edge = Edge(src=src, dest=dest, kind='W2S')
         edge.populate(frequency=frequency, total_freq=total_freq)
 
@@ -216,11 +214,11 @@ def handle_error(e):
     Shelveclose(hash4)  #For Synsets
     Shelveclose(graph)
 
-def Print(graph):
+def Showgraph(graph):
     '''
     To print made graph
     '''
-    for key, value in graph.items():
+    for key, value in graph.items()[:10]:
         print key,' :: '
         for edge in value:
             print edge
@@ -231,17 +229,19 @@ if __name__ == '__main__':
     hash3 = Shelveopen('Hash#3.shelve')
     hash4 = Shelveopen('Hash#4.shelve')
     graph = Shelveopen('Graph.shelve')
-    Print(graph)
-    # try:
-    #     for key in hash3.keys():
-    #         #Initialize empty list for each entry
-    #         graph[key] = list()
-    #         Words(key, hash3[key])
-    #         word_count += 1
-    #     for key in hash4.keys():
-    #         graph[key] = list()
-    #         Synsets(key, hash4[key])
-    #         synset_count += 1
-    #     raise StopIteration('All Entries Processed')
-    # except Exception as e:
-    #     handle_error(e)
+    graph.clear() #Overwrite new graph
+    
+    # Showgraph(graph)
+    try:
+        for key in hash3.keys():
+            #Initialize empty list for each entry
+            graph[key] = list()
+            Words(key, hash3[key])
+            word_count += 1
+        for key in hash4.keys():
+            graph[key] = list()
+            Synsets(key, hash4[key])
+            synset_count += 1
+        raise StopIteration('All Entries Processed')
+    except Exception as e:
+        handle_error(e)

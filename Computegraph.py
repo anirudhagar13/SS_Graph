@@ -43,11 +43,6 @@ def Createwords(word, kind, synset, count):
 	'''
 	global count_words, wordsnotinhsah
 
-	# Just a check for morphological parsing later
-	if word not in hash1:
-		wordsnotinhsah += 1
-		# Obtain their morphological form present in wordnet to create same entry for that also
-
 	if word in hash3:
 		# Word exists so just add property
 		# Updating Shelve, is tedious
@@ -57,6 +52,11 @@ def Createwords(word, kind, synset, count):
 		# Updated Shelve
 	else:
 		# Word does not exist so create a new one
+		# Just a check for morphological parsing later
+		if word not in hash1:
+			wordsnotinhsah += 1
+			# Obtain their morphological form present in wordnet to create same entry for that also
+		
 		count_words += 1
 		dic = Wordfactory()
 		dic[kind][synset] = count
@@ -120,17 +120,18 @@ def Showhash(open_hash):
 	'''
 	To print Some part of hash
 	'''
-	for key, value in open_hash.items()[:10]:
+	for key, value in open_hash.items()[:4]:
 		print key, ' :: ', value
 
 if __name__ == '__main__':
 	hash1 = Shelveopen('Hash#1.shelve')
 	hash2 = Shelveopen('Hash#2.shelve')
 	hash3 = Shelveopen('Hash#3.shelve')
-	hash4 = Shelveopen('Hash$4.shelve')
+	hash4 = Shelveopen('Hash#4.shelve')
 	hash3.clear()
 	hash4.clear()	# To Overwrite
-	# Showhash(hash4)
+
+	# Showhash(hash3)
 	try:
 		for key, value in hash2.items():
 			count_synsets += 1
