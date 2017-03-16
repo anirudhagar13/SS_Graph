@@ -45,6 +45,8 @@ if __name__ == '__main__':
     #Feed Hashes
     hash1 = Shelveopen('Hash#1.shelve')
     hash2 = Shelveopen('Hash#2.shelve')
+    hash1.clear()   # Overwriting
+    hash2.clear()   # Overwriting
 
     #Iterator to get all wordnet words
     iterator = Wordnet()
