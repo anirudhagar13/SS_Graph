@@ -25,5 +25,5 @@ for name in synsets.keys():
 		related = Unicode(lemma.derivationally_related_forms())
 		for word in related:
 			hash4[word] = name
-			
+
 Shelveclose(hash4)

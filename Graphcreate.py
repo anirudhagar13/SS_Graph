@@ -231,17 +231,17 @@ if __name__ == '__main__':
     hash3 = Shelveopen('Hash#3.shelve')
     hash4 = Shelveopen('Hash#4.shelve')
     graph = Shelveopen('Graph.shelve')
-    # Print(graph)
-    try:
-        for key in hash3.keys():
-            #Initialize empty list for each entry
-            graph[key] = list()
-            Words(key, hash3[key])
-            word_count += 1
-        for key in hash4.keys():
-            graph[key] = list()
-            Synsets(key, hash4[key])
-            synset_count += 1
-        raise StopIteration('All Entries Processed')
-    except Exception as e:
-        handle_error(e)
+    Print(graph)
+    # try:
+    #     for key in hash3.keys():
+    #         #Initialize empty list for each entry
+    #         graph[key] = list()
+    #         Words(key, hash3[key])
+    #         word_count += 1
+    #     for key in hash4.keys():
+    #         graph[key] = list()
+    #         Synsets(key, hash4[key])
+    #         synset_count += 1
+    #     raise StopIteration('All Entries Processed')
+    # except Exception as e:
+    #     handle_error(e)
