@@ -218,10 +218,13 @@ def Showgraph(graph, word):
     '''
     To print made graph
     '''
-    value = graph[word]
-    print word,' :: '
-    for edge in value:
-        print edge
+    if word not in graph:
+        print 'Sorry! Word Not available in Our Graph'
+    else:
+        value = graph[word]
+        print word,' :: '
+        for edge in value:
+            print edge
 
 if __name__ == '__main__':
     hash3 = Shelveopen('Hash#3.shelve')
@@ -229,7 +232,7 @@ if __name__ == '__main__':
     graph = Shelveopen('Graph.shelve')
     graph.clear() #Overwrite new graph
     
-    # Showgraph(graph, 'tiger.n.01')
+    # Showgraph(graph, 'feline.n.01')   # To show all edges of a word/synset
     try:
         start_time = time.time()
         for key in hash3.keys():
