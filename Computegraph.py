@@ -1,5 +1,6 @@
 from Commons import *
 from collections import Counter
+from nltk.corpus import stopwords
 
 # Globals
 hash1 = {}
@@ -84,12 +85,16 @@ def Removestopwords(sent):
 	'''
 	Removes a list of stop words and gives back rest of the sentence
 	'''
-	return [x for x in sent if x not in StopWords]
+	ls = [x for x in sent if x not in StopWords]	#US PTO stopwordlist
+	ls = [x for x in ls if x not in Unicode(stopwords.words('english'))]	#NLTK stopwordlist
+	return ls
 
 def Process_sentence(sentence):
 	'''
 	To process sentences to required tuple 
 	'''
+	sentence = sentence.replace("'s","")
+	sentence = sentence.replace("'t","")	#Bad Hardcode to replace all apostrophies
 	ls = ''.join(e for e in sentence if e.isalnum() or e == ' ')	#To remove special characters from words
 	ls = ls.split()
 	ls = Removestopwords(ls)

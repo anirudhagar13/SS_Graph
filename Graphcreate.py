@@ -1,5 +1,6 @@
 from Commons import *
 from Edge import *
+import time
 
 #Globals
 hash3 = {}
@@ -226,19 +227,23 @@ if __name__ == '__main__':
     hash3 = Shelveopen('Hash#3.shelve')
     hash4 = Shelveopen('Hash#4.shelve')
     graph = Shelveopen('Graph.shelve')
-    # graph.clear() #Overwrite new graph
+    graph.clear() #Overwrite new graph
     
-    # Showgraph(graph, 'tiger')
+    # Showgraph(graph, 'tiger.n.01')
     try:
+        start_time = time.time()
         for key in hash3.keys():
             #Initialize empty list for each entry
             graph[key] = list()
             Words(key, hash3[key])
             word_count += 1
         for key in hash4.keys():
+            #Initialize empty list for each entry
             graph[key] = list()
             Synsets(key, hash4[key])
             synset_count += 1
+        end_time = time.time()
+        print 'Graph Creation Time : ',end_time - start_time
         raise StopIteration('All Entries Processed')
     except Exception as e:
         handle_error(e)
