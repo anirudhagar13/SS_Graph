@@ -232,7 +232,7 @@ if __name__ == '__main__':
     graph = Shelveopen('Graph.shelve')
     graph.clear() #Overwrite new graph
     
-    # Showgraph(graph, 'feline.n.01')   # To show all edges of a word/synset
+    # Showgraph(graph, 'north')   # To show all edges of a word/synset
     try:
         start_time = time.time()
         for key in hash3.keys():

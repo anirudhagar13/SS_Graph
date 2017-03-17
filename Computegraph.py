@@ -125,7 +125,7 @@ def Showhash(open_hash):
 	'''
 	To print Some part of hash
 	'''
-	for key, value in open_hash.items()[:4]:
+	for key, value in open_hash.items():
 		print key, ' :: ', value
 
 if __name__ == '__main__':

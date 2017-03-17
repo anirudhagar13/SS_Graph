@@ -1,3 +1,4 @@
+from __future__ import division
 from Commons import *
 from Edge import *
 import copy
@@ -6,12 +7,14 @@ class Spider():
 	"""docstring for Spider"""
 	def __init__(self, word):
 		self.word = word
-		self.spread = 5	#to limit recursion depth
-		self.depth = 0	#to measure recursion depth
+		self.spread = 5	# Limit recursion depth
+		self.limit = 0.005	# Score limit for paths
+		self.depth = 0	# Measure recursion depth
+		self.score = 1 # Measure path score
 		self.web = dict()
 		self.graph = dict()
-		self.path = list()	#to store path traversed
-		self.visited = list()	#to prevent cycles
+		self.path = list()	# Store path traversed
+		self.visited = list()	# To prevent cycles
 
 	def crawl(self):
 		'''
@@ -21,7 +24,7 @@ class Spider():
 
 		# Adding first word into visited
 		self.DFS(self.word)
-		return {key : value for key, value in self.web.items() if '.' not in key}
+		return {key : value for key, value in self.web.items() if '.' not in key}	# Only returning word targets
 
 	def subset(self, paths, path):
 		'''
@@ -58,14 +61,23 @@ class Spider():
 				for edge in edges:
 					dest = edge.dest
 					if self.depth < self.spread:
-						#To limit recursion depth
+						
+						# To limit recursion depth and path score
 						self.depth += 1
+						self.score *= edge.weight
 						self.path.append(edge)
 						if node not in self.visited:
-							#to prevent double entry in visited
+							# To prevent double entry in visited
 							self.visited.append(node)
-						self.DFS(dest)
+
+						if self.score > self.limit:
+							# To Limit path score
+							self.DFS(dest)
+
+						# After recursion, coming back
 						self.depth -= 1
+						self.score /= edge.weight
+						
 						pop = self.path.pop()
 		except Exception as e:
-			print 'Error - ',e
+			print 'Error Spider - ',e

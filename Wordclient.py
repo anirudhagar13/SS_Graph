@@ -2,24 +2,26 @@ from __future__ import print_function
 from Commons import *
 from Spider import *
 from Edge import *
-import pdb
 
 def Printpaths(word, paths):
 	'''
-	To Return web of words around mentioned word
+	To print paths to a specific word in web
 	'''
 	print ('TO : ',word)
 	for i, path in enumerate(paths):
-		print ('PATH',i+1,' :',end='')
+		print ('PATH', i+1,' :',end='')
+		score = 1
 		for edge in path:
+			score *= edge.weight
 			print (' |',edge, end='')
-		print()
+		print  ()
+		print ('PathScore : ',score)
 
 def Score(word, paths):
 	'''
 	To Compute score of word in web
 	'''
-	print('TO : ',word)
+	print ('TO : ',word)
 	score = 0
 	for i, path in enumerate(paths):
 		path_score = 1
@@ -37,18 +39,21 @@ def Printweb(word, web):
 		print ('TO : ',word)
 		for i, path in enumerate(paths):
 			print ('PATH',i+1,' :',end='')
+			score = 1
 			for edge in path:
+				score *= edge.weight
 				print (' |',edge, end='')
-			print()
+			print ()
+			print ('PathScore : ',score)
 
 if __name__ == '__main__':
-	# pdb.set_trace()
-	word = 'wolf'
-	sp = Spider('tiger')
-	web = sp.crawl()
+	word = 'tiger'
+	client = 'lion'
 	try:
-		Printweb('tiger', web)
-		# Printpaths(word, web[word])
-		# print (Score(word, web[word]))
+		sp = Spider(word)
+		web = sp.crawl()	# Web obtained back around mentioned word
+		# Printweb(word, web)
+		Printpaths(client, web[client])
+		# print (Score(client, web[client]))
 	except Exception as e:
-		print ('Error - ',e)
+		print ('Error Wordclient- ',e)
