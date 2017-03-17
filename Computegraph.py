@@ -115,7 +115,7 @@ def Handle_error(e):
 	print 'Error - ',e
 	print 'Words Processed - ', count_words
 	print 'Synsets Processed - ', count_synsets
-	print 'Words Not in Hash - ', wordsnotinhsah 
+	print 'Words More than Hash1 - ', wordsnotinhsah 
 	Shelveclose(hash1)
 	Shelveclose(hash2)
 	Shelveclose(hash3)
