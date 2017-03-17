@@ -7,7 +7,7 @@ class Edge(object):
         self.kind = kind
         self.src = src
         self.dest = dest
-        self.weight = 1 # To avoid division by zero
+        self.weight = 0
 
     def __str__(self):
         '''
