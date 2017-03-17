@@ -7,7 +7,7 @@ class Spider():
 	"""docstring for Spider"""
 	def __init__(self, word):
 		self.word = word
-		self.spread = 5	# Limit recursion depth
+		self.spread = 4	# Limit recursion depth
 		self.limit = 0.005	# Score limit for paths
 		self.depth = 0	# Measure recursion depth
 		self.score = 1 # Measure path score

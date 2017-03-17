@@ -3,32 +3,41 @@ from Commons import *
 from Spider import *
 from Edge import *
 
-def Printpaths(word, paths):
+def Printpaths(word, web):
 	'''
 	To print paths to a specific word in web
 	'''
-	print ('TO : ',word)
-	for i, path in enumerate(paths):
-		print ('PATH', i+1,' :',end='')
-		score = 1
-		for edge in path:
-			score *= edge.weight
-			print (' |',edge, end='')
-		print  ()
-		print ('PathScore : ',score)
+	if word in web:
+		paths = web[word]
+		print ('TO : ',word)
+		for i, path in enumerate(paths):
+			print ('PATH', i+1,' :',end='')
+			score = 1
+			for edge in path:
+				score *= edge.weight
+				print (' |',edge, end='')
+			print  ()
+			print ('PathScore : ',score)
+	else:
+		print ('Word',word,'is not reachable from Source')
 
-def Score(word, paths):
+def Score(word, web):
 	'''
 	To Compute score of word in web
 	'''
-	print ('TO : ',word)
-	score = 0
-	for i, path in enumerate(paths):
-		path_score = 1
-		for edge in path:
-			path_score *= edge.weight
-		score += path_score
-	return score
+	if word in web:
+		paths = web[word]
+		print ('TO : ',word)
+		score = 0
+		for i, path in enumerate(paths):
+			path_score = 1
+			for edge in path:
+				path_score *= edge.weight
+			score += path_score
+		return score
+	else:
+		print ('Word',word,'is not reachable from Source')
+		return 0
 
 def Printweb(word, web):
 	'''
@@ -53,7 +62,7 @@ if __name__ == '__main__':
 		sp = Spider(word)
 		web = sp.crawl()	# Web obtained back around mentioned word
 		# Printweb(word, web)
-		Printpaths(client, web[client])
-		# print (Score(client, web[client]))
+		Printpaths(client, web)
+		# print (Score(client, web))
 	except Exception as e:
 		print ('Error Wordclient- ',e)
