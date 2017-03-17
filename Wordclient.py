@@ -6,7 +6,7 @@ import pdb
 
 def Printpaths(word, paths):
 	'''
-	To return web of words around mentioned word
+	To Return web of words around mentioned word
 	'''
 	print ('TO : ',word)
 	for i, path in enumerate(paths):
@@ -17,7 +17,7 @@ def Printpaths(word, paths):
 
 def Score(word, paths):
 	'''
-	To compute score of word in web
+	To Compute score of word in web
 	'''
 	print('TO : ',word)
 	score = 0
@@ -28,13 +28,27 @@ def Score(word, paths):
 		score += path_score
 	return score
 
+def Printweb(word, web):
+	'''
+	To Print entire web of mentioned word
+	'''
+	print ('FROM : ',word)
+	for word, paths in web.items():
+		print ('TO : ',word)
+		for i, path in enumerate(paths):
+			print ('PATH',i+1,' :',end='')
+			for edge in path:
+				print (' |',edge, end='')
+			print()
+
 if __name__ == '__main__':
 	# pdb.set_trace()
 	word = 'wolf'
-	sp = Spider('dog')
+	sp = Spider('tiger')
 	web = sp.crawl()
 	try:
-		Printpaths(word, web[word])
-		print (Score(word, web[word]))
+		Printweb('tiger', web)
+		# Printpaths(word, web[word])
+		# print (Score(word, web[word]))
 	except Exception as e:
 		print ('Error - ',e)

@@ -1,6 +1,5 @@
 from Commons import *
 from Edge import *
-# import pdb
 
 #Globals
 hash3 = {}
@@ -214,24 +213,22 @@ def handle_error(e):
     Shelveclose(hash4)  #For Synsets
     Shelveclose(graph)
 
-def Showgraph(graph):
+def Showgraph(graph, word):
     '''
     To print made graph
     '''
-    for key, value in graph.items()[:10]:
-        print key,' :: '
-        for edge in value:
-            print edge
+    value = graph[word]
+    print word,' :: '
+    for edge in value:
+        print edge
 
 if __name__ == '__main__':
-    #pdb.set_trace()
-
     hash3 = Shelveopen('Hash#3.shelve')
     hash4 = Shelveopen('Hash#4.shelve')
     graph = Shelveopen('Graph.shelve')
-    graph.clear() #Overwrite new graph
+    # graph.clear() #Overwrite new graph
     
-    # Showgraph(graph)
+    # Showgraph(graph, 'tiger')
     try:
         for key in hash3.keys():
             #Initialize empty list for each entry
