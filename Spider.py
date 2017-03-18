@@ -79,5 +79,7 @@ class Spider():
 						self.score /= edge.weight
 						
 						pop = self.path.pop()
+			else:
+				print 'Sorry ! Spider could not find',node,'in Similarity Graph'
 		except Exception as e:
 			print 'Error Spider - ',e
