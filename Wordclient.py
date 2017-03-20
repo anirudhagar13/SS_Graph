@@ -56,7 +56,7 @@ def Printweb(word, web):
 			print ('PathScore : ',score)
 
 if __name__ == '__main__':
-	word = 'tiger'
+	word = 'lion'
 	client = 'lion'
 	try:
 		sp = Spider(word)
