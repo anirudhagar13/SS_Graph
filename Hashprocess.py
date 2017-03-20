@@ -95,7 +95,7 @@ if __name__ == '__main__':
             #Replace in Hash
             hash2[synset.name()] = synset
             count += 1  #to keep track of updates
-        raise StopIteration('Stop Iteration')
+        raise StopIteration
     except StopIteration as s:
         Error(s)
     except KeyboardInterrupt as k:
