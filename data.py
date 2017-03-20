@@ -6,17 +6,17 @@ def Create():
     dic = {}
     dic2 = {}
     dic1 = {}
-    dic['W2S'] = [('dog.n.01', 43, 52),
-                    ('frump.n.01', 1, 52),
-                    ('dog.n.03', 1, 52),
-                    ('cad.n.01', 1, 52),
-                    ('frank.n.02', 1, 52),
-                    ('pawl.n.01', 1, 52),
-                    ('andiron.n', 1, 52),
-                    ('chase.v.01', 3, 52)]
+    dic['W2S'] = {'dog.n.01': 43,
+                    'frump.n.01': 1,
+                    'dog.n.03': 1,
+                    'cad.n.01': 1,
+                    'frank.n.02': 1,
+                    'pawl.n.01': 1,
+                    'andiron.n': 1,
+                    'chase.v.01': 3}
 
     dic['D2S'] = {'dog.n.01':3, 'dog.n.03':2, 'cad.n.01':7}
-    dic1['W2S'] = [('dog.n.01', 33, 42)]
+    dic1['W2S'] = {'dog.n.01': 33}
     dic1['D2S'] = {'dog.n.03':4 }
 
     syn = {}

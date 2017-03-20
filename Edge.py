@@ -23,7 +23,7 @@ class Edge(object):
         '''
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
-        self.weight = round(freq/tot_freq, 3)
+        self.weight = round(freq/tot_freq, 5)
 
     def D2S(self, **kwargs):
         '''
@@ -32,7 +32,7 @@ class Edge(object):
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
         prod = Hyper3*(freq/tot_freq)
-        self.weight = round(prod, 3)
+        self.weight = round(prod, 5)
 
      #******Synset Functions*******
     def S2W(self, **kwargs):
@@ -48,7 +48,7 @@ class Edge(object):
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
         prod = Hyper1*(freq/tot_freq)
-        self.weight = round(prod, 3)
+        self.weight = round(prod, 5)
 
     def S2E(self, **kwargs):
         '''
@@ -57,7 +57,7 @@ class Edge(object):
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
         prod = Hyper2*(freq/tot_freq)
-        self.weight = round(prod, 3)
+        self.weight = round(prod, 5)
 
     def Hyponym(self, **kwargs):
         '''
@@ -77,7 +77,7 @@ class Edge(object):
         '''
         #1/total no of meronyms
         ratio = 1/kwargs['num_mero']
-        self.weight =  round(Hyper7*ratio, 3)
+        self.weight =  round(Hyper7*ratio, 5)
 
     def Holonym(self, **kwargs):
         '''
@@ -127,4 +127,4 @@ class Edge(object):
             else:
                 raise Exception('Kind not defined')
         except Exception as e:
-            print 'Error - ',e
+            print 'Error Edge - ',e

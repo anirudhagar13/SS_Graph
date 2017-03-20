@@ -1,5 +1,6 @@
 from Commons import *
 from collections import Counter
+from nltk.corpus import stopwords
 
 # Globals
 hash1 = {}
@@ -43,11 +44,6 @@ def Createwords(word, kind, synset, count):
 	'''
 	global count_words, wordsnotinhsah
 
-	# Just a check for morphological parsing later
-	if word not in hash1:
-		wordsnotinhsah += 1
-		# Obtain their morphological form present in wordnet to create same entry for that also
-
 	if word in hash3:
 		# Word exists so just add property
 		# Updating Shelve, is tedious
@@ -57,6 +53,11 @@ def Createwords(word, kind, synset, count):
 		# Updated Shelve
 	else:
 		# Word does not exist so create a new one
+		# Just a check for morphological parsing later
+		if word not in hash1:
+			wordsnotinhsah += 1
+			# Obtain their morphological form present in wordnet to create same entry for that also
+		
 		count_words += 1
 		dic = Wordfactory()
 		dic[kind][synset] = count
@@ -84,12 +85,16 @@ def Removestopwords(sent):
 	'''
 	Removes a list of stop words and gives back rest of the sentence
 	'''
-	return [x for x in sent if x not in StopWords]
+	ls = [x for x in sent if x not in StopWords]	#US PTO stopwordlist
+	ls = [x for x in ls if x not in Unicode(stopwords.words('english'))]	#NLTK stopwordlist
+	return ls
 
 def Process_sentence(sentence):
 	'''
 	To process sentences to required tuple 
 	'''
+	sentence = sentence.replace("'s","")
+	sentence = sentence.replace("'t","")	#Bad Hardcode to replace all apostrophies
 	ls = ''.join(e for e in sentence if e.isalnum() or e == ' ')	#To remove special characters from words
 	ls = ls.split()
 	ls = Removestopwords(ls)
@@ -110,7 +115,7 @@ def Handle_error(e):
 	print 'Error - ',e
 	print 'Words Processed - ', count_words
 	print 'Synsets Processed - ', count_synsets
-	print 'Words Not in Hash - ', wordsnotinhsah 
+	print 'Words More than Hash1 - ', wordsnotinhsah 
 	Shelveclose(hash1)
 	Shelveclose(hash2)
 	Shelveclose(hash3)
@@ -120,17 +125,18 @@ def Showhash(open_hash):
 	'''
 	To print Some part of hash
 	'''
-	for key, value in open_hash.items()[:10]:
+	for key, value in open_hash.items():
 		print key, ' :: ', value
 
 if __name__ == '__main__':
 	hash1 = Shelveopen('Hash#1.shelve')
 	hash2 = Shelveopen('Hash#2.shelve')
 	hash3 = Shelveopen('Hash#3.shelve')
-	hash4 = Shelveopen('Hash$4.shelve')
+	hash4 = Shelveopen('Hash#4.shelve')
 	hash3.clear()
 	hash4.clear()	# To Overwrite
-	# Showhash(hash4)
+
+	# Showhash(hash3)
 	try:
 		for key, value in hash2.items():
 			count_synsets += 1
