@@ -57,12 +57,12 @@ def Printweb(word, web):
 
 if __name__ == '__main__':
 	word = 'lion'
-	client = 'lion'
+	client = 'tiger'
 	try:
 		sp = Spider(word)
 		web = sp.crawl()	# Web obtained back around mentioned word
 		# Printweb(word, web)
 		Printpaths(client, web)
-		# print (Score(client, web))
+		print ('Final Score : ',Score(client, web))
 	except Exception as e:
 		print ('Error Wordclient- ',e)

@@ -4,7 +4,7 @@ echo '>>>>>> Hash Created Successfully <<<<<<'
 python Hashprocess.py
 echo '>>>>>> Hash Processed Successfully <<<<<<'
 python Computegraph.py
-echo '>>>>>> Data Compilation Successfully <<<<<<'
+echo '>>>>>> Data Compilation Successfull <<<<<<'
 python Graphcreate.py
-echo '>>>>>> Graph Creation Successfully <<<<<<'
+echo '>>>>>> Graph Creation Successfull <<<<<<'
 echo '>>>>>> Solution Creation Has Ended <<<<<<'
