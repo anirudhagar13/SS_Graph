@@ -3,66 +3,73 @@ from Commons import *
 from Spider import *
 from Edge import *
 
-def Printpaths(word, web):
-	'''
-	To print paths to a specific word in web
-	'''
-	if word in web:
-		paths = web[word]
-		print ('TO : ',word)
-		for i, path in enumerate(paths):
-			print ('PATH', i+1,' :',end='')
-			score = 1
-			for edge in path:
-				score *= edge.weight
-				print (' |',edge, end='')
-			print  ()
-			print ('PathScore : ',score)
-	else:
-		print ('Word',word,'is not reachable from Source')
+class Wordclient:
+	def __init__(self, word):
+		'''
+		Constructor to crawl web for a word 
+		'''
+		self.word = word
+		sp = Spider(word)
+		self.web = sp.crawl()	# Crawled web
 
-def Score(word, web):
-	'''
-	To Compute score of word in web
-	'''
-	if word in web:
-		paths = web[word]
-		print ('TO : ',word)
-		score = 0
-		for i, path in enumerate(paths):
-			path_score = 1
-			for edge in path:
-				path_score *= edge.weight
-			score += path_score
-		return score
-	else:
-		print ('Word',word,'is not reachable from Source')
-		return 0
+	def printweb(word, web):
+		'''
+		To Print entire web of mentioned word
+		'''
+		print ('FROM : ',word)
+		for word, paths in web.items():
+			print ('TO : ',word)
+			for i, path in enumerate(paths):
+				print ('PATH',i+1,' :',end='')
+				score = 1
+				for edge in path:
+					score *= edge.weight
+					print (' |',edge, end='')
+				print ()
+				print ('PathScore : ',score)
 
-def Printweb(word, web):
-	'''
-	To Print entire web of mentioned word
-	'''
-	print ('FROM : ',word)
-	for word, paths in web.items():
-		print ('TO : ',word)
-		for i, path in enumerate(paths):
-			print ('PATH',i+1,' :',end='')
-			score = 1
-			for edge in path:
-				score *= edge.weight
-				print (' |',edge, end='')
-			print ()
-			print ('PathScore : ',score)
+	def printpaths(self, dest):
+		'''
+		To print paths to a specific word in web
+		'''
+		if dest in self.web:
+			paths = self.web[dest]
+			print ('TO : ',dest)
+			for i, path in enumerate(paths):
+				print ('PATH', i+1,' :',end='')
+				score = 1
+				for edge in path:
+					score *= edge.weight
+					print (' |',edge, end='')
+				print  ()
+				print ('PathScore : ',score)
+		else:
+			print ('Word',word,'is not reachable from Source')
+
+	def score(self, dest):
+		'''
+		To Compute score of word in web
+		'''
+		if dest in self.web:
+			paths = self.web[dest]
+			print ('TO : ',dest)
+			score = 0
+			for i, path in enumerate(paths):
+				path_score = 1
+				for edge in path:
+					path_score *= edge.weight
+				score += path_score
+			return score
+		else:
+			print ('Word',word,'is not reachable from Source')
+			return 0
 
 if __name__ == '__main__':
-	word = 'lion'
-	client = 'tiger'
+	word = 'dog'
+	client = 'puppy'
 	try:
-		sp = Spider(word)
-		web = sp.crawl()	# Web obtained back around mentioned word
-		# Printweb(word, web)
-		Printpaths(client, web)
-		print ('Final Score : ',Score(client, web))
+		wc = Wordclient(word)
+		wc.printpaths(client)
+		print ('Final Score : ',wc.score(client))
 	except Exception as e:
 		print ('Error Wordclient- ',e)
