@@ -44,7 +44,7 @@ class Wordclient:
 				print  ()
 				print ('PathScore : ',score)
 		else:
-			print ('Word',word,'is not reachable from Source')
+			print ('Word',dest,'is not reachable from Source')
 
 	def score(self, dest):
 		'''
@@ -59,14 +59,15 @@ class Wordclient:
 				for edge in path:
 					path_score *= edge.weight
 				score += path_score
+			score = score if score < 1 else 1.0
 			return score
 		else:
-			print ('Word',word,'is not reachable from Source')
+			print ('Word',dest,'is not reachable from Source')
 			return 0
 
 if __name__ == '__main__':
-	word = 'dog'
-	client = 'puppy'
+	word = 'bird'
+	client = 'cock'
 	try:
 		wc = Wordclient(word)
 		wc.printpaths(client)
