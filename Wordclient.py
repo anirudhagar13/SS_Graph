@@ -3,6 +3,8 @@ from Commons import *
 from Spider import *
 from Edge import *
 
+# Needs words in lowercase, and if multiple words, join them using '_'
+
 class Wordclient:
 	def __init__(self, word):
 		'''
@@ -12,12 +14,12 @@ class Wordclient:
 		sp = Spider(word)
 		self.web = sp.crawl()	# Crawled web
 
-	def printweb(word, web):
+	def printweb(self, word):
 		'''
 		To Print entire web of mentioned word
 		'''
 		print ('FROM : ',word)
-		for word, paths in web.items():
+		for word, paths in self.web.items():
 			print ('TO : ',word)
 			for i, path in enumerate(paths):
 				print ('PATH',i+1,' :',end='')
@@ -66,10 +68,11 @@ class Wordclient:
 			return 0
 
 if __name__ == '__main__':
-	word = 'bird'
-	client = 'cock'
+	word = 'search'
+	client = 'google'
 	try:
 		wc = Wordclient(word)
+		# wc.printweb(word)
 		wc.printpaths(client)
 		print ('Final Score : ',wc.score(client))
 	except Exception as e:
