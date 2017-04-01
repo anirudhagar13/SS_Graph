@@ -1,7 +1,8 @@
 from __future__ import print_function
 from Commons import *
-from Spider import *
+from FastSpider import *
 from Edge import *
+import time
 
 # Needs words in lowercase, and if multiple words, join them using '_'
 
@@ -68,12 +69,14 @@ class Wordclient:
 			return 0
 
 if __name__ == '__main__':
-	word = 'search'
+	start_time = time.time()
+	word = 'engine'
 	client = 'google'
 	try:
 		wc = Wordclient(word)
 		# wc.printweb(word)
-		wc.printpaths(client)
+		# wc.printpaths(client)
 		print ('Final Score : ',wc.score(client))
+		print ('Execution Time > ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)

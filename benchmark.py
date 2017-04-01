@@ -20,7 +20,7 @@ def manager(score1, score2):
 			return bigger
 
 if __name__ == '__main__':
-	with open('Radinsky.txt') as f:
+	with open('MC.txt') as f:
 		start_time = time.time()
 		for line in f.readlines():
 			line = line.replace('\n','')
