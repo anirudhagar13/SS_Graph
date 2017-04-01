@@ -1,27 +1,33 @@
-import os
+import os, sys, string
 import PyPDF2 as pypdf
-import sys
+from Commons import Pickledump, Pickleload
+from compute_graph import get_words, remove_overlap_words
 
 if __name__ == "__main__":
 
-    filenames = list()
     file_extensions = list()
-    file_text = list()
-    filenames.append(sys.argv[1])
-    #filenames.append(sys.argv[2])
+    file_text = dict()
+    filenames = [sys.argv[1], sys.argv[2]]
+
     for i in filenames:
         file_extensions.append(os.path.splitext(i)[1])
-    print file_extensions
 
     for i in range(0,len(filenames)):
-        file_text.append('')
+        #file_text = dict()
         if file_extensions[i] == '.txt':
             try:
                 with open(filenames[i], 'r') as f:
+                    file_text[i] = list()
                     for line in f:
-                        file_text[i] += line
+                        line = line.translate(None, string.punctuation)
+                        tokens_2 = get_words(input_str=line,size_=2)
+                        tokens_1 = get_words(input_str=line,size_=1)
+                        tokens_1 = remove_overlap_words(tokens_1,tokens_2)
+                        file_text[i].extend(tokens_1+tokens_2)
+                    #Pickledump(file_text[i], 'file_text.pkl')
             except:
-                print 'Unable to open / read txt file'
+                print 'Unable to read txt file'
+
         elif file_extensions[i] == '.pdf':
             try:
                 pdf_file_obj = open(filenames[i],'rb')
@@ -38,5 +44,9 @@ if __name__ == "__main__":
         else:
             print 'Unsupported file type!'
 
-    #print sys.getsizeof(file_text[0])
-    #print type(file_text[0])
+    Pickledump(file_text, 'file_text.pkl')
+    '''
+    #for debugging
+    data = Pickleload('file_text.pkl')
+    print data
+    '''
