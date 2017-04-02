@@ -21,6 +21,7 @@ def doc_score(doc1, doc2):
 
     for i in doc1_tokens:
         i_wc_inst = doc1_tokens[i][0]
+        i_freq = doc1_tokens[i][1]
         for j in doc2_tokens:
             score_fwd = i_wc_inst.score(j)
             score_bkwd = doc2_tokens[j][0].score(i)
@@ -34,7 +35,8 @@ def doc_score(doc1, doc2):
                     matching_doc2[j].append(i)
                 except KeyError:
                     matching_doc2[j] = [i]
-            total_score += ( computeMinMax(0,doc1_edge_wt,doc1_tokens[i][1]) * manager(score_fwd,score_bkwd) *                        computeMinMax(0,doc2_edge_wt,doc2_tokens[j][1]) )
+            total_score += ( computeMinMax(0,doc1_edge_wt,i_freq) * manager(score_fwd,score_bkwd) *
+                            computeMinMax(0,doc2_edge_wt,doc2_tokens[j][1]) )
     return total_score
 
 if __name__ == '__main__':
