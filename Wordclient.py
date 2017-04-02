@@ -1,7 +1,10 @@
 from __future__ import print_function
 from Commons import *
-from Spider import *
+from FastSpider import *
 from Edge import *
+import time
+
+# Needs words in lowercase, and if multiple words, join them using '_'
 
 class Wordclient:
 	def __init__(self, word):
@@ -12,12 +15,12 @@ class Wordclient:
 		sp = Spider(word)
 		self.web = sp.crawl()	# Crawled web
 
-	def printweb(word, web):
+	def printweb(self, word):
 		'''
 		To Print entire web of mentioned word
 		'''
 		print ('FROM : ',word)
-		for word, paths in web.items():
+		for word, paths in self.web.items():
 			print ('TO : ',word)
 			for i, path in enumerate(paths):
 				print ('PATH',i+1,' :',end='')
@@ -44,7 +47,7 @@ class Wordclient:
 				print  ()
 				print ('PathScore : ',score)
 		else:
-			print ('Word',word,'is not reachable from Source')
+			print ('Word',dest,'is not reachable from Source')
 
 	def score(self, dest):
 		'''
@@ -59,17 +62,21 @@ class Wordclient:
 				for edge in path:
 					path_score *= edge.weight
 				score += path_score
+			score = score if score < 1 else 1.0
 			return score
 		else:
-			print ('Word',word,'is not reachable from Source')
+			print ('Word',dest,'is not reachable from Source')
 			return 0
 
 if __name__ == '__main__':
-	word = 'dog'
-	client = 'puppy'
+	start_time = time.time()
+	word = 'engine'
+	client = 'car'
 	try:
 		wc = Wordclient(word)
-		wc.printpaths(client)
+		# wc.printweb(word)
+		# wc.printpaths(client)
 		print ('Final Score : ',wc.score(client))
+		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)

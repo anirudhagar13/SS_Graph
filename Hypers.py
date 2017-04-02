@@ -1,9 +1,9 @@
 Hyper1 = 0.5    #For non-noise words in sense definition
 Hyper2 = 0.2    #For non-noise words in sense examples
-Hyper3 = 0.8    #For words present in other synsets
+Hyper3 = 0.7    #For words present in other synsets
 Hyper4 = 1  #Sense to its wordforms
-Hyper5 = 0.9    #For Hyponyms, needs to be multiplied with BNC ratio
-Hyper6 = 0.9    #For Hypernyms
+Hyper5 = 0.8    #For Hyponyms, needs to be multiplied with BNC ratio
+Hyper6 = 0.8    #For Hypernyms
 Hyper7 = 0.5    #For Meronyms
 Hyper8 = 0.5    #For Holonyms
 Hyper9 = 1  #For Similar adjectives
