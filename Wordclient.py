@@ -71,12 +71,12 @@ class Wordclient:
 if __name__ == '__main__':
 	start_time = time.time()
 	word = 'engine'
-	client = 'google'
+	client = 'car'
 	try:
 		wc = Wordclient(word)
 		# wc.printweb(word)
 		# wc.printpaths(client)
 		print ('Final Score : ',wc.score(client))
-		print ('Execution Time > ',time.time() - start_time)
+		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)
