@@ -15,6 +15,7 @@ class Spider():
 		self.graph = dict()
 		self.path = list()	# Store path traversed
 		self.visited = list()	# To prevent cycles
+		self.closest = list()	# Workaround to speed up spider by stopping dests with paths lenght > 1
 
 	def crawl(self):
 		'''
@@ -25,6 +26,23 @@ class Spider():
 		# Adding first word into visited
 		self.DFS(self.word)
 		return {key : value for key, value in self.web.items() if '.' not in key}	# Only returning word targets
+
+	def pathscore(self, dest):
+		'''
+		Returns true if path length of all paths to a destination is > 1.0
+		'''
+		if dest in self.web:
+			paths = self.web[dest]
+			score = 0
+			for path in paths:
+				path_score = 1
+				for edge in path:
+					path_score *= edge.weight
+				score += path_score
+			return True if score > 1.0 else False
+		else:
+			print 'Spider Web does not have',dest,'yet'
+			return False
 
 	def subset(self, paths, path):
 		'''
@@ -41,11 +59,19 @@ class Spider():
 		To perform DFS using internal stack
 		'''
 		try:
+			if node in self.closest:
+				# Sum of all paths to node is already > 1.0
+				# Done to speed up crawling
+				return
 			if node in self.visited:
 				# Check if path is a cycle of existing path
 				paths = self.web[node]
 				if self.subset(paths, self.path):
 					# It is a cycle
+					return
+				if self.pathscore(node):
+					# Check if sum of paths to node is > 1.0
+					self.closest.append(node)
 					return
 
 			# Check if word entry for first time in web
