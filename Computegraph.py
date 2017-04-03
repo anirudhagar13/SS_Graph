@@ -18,6 +18,7 @@ def Wordfactory():
 	dic = {}
 	dic['W2S'] = {}
 	dic['D2S'] = {}
+	dic['E2S'] = {}
 	return dic
 
 def Synfactory(synset):
@@ -74,7 +75,7 @@ def Process_words(synset, example, definition):
 
 	# Creating Example words
 	for word in example:
-		Createwords(word[0], 'D2S', synset.name(), word[1])
+		Createwords(word[0], 'E2S', synset.name(), word[1])
 
 	# Creating Definition words
 	for word in definition:

@@ -8,3 +8,5 @@ Hyper7 = 0.5    #For Meronyms
 Hyper8 = 0.5    #For Holonyms
 Hyper9 = 1  #For Similar adjectives
 Hyper10 = 0.6   #For Verb Entailments
+DMax = 0.9	#Max value of words in definition of senses
+EMax = 0.6	#Max value of words in examples of senses	

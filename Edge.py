@@ -1,5 +1,6 @@
 from __future__ import division
 from Hypers import *
+from Commons import computeMinMax
 
 class Edge(object):
     """docstring for Edge"""
@@ -31,7 +32,16 @@ class Edge(object):
         '''
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
-        prod = Hyper3*(freq/tot_freq)
+        prod = Hyper3*computeMinMax(0, DMax, freq/tot_freq)
+        self.weight = round(prod, 5)
+
+    def E2S(self, **kwargs):
+        '''
+        Words to senses defn in which they are present
+        '''
+        freq = kwargs['frequency']
+        tot_freq = kwargs['total_freq']
+        prod = Hyper3*computeMinMax(0, EMax, freq/tot_freq)
         self.weight = round(prod, 5)
 
      #******Synset Functions*******
@@ -106,6 +116,8 @@ class Edge(object):
                 self.W2S(**kwargs)
             elif self.kind == 'D2S':
                 self.D2S(**kwargs)
+            elif self.kind == 'E2S':
+                self.E2S(**kwargs)
             elif self.kind == 'S2W':
                 self.S2W(**kwargs)
             elif self.kind == 'S2D':

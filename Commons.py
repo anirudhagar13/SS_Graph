@@ -44,4 +44,7 @@ def Shelveclose(shelve):
     shelve.close()
 
 def computeMinMax(minVal,maxVal,ratio):
-    return minVal + (maxVal - minVal) * (-1/math.log(ratio,2))
+    if ratio == 1:
+        return maxVal
+    else:
+        return minVal + (maxVal - minVal) * (-1/math.log(ratio,2))
