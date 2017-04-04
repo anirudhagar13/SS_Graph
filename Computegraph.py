@@ -63,7 +63,7 @@ def Createwords(word, kind, synset, count):
 		dic[kind][synset] = count
 		hash3[word] = dic
 
-def Process_words(synset, example, definition):
+def Process_words(synset, definition):
 	'''
 	Process all 3 forms of words in a synset
 	'''
@@ -71,10 +71,6 @@ def Process_words(synset, example, definition):
 	for i, lemma in enumerate(synset.lemma_names()):
 		count = synset.lemma_count()[i]
 		Createwords(lemma, 'W2S', synset.name(), count)
-
-	# Creating Example words
-	for word in example:
-		Createwords(word[0], 'D2S', synset.name(), word[1])
 
 	# Creating Definition words
 	for word in definition:
@@ -146,7 +142,7 @@ if __name__ == '__main__':
 			hash4[key] = synset
 
 			# Just process Words now
-			Process_words(value, synset['S2E'], synset['S2D'])
+			Process_words(value, synset['S2D'])
 		raise StopIteration
 	except Exception as e:
 		Handle_error(e)

@@ -1,5 +1,6 @@
 from __future__ import division
 from Hypers import *
+from Commons import computeMinMax
 
 class Edge(object):
     """docstring for Edge"""
@@ -47,7 +48,7 @@ class Edge(object):
         '''
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
-        prod = Hyper1*(freq/tot_freq)
+        prod = Hyper1*computeMinMax(0,DMax,freq/tot_freq)
         self.weight = round(prod, 5)
 
     def S2E(self, **kwargs):
@@ -56,7 +57,7 @@ class Edge(object):
         '''
         freq = kwargs['frequency']
         tot_freq = kwargs['total_freq']
-        prod = Hyper2*(freq/tot_freq)
+        prod = Hyper2*computeMinMax(0,EMax,freq/tot_freq)
         self.weight = round(prod, 5)
 
     def Hyponym(self, **kwargs):
