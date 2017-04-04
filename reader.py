@@ -40,8 +40,8 @@ def doc_score(doc1, doc2):
     return total_score
 
 if __name__ == '__main__':
-    doc1 = Document(text_='united states is a car car.', type_='doc1.heading', edge_weight_ = 0.6)
-    doc2 = Document(text_='this is a sample engine!', type_='doc2.heading', edge_weight_ = 0.6)
+    doc1 = Document(text_='united states is a car car.', type_='doc1.heading', edge_weight_=0.6)
+    doc2 = Document(text_='this is a sample engine!', type_='doc2.heading', edge_weight_=0.6)
     print doc_score(doc1,doc2)
     print matching_doc1
     print matching_doc2

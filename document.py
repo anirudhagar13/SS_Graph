@@ -29,10 +29,9 @@ class Document:
     def get_tokens(self):
         return self.tokens
 
-'''
+
 if __name__ == "__main__":
-    d = Document(text_='united states is a country.', type_='doc1.heading')
-    print d.edge_weight
+    d = Document(text_='united states is a country.', type_='doc1.heading', edge_weight_=0.6)
+    #print d.edge_weight
     print d.tokens
-    print d.type
-'''
+    #print d.type

@@ -72,20 +72,26 @@ def get_words(input_str,size_):
         strip words from sentence acc to value of 'size_'
         check word existence in wordnet data
     '''
-    hash1 = shelve.open(HASH1)
+    hash1 = shelve.open(HASH1) # where is hash1 closed? what happens when calling get_words from some other module
     input_tokens = [x.lower() for x in input_str.split()]
     if size_ == 1:
+        hash1_has_key = hash1.has_key
+        input_tokens_remove = input_tokens.remove
         for tkn in input_tokens:
-            if not hash1.has_key(tkn):
-                input_tokens.remove(tkn)
+            if not hash1_has_key(tkn):
+                input_tokens_remove(tkn)
         return input_tokens
     if size_ == 2:
         tokens = list()
-        for i in range(0,len(input_tokens)-1):
+        hash1_has_key = hash1.has_key
+        tokens_append = tokens.append
+        for i in xrange(0,len(input_tokens)-1):
             val = str(input_tokens[i:i+size_][0]) + str('_') + str(input_tokens[i:i+size_][1])
-            if hash1.has_key(val):
-                tokens.append(val)
+            if hash1_has_key(val):
+                tokens_append(val)
         return tokens
+
+    hash1.close() # or else do not open hash1 in this function
 
 def number_non_noise_words(synset_defn):
     '''
