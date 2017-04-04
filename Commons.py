@@ -72,3 +72,6 @@ def Morphoparse(word):
             # with open('Shelves/WordDump.txt','a') as file:
             #     file.write(word + "\n")
             return word
+
+if __name__ == '__main__':
+    print Morphoparse('adpositions')

@@ -1,6 +1,6 @@
 from __future__ import print_function
 from Commons import *
-from FastSpider import *
+from Spider import *
 from Edge import *
 import time
 
@@ -70,8 +70,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'engine'
-	client = 'car'
+	word = 'bird'
+	client = 'cock'
 	try:
 		wc = Wordclient(word)
 		# wc.printweb(word)
