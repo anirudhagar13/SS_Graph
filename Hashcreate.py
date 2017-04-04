@@ -35,16 +35,18 @@ def handle_error(error):
     Shelveclose(hash1)
     Shelveclose(hash2)
 
-def print_hash(filename):
-	unserialized_hash = Shelveopen(filename)
-	print len(unserialized_hash.keys())
+def print_hash(unserialized_hash):
+    for i in unserialized_hash:
+        print i,' : ',unserialized_hash[i]
+
 
 if __name__ == '__main__':
-	# print_hash(filename='Hash#2.shelve')
-
     #Feed Hashes
     hash1 = Shelveopen('Hash#1.shelve')
     hash2 = Shelveopen('Hash#2.shelve')
+
+    # print_hash(hash1)
+
     hash1.clear()   # Overwriting
     hash2.clear()   # Overwriting
 

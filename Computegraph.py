@@ -1,6 +1,8 @@
 from Commons import *
 from collections import Counter
 from nltk.corpus import stopwords
+from nltk import ngrams
+import time
 
 # Globals
 hash1 = {}
@@ -37,6 +39,19 @@ def Synfactory(synset):
 	if synset.examples():	#checking if examples actually exist
 		dic['S2E'] = Process_sentence(synset.examples()[0])	#Choosing only first example
 	return dic
+
+def Ngrams(ls):
+	# For now Bigram but can handle any Ngram
+	sentence = ' '.join(ls)
+	bigrams = ngrams(ls,2)
+	for i in bigrams:
+		st = ls[0]+'_'+ls[1]
+		if st in hash1:
+			# Double words Exist
+			# Replace its occurences in sentence with double word
+			spaced = ls[0]+' '+ls[1]
+			sentence = sentence.replace(spaced,st)
+	return sentence.split()
 
 def Createwords(word, kind, synset, count):
 	'''
@@ -91,17 +106,20 @@ def Process_sentence(sentence):
 	'''
 	sentence = sentence.replace("'s","")
 	sentence = sentence.replace("'t","")	#Bad Hardcode to replace all apostrophies
-	ls = ''.join(e for e in sentence if e.isalnum() or e == ' ')	#To remove special characters from words
-	ls = ls.split()
+	ls = ''.join(e for e in sentence if e.isalpha() or e == ' ' or e == '_')	#To remove special characters/numbers from words
+	ls = ls.split()	#list of words
 	ls = Removestopwords(ls)
+	ls = Ngrams(ls)	#Get pair of words together
 	total = len(ls)	# Getting total words after stop words removal
 	ls = dict(Counter(ls))	# Getting count of words in a list
 
 	# Creating tuples of proper format
 	tup = []
 	for key, value in ls.items():
+		if '_' not in key and key not in hash1:	# Not a Multiword and not present in wordnet
+			# Morphological parsing
+			key = Morphoparse(key)
 		tup.append((key, value, total))
-
 	return tup
 
 def Handle_error(e):
@@ -116,6 +134,7 @@ def Handle_error(e):
 	Shelveclose(hash2)
 	Shelveclose(hash3)
 	Shelveclose(hash4)
+	print 'ComputeGraph Computation took : ',time.time() - start_time
 
 def Showhash(open_hash):
 	'''
@@ -125,6 +144,7 @@ def Showhash(open_hash):
 		print key, ' :: ', value
 
 if __name__ == '__main__':
+	start_time = time.time()
 	hash1 = Shelveopen('Hash#1.shelve')
 	hash2 = Shelveopen('Hash#2.shelve')
 	hash3 = Shelveopen('Hash#3.shelve')
