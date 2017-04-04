@@ -47,7 +47,7 @@ def Ngrams(ls):
 	for i in bigrams:
 		st = ls[0]+'_'+ls[1]
 		if st in hash1:
-			# Double words Exist
+			# Double words Exists
 			# Replace its occurences in sentence with double word
 			spaced = ls[0]+' '+ls[1]
 			sentence = sentence.replace(spaced,st)
@@ -70,6 +70,7 @@ def Createwords(word, kind, synset, count):
 		# Word does not exist so create a new one
 		# Just a check for morphological parsing later
 		if word not in hash1:
+			print word
 			wordsnotinhsah += 1
 			# Obtain their morphological form present in wordnet to create same entry for that also
 		
@@ -106,7 +107,7 @@ def Process_sentence(sentence):
 	'''
 	sentence = sentence.replace("'s","")
 	sentence = sentence.replace("'t","")	#Bad Hardcode to replace all apostrophies
-	ls = ''.join(e for e in sentence if e.isalpha() or e == ' ' or e == '_')	#To remove special characters/numbers from words
+	ls = ''.join(e for e in sentence if e.isalpha() or e == ' ')	#To remove special characters/numbers from words
 	ls = ls.split()	#list of words
 	ls = Removestopwords(ls)
 	ls = Ngrams(ls)	#Get pair of words together
@@ -116,9 +117,15 @@ def Process_sentence(sentence):
 	# Creating tuples of proper format
 	tup = []
 	for key, value in ls.items():
-		if '_' not in key and key not in hash1:	# Not a Multiword and not present in wordnet
+		if key not in hash1:	# Not present in wordnet
 			# Morphological parsing
-			key = Morphoparse(key)
+			newkey = Morphoparse(key)
+			if newkey == key:
+				# Word does not exist in WOrdnet
+				WordDump.append(key)
+				continue
+			else:
+				key = newkey
 		tup.append((key, value, total))
 	return tup
 
@@ -145,6 +152,7 @@ def Showhash(open_hash):
 
 if __name__ == '__main__':
 	start_time = time.time()
+	WordDump = []
 	hash1 = Shelveopen('Hash#1.shelve')
 	hash2 = Shelveopen('Hash#2.shelve')
 	hash3 = Shelveopen('Hash#3.shelve')
@@ -163,6 +171,7 @@ if __name__ == '__main__':
 
 			# Just process Words now
 			Process_words(value, synset['S2D'])
+		print 'Words Not Found In WOrdnet : ',set(WordDump)
 		raise StopIteration
 	except Exception as e:
 		Handle_error(e)

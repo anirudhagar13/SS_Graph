@@ -62,7 +62,6 @@ class Wordclient:
 				for edge in path:
 					path_score *= edge.weight
 				score += path_score
-			score = score if score < 1 else 1.0
 			return score
 		else:
 			print ('Word',dest,'is not reachable from Source')
