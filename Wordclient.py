@@ -1,6 +1,6 @@
 from __future__ import print_function
 from Commons import *
-from FastSpider import *
+from Spider import *
 from Edge import *
 import time
 
@@ -62,7 +62,6 @@ class Wordclient:
 				for edge in path:
 					path_score *= edge.weight
 				score += path_score
-			score = score if score < 1 else 1.0
 			return score
 		else:
 			print ('Word',dest,'is not reachable from Source')
@@ -70,8 +69,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'engine'
-	client = 'car'
+	word = 'bird'
+	client = 'cock'
 	try:
 		wc = Wordclient(word)
 		# wc.printweb(word)

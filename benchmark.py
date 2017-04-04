@@ -20,7 +20,7 @@ def manager(score1, score2):
 			return bigger
 
 if __name__ == '__main__':
-	with open('MC.txt') as f:
+	with open('MilesCharles.txt') as f:
 		start_time = time.time()
 		for line in f.readlines():
 			line = line.replace('\n','')
@@ -29,5 +29,5 @@ if __name__ == '__main__':
 			word2 = Wordclient(ls[1])
 			score1 = word1.score(ls[1])
 			score2 = word2.score(ls[0])
-			print (ls[0],ls[1], ls[2], manager(score1, score2), sep='\t')
+			print (ls[0], ls[1], ls[2], score1, score2, sep='\t')
 		print ('Execution time - ',time.time() - start_time)
