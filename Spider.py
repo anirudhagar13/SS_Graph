@@ -5,10 +5,10 @@ import copy
 
 class Spider():
 	"""docstring for Spider"""
-	def __init__(self, word):
+	def __init__(self, word, spread=3, limit=0.008):
 		self.word = word
-		self.spread = 3	# Limit recursion depth
-		self.limit = 0.008	# Score limit for paths
+		self.spread = spread	# Limit recursion depth
+		self.limit = limit	# Score limit for paths
 		self.depth = 0	# Measure recursion depth
 		self.score = 1 # Measure path score
 		self.web = dict()
@@ -16,14 +16,30 @@ class Spider():
 		self.path = list()	# Store path traversed
 		self.visited = list()	# To prevent cycles
 
-	def crawl(self):
+	def crawl(self, filename):
 		'''
 		To get spread of wordnet
 		'''
-		self.graph = Shelveopen('Graph.shelve')
+		self.graph = Shelveopen(filename)
 
 		# Adding first word into visited
-		self.DFS(self.word)
+		edges = self.graph[self.word]
+		for edge in edges:
+			if edge.weight != 0: # Prevents division by zero error
+				self.score *= edge.weight
+				self.depth += 1
+
+				if self.depth <= self.spread and self.score >= self.limit:
+					self.path.append(edge)
+					self.DFS(edge.dest)
+					pop = self.path.pop()
+
+				self.depth -= 1
+				self.score /= edge.weight
+			else:
+				pass
+
+		return self.web # Only for fast processing
 		return {key : value for key, value in self.web.items() if '.' not in key}	# Only returning word targets
 
 	def subset(self, paths, path):
@@ -59,26 +75,25 @@ class Spider():
 			if node in self.graph:
 				edges = self.graph[node]
 				for edge in edges:
-					dest = edge.dest
-					if self.depth < self.spread:
-						
-						# To limit recursion depth and path score
-						self.depth += 1
+					if edge.weight != 0: # Prevent division by zero error
 						self.score *= edge.weight
-						self.path.append(edge)
-						if node not in self.visited:
-							# To prevent double entry in visited
-							self.visited.append(node)
+						self.depth += 1
 
-						if self.score > self.limit:
-							# To Limit path score
-							self.DFS(dest)
+						if self.depth <= self.spread and self.score >= self.limit:
+							self.path.append(edge)
+							if node not in self.visited:
+								# To prevent double entry in visited
+								self.visited.append(node)
 
+							self.DFS(edge.dest)							
+							pop = self.path.pop()
+													
 						# After recursion, coming back
 						self.depth -= 1
 						self.score /= edge.weight
-						
-						pop = self.path.pop()
+
+					else:
+						return
 			else:
 				print 'Sorry ! Spider could not find',node,'in Similarity Graph'
 		except Exception as e:
