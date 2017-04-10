@@ -14,11 +14,25 @@ class Wordclient:
 		'''
 		self.word = word
 		self.client = client
-		sp = Spider(word, spread=2, limit=0.01)
-		self.web = sp.crawl('Graph.shelve')	# Crawled web
 		self.paths = []	# To store all paths
 		self.scores = []	# To store corresponding pathscores
-		self.calcmetric() # To calculate all paths and scores
+		self.feature_vector = []	# Stores feature vector of comparison
+		self.standard_vector = []	# Standard vector for both words being same
+		if word == client:
+			# define standard condition
+			self.standard()
+		else:
+			# There is a need to crawl and calculate metrics
+			sp = Spider(word, spread=2, limit=0.01)
+			self.web = sp.crawl('Graph.shelve')	# Crawled web
+			self.calcmetric() # To calculate all paths and scores
+
+	def standard(self):
+		# Define standard condition
+		# Features being i(no of paths), j(highest path score), k(Mean score), l(total score)
+		self.feature_vector = copy.deepcopy(self.standard_vector)
+		
+
 
 	def calcmetric(self):
 		if self.paths:

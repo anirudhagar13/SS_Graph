@@ -34,7 +34,12 @@ class Wordclient:
 		'''
 		To print paths to a specific word in web
 		'''
-		if dest in self.web:
+		if dest == self.word:
+			# Both same words
+			print ('TO : ',dest)
+			print ('PATH 0 :',self.word,'>>>',dest)
+			print ('PathScore : 1.0')
+		elif dest in self.web:
 			paths = self.web[dest]
 			print ('TO : ',dest)
 			for i, path in enumerate(paths):
@@ -52,7 +57,10 @@ class Wordclient:
 		'''
 		To Compute score of word in web
 		'''
-		if dest in self.web:
+		if dest == self.word:
+			# Both words same
+			return 1.0
+		elif dest in self.web:
 			paths = self.web[dest]
 			print ('TO : ',dest)
 			score = 0
@@ -61,6 +69,7 @@ class Wordclient:
 				for edge in path:
 					path_score *= edge.weight
 				score += path_score
+			score = score if score < 1.0 else 1.0
 			return score
 		else:
 			print ('Word',dest,'is not reachable from Source')
