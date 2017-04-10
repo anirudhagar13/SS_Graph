@@ -12,14 +12,14 @@ class Wordclient:
 		Constructor to crawl web for a word 
 		'''
 		self.word = word
-		sp = Spider(word)
-		self.web = sp.crawl()	# Crawled web
+		sp = Spider(word, spread=3, limit=0.008)
+		self.web = sp.crawl('OldGraph.shelve')	# Crawled web
 
-	def printweb(self, word):
+	def printweb(self):
 		'''
 		To Print entire web of mentioned word
 		'''
-		print ('FROM : ',word)
+		print ('FROM : ',self.word)
 		for word, paths in self.web.items():
 			print ('TO : ',word)
 			for i, path in enumerate(paths):
@@ -29,7 +29,6 @@ class Wordclient:
 					score *= edge.weight
 					print (' |',edge, end='')
 				print ()
-				print ('PathScore : ',score)
 
 	def printpaths(self, dest):
 		'''
@@ -69,13 +68,13 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'bird'
-	client = 'cock'
+	word = 'cock'
+	client = 'bird'
 	try:
 		wc = Wordclient(word)
-		# wc.printweb(word)
+		# wc.printweb()
 		# wc.printpaths(client)
-		print ('Final Score : ',wc.score(client))
+		# print ('Final Score : ',wc.score(client))
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)

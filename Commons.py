@@ -74,4 +74,4 @@ def Morphoparse(word):
             return word
 
 if __name__ == '__main__':
-    print Morphoparse('adpositions')
+    print Morphoparse('happening')
