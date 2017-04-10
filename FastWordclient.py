@@ -13,34 +13,51 @@ class Wordclient:
 		Constructor to crawl web for a word 
 		'''
 		self.word = word
+		sp = Spider(word, spread=2, limit=0.01)
+		self.web = sp.crawl('Graph.shelve')	# Crawled web
+		self.graph = Shelveopen('Graph.shelve')
+
 		self.client = client
 		self.paths = []	# To store all paths
 		self.scores = []	# To store corresponding pathscores
-		self.feature_vector = []	# Stores feature vector of comparison
-		self.standard_vector = []	# Standard vector for both words being same
-		if word == client:
-			# define standard condition
-			self.standard()
-		else:
-			# There is a need to crawl and calculate metrics
-			sp = Spider(word, spread=2, limit=0.01)
-			self.web = sp.crawl('Graph.shelve')	# Crawled web
-			self.calcmetric() # To calculate all paths and scores
+		self.clientfeatures = []	# Feature vector for client
+		self.init_client() # To initialise all properties for clients
 
-	def standard(self):
-		# Define standard condition
-		# Features being i(no of paths), j(highest path score), k(Mean score), l(total score)
-		self.feature_vector = copy.deepcopy(self.standard_vector)
-		
+		self.standardfeatures = []	# To compare against
 
+	def init_client(self):
+		'''
+		To initialize diff. parameters related to client
+		'''
+		self.paths, self.scores = self.calcmetric(self.client)
 
-	def calcmetric(self):
-		if self.paths:
-			# Calculations already done
-			return
+		#Initializing client features
+		i = self.getpathnum()
+		j = self.gethighestscore()
+		k = self.getmeanscore()
+		l = self.gettotalscore()
+		self.clientfeatures = [i, j, k, l]
 
-		graph = Shelveopen('Graph.shelve')
-		clientedges = graph[self.client]
+	def init_standard(self):
+		'''
+		To initialize diff. parameters to oneself
+		'''
+		paths, scores = self.calcmetric(self.word)
+
+		#Initializing client features
+		i = self.getpathnum(paths)
+		j = self.gethighestscore(scores)
+		k = self.getmeanscore(scores)
+		l = self.gettotalscore(scores)
+		self.standardfeatures = [i, j, k, l]
+
+	#Generic function for reuse
+	def calcmetric(self, client):
+		clientpaths = []
+		clientscores = []
+		total = []
+
+		clientedges = self.graph[client]
 		clientdests = []
 		for edge in clientedges:
 			clientdests.append(edge.dest)
@@ -53,9 +70,9 @@ class Wordclient:
 		# Handles case when no common points exist
 		extrapath = {}
 		for node in common_points:
-			edges = graph[node]
+			edges = self.graph[node]
 			for edge in edges:
-				if edge.dest == self.client:
+				if edge.dest == client:
 					extrapath[node] = edge
 					break
 
@@ -66,56 +83,57 @@ class Wordclient:
 				if extraedge:	# If path exists
 					ls = copy.deepcopy(path)
 					ls.append(extraedge)
-					self.paths.append(ls)
+					clientpaths.append(ls)
 
 		# Score calculation
-		for path in self.paths:
+		for path in clientpaths:
 			score = 1
 			for edge in path:
 				score *= edge.weight
-			self.scores.append(score)
+			clientscores.append(score)
 
-	def getscores(self, dest):
+		total.append(clientpaths)
+		total.append(clientscores)
+		return total
+
+	# Functions strictly for access only, no reuse
+	def getscores(self):
 		'''
-		To Compute score of word in web
+		To access client scores
 		'''
 		return self.scores
 
-	def gettotalscore(self):
+	def getpaths(self):
 		'''
-		To compute total score
-		'''
-		return sum(self.scores)
-
-	def getmeanscore(self):
-		'''
-		Get Mean of all scores
-		'''
-		if len(self.scores) == 0:
-			return 0	# To prevent division by zero
-		else:
-			return round(sum(self.scores)/len(self.scores),3)
-
-	def gethighestscore(self):
-		'''
-		To return highest score
-		'''
-		if len(self.scores) == 0:
-			return 0	# To prevent no arg. error
-		else:
-			return max(self.scores)
-
-	def getpaths(self, dest):
-		'''
-		To Compute score of word in web
+		To access client paths
 		'''
 		return self.paths
 
-	def getpathnum(self):
+	def getfeatures(self):
 		'''
-		To return no of paths obtained
+		To access client features
 		'''
-		return len(self.paths)
+		return self.clientfeatures
+
+	def getstandard(self):
+		'''
+		To access standard features to oneself
+		'''
+		if self.standardfeatures:
+			return self.standardfeatures
+		else:
+			self.init_standard()	# Initialize Standard
+			return self.standardfeatures
+
+	def getmetric(self):
+		'''
+		To get semantic score between client and word
+		'''
+		if self.standardfeatures == []:
+			self.init_standard()
+
+		# Perform client and standard vector comparison
+		return 1.0
 
 	def printweb(self):
 		'''
@@ -144,6 +162,45 @@ class Wordclient:
 		else:
 			print ('Word',dest,'is not reachable from Source')
 
+	# Functions reused to create features for standard and client, also can be accessed directly for client
+	def gettotalscore(self, scores=None):
+		'''
+		To compute total score
+		'''
+		if scores is None:
+			scores = self.scores
+		return sum(scores)
+
+	def getmeanscore(self, scores=None):
+		'''
+		Get Mean of all scores
+		'''
+		if scores is None:
+			scores = self.scores
+		if len(scores) == 0:
+			return 0	# To prevent division by zero
+		else:
+			return round(sum(scores)/len(scores),3)
+
+	def gethighestscore(self, scores=None):
+		'''
+		To return highest score
+		'''
+		if scores is None:
+			scores = self.scores
+		if len(scores) == 0:
+			return 0	# To prevent no arg. error
+		else:
+			return max(scores)
+
+	def getpathnum(self, paths=None):
+		'''
+		To return no of paths obtained
+		'''
+		if paths is None:
+			paths = self.paths
+		return len(paths)
+
 if __name__ == '__main__':
 	start_time = time.time()
 	word = 'cock'
@@ -152,7 +209,7 @@ if __name__ == '__main__':
 		wc = Wordclient(word, client)
 		# wc.printweb()
 		# wc.printpaths()
-		# print ('Final Score :',wc.gettotalscore())
+		print ('Final Score :',wc.getmetric())
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)
