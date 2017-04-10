@@ -20,6 +20,7 @@ def Wordfactory():
 	dic = {}
 	dic['W2S'] = {}
 	dic['D2S'] = {}
+	dic['E2S'] = {}
 	return dic
 
 def Synfactory(synset):
@@ -79,7 +80,7 @@ def Createwords(word, kind, synset, count):
 		dic[kind][synset] = count
 		hash3[word] = dic
 
-def Process_words(synset, definition):
+def Process_words(synset, definition, example):
 	'''
 	Process all 3 forms of words in a synset
 	'''
@@ -91,6 +92,10 @@ def Process_words(synset, definition):
 	# Creating Definition words
 	for word in definition:
 		Createwords(word[0], 'D2S', synset.name(), word[1])
+
+	# Creating Example words
+	for word in example:
+		Createwords(word[0], 'E2S', synset.name(), 1) # Doesn't really matter as how many times word occurs in synset examples, as edge not gonna be traversed for calculation
 
 
 def Removestopwords(sent):
@@ -155,8 +160,8 @@ if __name__ == '__main__':
 	WordDump = []
 	hash1 = Shelveopen('Hash#1.shelve')
 	hash2 = Shelveopen('Hash#2.shelve')
-	hash3 = Shelveopen('OldHash#3.shelve')
-	hash4 = Shelveopen('OldHash#4.shelve')
+	hash3 = Shelveopen('Hash#3.shelve')
+	hash4 = Shelveopen('Hash#4.shelve')
 	hash3.clear()
 	hash4.clear()	# To Overwrite
 
@@ -170,7 +175,7 @@ if __name__ == '__main__':
 			hash4[key] = synset
 
 			# Just process Words now
-			Process_words(value, synset['S2D'])
+			Process_words(value, synset['S2D'], synset['S2E'])
 		print 'Words Not Found In WOrdnet : ',set(WordDump)
 		raise StopIteration
 	except Exception as e:

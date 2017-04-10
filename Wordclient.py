@@ -1,89 +1,215 @@
-from __future__ import print_function
+from __future__ import print_function, division
 from Commons import *
 from Spider import *
 from Edge import *
 import time
+import copy
 
 # Needs words in lowercase, and if multiple words, join them using '_'
 
 class Wordclient:
-	def __init__(self, word):
+	def __init__(self, word, client):
 		'''
 		Constructor to crawl web for a word 
 		'''
 		self.word = word
-		sp = Spider(word, spread=3, limit=0.008)
-		self.web = sp.crawl('OldGraph.shelve')	# Crawled web
+		sp = Spider(word, spread=2, limit=0.01)
+		self.web = sp.crawl('Graph.shelve')	# Crawled web
+		self.graph = Shelveopen('Graph.shelve')
+
+		self.client = client
+		self.paths = []	# To store all paths
+		self.scores = []	# To store corresponding pathscores
+		self.clientfeatures = []	# Feature vector for client
+		self.init_client() # To initialise all properties for clients
+
+		self.standardfeatures = []	# To compare against
+
+	def init_client(self):
+		'''
+		To initialize diff. parameters related to client
+		'''
+		self.paths, self.scores = self.calcmetric(self.client)
+
+		#Initializing client features
+		i = self.getpathnum()
+		j = self.gethighestscore()
+		k = self.getmeanscore()
+		l = self.gettotalscore()
+		self.clientfeatures = [i, j, k, l]
+
+	def init_standard(self):
+		'''
+		To initialize diff. parameters to oneself
+		'''
+		paths, scores = self.calcmetric(self.word)
+
+		#Initializing client features
+		i = self.getpathnum(paths)
+		j = self.gethighestscore(scores)
+		k = self.getmeanscore(scores)
+		l = self.gettotalscore(scores)
+		self.standardfeatures = [i, j, k, l]
+
+	#Generic function for reuse
+	def calcmetric(self, client):
+		clientpaths = []
+		clientscores = []
+		total = []
+
+		clientedges = self.graph[client]
+		clientdests = []
+		for edge in clientedges:
+			clientdests.append(edge.dest)
+
+		common_points = []
+		for node in self.web:
+			if node in clientdests:
+				common_points.append(node)
+
+		# Handles case when no common points exist
+		extrapath = {}
+		for node in common_points:
+			edges = self.graph[node]
+			for edge in edges:
+				if edge.dest == client:
+					extrapath[node] = edge
+					break
+
+		for node in common_points:
+			paths = self.web[node]
+			for path in paths:
+				extraedge = extrapath[node]
+				if extraedge:	# If path exists
+					ls = copy.deepcopy(path)
+					ls.append(extraedge)
+					clientpaths.append(ls)
+
+		# Score calculation
+		for path in clientpaths:
+			score = 1
+			for edge in path:
+				score *= edge.weight
+			clientscores.append(score)
+
+		total.append(clientpaths)
+		total.append(clientscores)
+		return total
+
+	# Functions strictly for access only, no reuse
+	def getscores(self):
+		'''
+		To access client scores
+		'''
+		return self.scores
+
+	def getpaths(self):
+		'''
+		To access client paths
+		'''
+		return self.paths
+
+	def getfeatures(self):
+		'''
+		To access client features
+		'''
+		return self.clientfeatures
+
+	def getstandard(self):
+		'''
+		To access standard features to oneself
+		'''
+		if self.standardfeatures:
+			return self.standardfeatures
+		else:
+			self.init_standard()	# Initialize Standard
+			return self.standardfeatures
+
+	def getmetric(self):
+		'''
+		To get semantic score between client and word
+		'''
+		if self.standardfeatures == []:
+			self.init_standard()
+
+		# Perform client and standard vector comparison
+		return 1.0
 
 	def printweb(self):
 		'''
-		To Print entire web of mentioned word
+		To Print entire web
 		'''
 		print ('FROM : ',self.word)
-		for word, paths in self.web.items():
-			print ('TO : ',word)
+		for dest, paths in self.web.items():
+			print ('TO : ',dest)
 			for i, path in enumerate(paths):
 				print ('PATH',i+1,' :',end='')
-				score = 1
 				for edge in path:
-					score *= edge.weight
 					print (' |',edge, end='')
 				print ()
 
-	def printpaths(self, dest):
+	def printpaths(self):
 		'''
-		To print paths to a specific word in web
+		To print paths to a sclient
 		'''
-		if dest == self.word:
-			# Both same words
-			print ('TO : ',dest)
-			print ('PATH 0 :',self.word,'>>>',dest)
-			print ('PathScore : 1.0')
-		elif dest in self.web:
-			paths = self.web[dest]
-			print ('TO : ',dest)
-			for i, path in enumerate(paths):
+		if self.paths:
+			for i, path in enumerate(self.paths):
 				print ('PATH', i+1,' :',end='')
-				score = 1
 				for edge in path:
-					score *= edge.weight
 					print (' |',edge, end='')
 				print  ()
-				print ('PathScore : ',score)
+				print ('PathScore : ',self.scores[i])
 		else:
 			print ('Word',dest,'is not reachable from Source')
 
-	def score(self, dest):
+	# Functions reused to create features for standard and client, also can be accessed directly for client
+	def gettotalscore(self, scores=None):
 		'''
-		To Compute score of word in web
+		To compute total score
 		'''
-		if dest == self.word:
-			# Both words same
-			return 1.0
-		elif dest in self.web:
-			paths = self.web[dest]
-			print ('TO : ',dest)
-			score = 0
-			for i, path in enumerate(paths):
-				path_score = 1
-				for edge in path:
-					path_score *= edge.weight
-				score += path_score
-			score = score if score < 1.0 else 1.0
-			return score
+		if scores is None:
+			scores = self.scores
+		return sum(scores)
+
+	def getmeanscore(self, scores=None):
+		'''
+		Get Mean of all scores
+		'''
+		if scores is None:
+			scores = self.scores
+		if len(scores) == 0:
+			return 0	# To prevent division by zero
 		else:
-			print ('Word',dest,'is not reachable from Source')
-			return 0
+			return round(sum(scores)/len(scores),3)
+
+	def gethighestscore(self, scores=None):
+		'''
+		To return highest score
+		'''
+		if scores is None:
+			scores = self.scores
+		if len(scores) == 0:
+			return 0	# To prevent no arg. error
+		else:
+			return max(scores)
+
+	def getpathnum(self, paths=None):
+		'''
+		To return no of paths obtained
+		'''
+		if paths is None:
+			paths = self.paths
+		return len(paths)
 
 if __name__ == '__main__':
 	start_time = time.time()
 	word = 'cock'
 	client = 'bird'
 	try:
-		wc = Wordclient(word)
+		wc = Wordclient(word, client)
 		# wc.printweb()
-		# wc.printpaths(client)
-		# print ('Final Score : ',wc.score(client))
+		# wc.printpaths()
+		print ('Final Score :',wc.getmetric())
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)
