@@ -73,7 +73,7 @@ if __name__ == '__main__':
 	try:
 		wc = Wordclient(word)
 		# wc.printweb()
-		wc.printpaths(client)
+		# wc.printpaths(client)
 		# print ('Final Score : ',wc.score(client))
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:

@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, division
 from Commons import *
 from Spider import *
 from Edge import *
@@ -14,7 +14,7 @@ class Wordclient:
 		'''
 		self.word = word
 		self.client = client
-		sp = Spider(word, spread=2, limit=0.008)
+		sp = Spider(word, spread=2, limit=0.01)
 		self.web = sp.crawl('Graph.shelve')	# Crawled web
 		self.paths = []	# To store all paths
 		self.scores = []	# To store corresponding pathscores
@@ -67,11 +67,41 @@ class Wordclient:
 		'''
 		return self.scores
 
+	def gettotalscore(self):
+		'''
+		To compute total score
+		'''
+		return sum(self.scores)
+
+	def getmeanscore(self):
+		'''
+		Get Mean of all scores
+		'''
+		if len(self.scores) == 0:
+			return 0	# To prevent division by zero
+		else:
+			return round(sum(self.scores)/len(self.scores),3)
+
+	def gethighestscore(self):
+		'''
+		To return highest score
+		'''
+		if len(self.scores) == 0:
+			return 0	# To prevent no arg. error
+		else:
+			return max(self.scores)
+
 	def getpaths(self, dest):
 		'''
 		To Compute score of word in web
 		'''
 		return self.paths
+
+	def getpathnum(self):
+		'''
+		To return no of paths obtained
+		'''
+		return len(self.paths)
 
 	def printweb(self):
 		'''
@@ -107,7 +137,8 @@ if __name__ == '__main__':
 	try:
 		wc = Wordclient(word, client)
 		# wc.printweb()
-		wc.printpaths()
+		# wc.printpaths()
+		# print ('Final Score :',wc.gettotalscore())
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)
