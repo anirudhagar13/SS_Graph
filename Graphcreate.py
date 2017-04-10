@@ -20,6 +20,9 @@ def Words(src, data):
         elif key == 'D2S':
             if value:
                 D2S(src, value)
+        elif key == 'E2S':
+            if value:
+                E2S(src, value)
         else:
             raise Exception('Word Edge not defined - ',key)
 
@@ -193,12 +196,23 @@ def W2S(src, data):
 
 def D2S(src, data):
     '''
-    To create word to sense backedges in which it occurs
+    To create word to sense definition backedges in which it occurs
     '''
     total_freq = sum(data.values())
     for dest, frequency in data.items():
         edge = Edge(src=src, dest=dest, kind='D2S')
         edge.populate(frequency=frequency, total_freq=total_freq)
+
+        #Adding edge created in graph
+        Insert(src, edge)
+
+def E2S(src, data):
+    '''
+    To create word to sense examples backedges in which it occurs
+    '''
+    for dest in data.keys():
+        edge = Edge(src=src, dest=dest, kind='E2S')
+        # No need to populate edge as default weight = 0, which will prevent traversal
 
         #Adding edge created in graph
         Insert(src, edge)
