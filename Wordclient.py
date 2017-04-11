@@ -1,9 +1,12 @@
 from __future__ import print_function, division
+# from scipy import spatial
 from Commons import *
 from Spider import *
 from Edge import *
 import time
 import copy
+import math
+
 
 # Needs words in lowercase, and if multiple words, join them using '_'
 
@@ -12,6 +15,11 @@ class Wordclient:
 		'''
 		Constructor to crawl web for a word 
 		'''
+		self.alpha = 1 # To scale dimensions
+		self.beta = 1 # To scale dimensions
+		self.gamma = 1 # To scale dimensions
+		self.delta = 1 # To scale dimensions
+
 		self.word = word
 		sp = Spider(word, spread=2, limit=0.01)
 		self.web = sp.crawl('Graph.shelve')	# Crawled web
@@ -23,19 +31,22 @@ class Wordclient:
 		self.clientfeatures = []	# Feature vector for client
 		self.init_client() # To initialise all properties for clients
 
-		self.standardfeatures = []	# To compare against
+		self.standardfeatures = [1000,1000,1000,1000]	# To compare against
 
-	def init_client(self):
+	# Reusable function for another client
+	def init_client(self, client=None):
 		'''
 		To initialize diff. parameters related to client
 		'''
-		self.paths, self.scores = self.calcmetric(self.client)
+		if client is None:
+			client = self.client
+		self.paths, self.scores = self.calcmetric(client)
 
 		#Initializing client features
-		i = self.getpathnum()
-		j = self.gethighestscore()
-		k = self.getmeanscore()
-		l = self.gettotalscore()
+		i = self.getpathnum() * self.alpha
+		j = self.gethighestscore() * self.beta
+		k = self.getmeanscore() * self.gamma
+		l = self.gettotalscore() * self.delta
 		self.clientfeatures = [i, j, k, l]
 
 	def init_standard(self):
@@ -45,10 +56,10 @@ class Wordclient:
 		paths, scores = self.calcmetric(self.word)
 
 		#Initializing client features
-		i = self.getpathnum(paths)
-		j = self.gethighestscore(scores)
-		k = self.getmeanscore(scores)
-		l = self.gettotalscore(scores)
+		i = self.getpathnum(paths) * self.alpha	# To scale to other dimensions
+		j = self.gethighestscore(scores) * self.beta
+		k = self.getmeanscore(scores) * self.gamma
+		l = self.gettotalscore(scores) * self.delta
 		self.standardfeatures = [i, j, k, l]
 
 	#Generic function for reuse
@@ -133,7 +144,28 @@ class Wordclient:
 			self.init_standard()
 
 		# Perform client and standard vector comparison
+		# print ('Spatial : ',1-spatial.distance.cosine(self.standardfeatures, self.clientfeatures))
+		print ('Client : ',self.clientfeatures)
+		print ('Standard : ',self.standardfeatures)
+		print ('Cosine FUnction : ',self.cosine_similarity(self.standardfeatures, self.clientfeatures))
 		return 1.0
+
+	def cosine_similarity(self, v1, v2):
+	    "compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)"
+	    # Prevent division by zero condition
+	    if not any(v1):
+	    	return 0.0
+	    if not any(v2):
+	    	return 0.0
+	    sumxx, sumxy, sumyy = 0, 0, 0
+	    for i in range(len(v1)):
+	        x = v1[i]; y = v2[i]
+	        sumxx += x*x
+	        sumyy += y*y
+	        sumxy += x*y
+	    print ('Numerator : ',sumxy)
+	    print ('Denominator : ',sumyy, sumxx, math.sqrt(sumxx*sumyy))
+	    return round(sumxy/math.sqrt(sumxx*sumyy),4)
 
 	def printweb(self):
 		'''
@@ -203,8 +235,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'cock'
-	client = 'bird'
+	word = 'coast'
+	client = 'hill'
 	try:
 		wc = Wordclient(word, client)
 		# wc.printweb()
