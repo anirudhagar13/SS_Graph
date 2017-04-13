@@ -143,23 +143,8 @@ class Wordclient:
 			self.init_standard()
 
 		print ('Client',self.client,':',self.clientfeatures)
-		print ('Standard : ',self.standardfeatures)
-		return self.cosine_similarity(self.standardfeatures, self.clientfeatures)
-
-	def cosine_similarity(self, v1, v2):
-	    # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
-	    # Prevent division by zero condition
-	    if not any(v1):
-	    	return 0.0
-	    if not any(v2):
-	    	return 0.0
-	    sumxx, sumxy, sumyy = 0, 0, 0
-	    for i in range(len(v1)):
-	        x = v1[i]; y = v2[i]
-	        sumxx += x*x
-	        sumyy += y*y
-	        sumxy += x*y
-	    return round(sumxy/math.sqrt(sumxx*sumyy),4)
+		print ('Standard',self.word,':',self.standardfeatures)
+		return cosine_similarity(self.standardfeatures, self.clientfeatures)
 
 	def printweb(self):
 		'''
@@ -233,8 +218,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'dog'
-	client = 'puppy'
+	word = 'puppy'
+	client = 'dog'
 	try:
 		wc = Wordclient(word)
 		wc.init_client(client)

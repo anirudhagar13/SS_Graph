@@ -123,8 +123,10 @@ if __name__ == '__main__':
 	hash2 = Shelveopen('Hash#2.shelve')
 	hash3 = Shelveopen('Hash#3.shelve')
 	hash4 = Shelveopen('Hash#4.shelve')
+	morpho = Shelveopen('Morpho.shelve')
 	hash3.clear()
 	hash4.clear()	# To Overwrite
+	morpho.clear()
 
 	# Showhash(hash3)
 	try:

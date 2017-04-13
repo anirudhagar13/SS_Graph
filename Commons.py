@@ -21,6 +21,21 @@ def Unicode(data):
         else:
             return [str(x).lower() for x in data]
 
+def cosine_similarity(v1, v2):
+    # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
+    # Prevent division by zero condition
+    if not any(v1):
+        return 0.0
+    if not any(v2):
+        return 0.0
+    sumxx, sumxy, sumyy = 0, 0, 0
+    for i in range(len(v1)):
+        x = v1[i]; y = v2[i]
+        sumxx += x*x
+        sumyy += y*y
+        sumxy += x*y
+    return round(sumxy/math.sqrt(sumxx*sumyy),4)
+
 def Pickledump(data, file):
     '''
     Store data (serialize)
@@ -96,6 +111,7 @@ def Purify(sentence, wordhash):
                     print newkey, key
                     continue
                 else:
+                    print 'Entered in MorphoHash : ',key 
                     morphohash[key] = newkey
                     parsed_list.append(newkey)
             else:
