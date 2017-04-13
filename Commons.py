@@ -77,6 +77,7 @@ def Removestopwords(sent):
 
 # System specific function, removes special characters, creates wordnet present bigrams and removes stopwords
 def Purify(sentence, wordhash):
+    morphohash = Shelveopen('Morpho.shelve')
     sentence = sentence.strip().lower();
     sentence = sentence.replace("'s","")
     sentence = sentence.replace("'t","")    #Bad Hardcode to replace all apostrophies
@@ -86,16 +87,20 @@ def Purify(sentence, wordhash):
     ls = Ngrams(ls, wordhash)  #Get pair of words together
     parsed_list = []
     for key in ls:
-        key = key.strip()
         if key not in wordhash:    # Not present in wordnet
+            if key not in morphohash:
                 # Morphological parsing
                 newkey = Morphoparse(key)
                 if newkey == key:
-                    # Word does not exist in WOrdnet
+                    # Word does not exist in WOrdnet & Our hash
                     print newkey, key
                     continue
                 else:
+                    morphohash[key] = newkey
                     parsed_list.append(newkey)
+            else:
+                print 'Found In MorphoHash : ',key
+                parsed_list.append(morphohash[key])
         else:
             parsed_list.append(key)
     return parsed_list

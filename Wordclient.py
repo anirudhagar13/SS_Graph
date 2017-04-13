@@ -9,7 +9,7 @@ import math
 # Needs words in lowercase, and if multiple words, join them using '_'
 
 class Wordclient:
-	def __init__(self, word, client):
+	def __init__(self, word):
 		'''
 		Constructor to crawl web for a word 
 		'''
@@ -23,12 +23,10 @@ class Wordclient:
 		self.web = sp.crawl('Graph.shelve')	# Crawled web
 		self.graph = Shelveopen('Graph.shelve')
 
-		self.client = client
 		self.paths = []	# To store all paths
 		self.scores = []	# To store corresponding pathscores
-		self.clientfeatures = []	# Feature vector for client
-		self.init_client() # To initialise all properties for clients
 
+		self.clientfeatures = []	# Feature vector for client
 		self.standardfeatures = []	# To compare against
 
 	# Reusable function for another client
@@ -38,6 +36,9 @@ class Wordclient:
 		'''
 		if client is None:
 			client = self.client
+		else:
+			self.client = client
+
 		self.paths, self.scores = self.calcmetric(client)
 
 		#Initializing client features
@@ -141,15 +142,12 @@ class Wordclient:
 		if self.standardfeatures == []:
 			self.init_standard()
 
-		# Perform client and standard vector comparison
-		# print ('Spatial : ',1-spatial.distance.cosine(self.standardfeatures, self.clientfeatures))
-		print ('Client : ',self.clientfeatures)
+		print ('Client',self.client,':',self.clientfeatures)
 		print ('Standard : ',self.standardfeatures)
-		print ('Cosine FUnction : ',self.cosine_similarity(self.standardfeatures, self.clientfeatures))
-		return 1.0
+		return self.cosine_similarity(self.standardfeatures, self.clientfeatures)
 
 	def cosine_similarity(self, v1, v2):
-	    "compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)"
+	    # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
 	    # Prevent division by zero condition
 	    if not any(v1):
 	    	return 0.0
@@ -161,8 +159,6 @@ class Wordclient:
 	        sumxx += x*x
 	        sumyy += y*y
 	        sumxy += x*y
-	    print ('Numerator : ',sumxy)
-	    print ('Denominator : ',sumyy, sumxx, math.sqrt(sumxx*sumyy))
 	    return round(sumxy/math.sqrt(sumxx*sumyy),4)
 
 	def printweb(self):
@@ -237,10 +233,11 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'food'
-	client = 'fruit'
+	word = 'dog'
+	client = 'puppy'
 	try:
-		wc = Wordclient(word, client)
+		wc = Wordclient(word)
+		wc.init_client(client)
 		# wc.printweb()
 		# wc.printpaths()
 		print ('Final Score :',wc.getmetric())
