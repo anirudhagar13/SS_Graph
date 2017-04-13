@@ -1,6 +1,4 @@
 from __future__ import print_function, division
-# from scipy import spatial
-from Commons import *
 from Spider import *
 from Edge import *
 import time
@@ -16,9 +14,9 @@ class Wordclient:
 		Constructor to crawl web for a word 
 		'''
 		self.alpha = 1 # To scale dimensions
-		self.beta = 1 # To scale dimensions
-		self.gamma = 1 # To scale dimensions
-		self.delta = 1 # To scale dimensions
+		self.beta = 100 # To scale dimensions
+		self.gamma = 100 # To scale dimensions
+		self.delta = 100 # To scale dimensions
 
 		self.word = word
 		sp = Spider(word, spread=2, limit=0.01)
@@ -31,7 +29,7 @@ class Wordclient:
 		self.clientfeatures = []	# Feature vector for client
 		self.init_client() # To initialise all properties for clients
 
-		self.standardfeatures = [1000,1000,1000,1000]	# To compare against
+		self.standardfeatures = []	# To compare against
 
 	# Reusable function for another client
 	def init_client(self, client=None):
@@ -180,17 +178,21 @@ class Wordclient:
 					print (' |',edge, end='')
 				print ()
 
-	def printpaths(self):
+	def printpaths(self, paths=None, scores=None):
 		'''
 		To print paths to a sclient
 		'''
-		if self.paths:
-			for i, path in enumerate(self.paths):
+		if paths is None:
+			paths = self.paths
+		if scores is None:
+			scores = self.scores
+		if paths:
+			for i, path in enumerate(paths):
 				print ('PATH', i+1,' :',end='')
 				for edge in path:
 					print (' |',edge, end='')
 				print  ()
-				print ('PathScore : ',self.scores[i])
+				print ('PathScore : ',scores[i])
 		else:
 			print ('Word',dest,'is not reachable from Source')
 
@@ -235,8 +237,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'coast'
-	client = 'hill'
+	word = 'food'
+	client = 'fruit'
 	try:
 		wc = Wordclient(word, client)
 		# wc.printweb()

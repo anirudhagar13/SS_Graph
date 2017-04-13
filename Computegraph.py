@@ -1,7 +1,5 @@
-from Commons import *
 from collections import Counter
-from nltk.corpus import stopwords
-from nltk import ngrams
+from Commons import *
 import time
 
 # Globals
@@ -40,19 +38,6 @@ def Synfactory(synset):
 	if synset.examples():	#checking if examples actually exist
 		dic['S2E'] = Process_sentence(synset.examples()[0])	#Choosing only first example
 	return dic
-
-def Ngrams(ls):
-	# For now Bigram but can handle any Ngram
-	sentence = ' '.join(ls)
-	bigrams = ngrams(ls,2)
-	for i in bigrams:
-		st = ls[0]+'_'+ls[1]
-		if st in hash1:
-			# Double words Exists
-			# Replace its occurences in sentence with double word
-			spaced = ls[0]+' '+ls[1]
-			sentence = sentence.replace(spaced,st)
-	return sentence.split()
 
 def Createwords(word, kind, synset, count):
 	'''
@@ -97,25 +82,11 @@ def Process_words(synset, definition, example):
 	for word in example:
 		Createwords(word[0], 'E2S', synset.name(), 1) # Doesn't really matter as how many times word occurs in synset examples, as edge not gonna be traversed for calculation
 
-
-def Removestopwords(sent):
-	'''
-	Removes a list of stop words and gives back rest of the sentence
-	'''
-	ls = [x for x in sent if x not in StopWords]	#US PTO stopwordlist
-	ls = [x for x in ls if x not in Unicode(stopwords.words('english'))]	#NLTK stopwordlist
-	return ls
-
 def Process_sentence(sentence):
 	'''
 	To process sentences to required tuple 
 	'''
-	sentence = sentence.replace("'s","")
-	sentence = sentence.replace("'t","")	#Bad Hardcode to replace all apostrophies
-	ls = ''.join(e for e in sentence if e.isalpha() or e == ' ')	#To remove special characters/numbers from words
-	ls = ls.split()	#list of words
-	ls = Removestopwords(ls)
-	ls = Ngrams(ls)	#Get pair of words together
+	ls = Purify(sentence, hash1)
 	total = len(ls)	# Getting total words after stop words removal
 	ls = dict(Counter(ls))	# Getting count of words in a list
 

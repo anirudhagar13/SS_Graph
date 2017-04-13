@@ -1,5 +1,7 @@
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer as WL
+from nltk.corpus import stopwords
+from nltk import ngrams
 import difflib
 import pickle
 import shelve
@@ -51,6 +53,38 @@ def computeMinMax(minVal,maxVal,ratio):
         return 1.2*maxVal
     else:
         return minVal + (maxVal - minVal) * (-1/math.log(ratio,2))
+
+def Ngrams(ls, wordhash):
+    # For now Bigram but can handle any Ngram
+    sentence = ' '.join(ls)
+    bigrams = ngrams(ls,2)
+    for i in bigrams:
+        st = i[0]+'_'+i[1] 
+        if st in wordhash:
+            # Double words Exists
+            # Replace its occurences in sentence with double word
+            spaced = i[0]+' '+i[1]
+            sentence = sentence.replace(spaced,st)
+    return sentence.split()
+
+def Removestopwords(sent):
+    '''
+    Removes a list of stop words and gives back rest of the sentence
+    '''
+    ls = [x for x in sent if x not in StopWords]    #US PTO stopwordlist
+    ls = [x for x in ls if x not in Unicode(stopwords.words('english'))]    #NLTK stopwordlist
+    return ls
+
+# System specific function, removes special characters, creates wordnet present bigrams and removes stopwords
+def Purify(sentence, wordhash):
+    sentence = sentence.strip().lower();
+    sentence = sentence.replace("'s","")
+    sentence = sentence.replace("'t","")    #Bad Hardcode to replace all apostrophies
+    ls = ''.join(e for e in sentence if e.isalpha() or e == ' ')    #To remove special characters/numbers from words
+    ls = ls.split() #list of words
+    ls = Removestopwords(ls)
+    ls = Ngrams(ls, wordhash)  #Get pair of words together
+    return ls
 
 def Morphoparse(word):
     # To Give back root word existent in Wordnet
