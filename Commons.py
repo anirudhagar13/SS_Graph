@@ -84,7 +84,21 @@ def Purify(sentence, wordhash):
     ls = ls.split() #list of words
     ls = Removestopwords(ls)
     ls = Ngrams(ls, wordhash)  #Get pair of words together
-    return ls
+    parsed_list = []
+    for key in ls:
+        key = key.strip()
+        if key not in wordhash:    # Not present in wordnet
+                # Morphological parsing
+                newkey = Morphoparse(key)
+                if newkey == key:
+                    # Word does not exist in WOrdnet
+                    print newkey, key
+                    continue
+                else:
+                    parsed_list.append(newkey)
+        else:
+            parsed_list.append(key)
+    return parsed_list
 
 def Morphoparse(word):
     # To Give back root word existent in Wordnet
@@ -108,4 +122,4 @@ def Morphoparse(word):
             return word
 
 if __name__ == '__main__':
-    print Morphoparse('happening')
+    print Morphoparse('flowers')

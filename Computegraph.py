@@ -56,7 +56,7 @@ def Createwords(word, kind, synset, count):
 		# Word does not exist so create a new one
 		# Just a check for morphological parsing later
 		if word not in hash1:
-			print word
+			print 'WordNot in Hash : ',word
 			wordsnotinhsah += 1
 			# Obtain their morphological form present in wordnet to create same entry for that also
 		
@@ -93,15 +93,6 @@ def Process_sentence(sentence):
 	# Creating tuples of proper format
 	tup = []
 	for key, value in ls.items():
-		if key not in hash1:	# Not present in wordnet
-			# Morphological parsing
-			newkey = Morphoparse(key)
-			if newkey == key:
-				# Word does not exist in WOrdnet
-				WordDump.append(key)
-				continue
-			else:
-				key = newkey
 		tup.append((key, value, total))
 	return tup
 
@@ -128,7 +119,6 @@ def Showhash(open_hash):
 
 if __name__ == '__main__':
 	start_time = time.time()
-	WordDump = []
 	hash1 = Shelveopen('Hash#1.shelve')
 	hash2 = Shelveopen('Hash#2.shelve')
 	hash3 = Shelveopen('Hash#3.shelve')
@@ -147,7 +137,6 @@ if __name__ == '__main__':
 
 			# Just process Words now
 			Process_words(value, synset['S2D'], synset['S2E'])
-		print 'Words Not Found In WOrdnet : ',set(WordDump)
 		raise StopIteration
 	except Exception as e:
 		Handle_error(e)
