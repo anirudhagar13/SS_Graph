@@ -36,7 +36,18 @@ def Cosine_similarity(v1, v2):
         sumxy += x*y
     return round(sumxy/math.sqrt(sumxx*sumyy),4)
 
+def Vectormag(v1):
+    # Returns magnitude of vector received
+    if not any(v1):
+        return 0.0
+    sumd = 0
+    for dimension in v1:
+        sumd += dimension*dimension
+    return sumd ** 0.5
+
+
 def Filedump(filename, content, appendflag=True):
+    # Appends/Overwrites data to files
     if appendflag:
         with open('Logs/'+filename,'a') as file:
             file.write(content+'\n')

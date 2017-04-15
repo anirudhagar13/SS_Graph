@@ -1,4 +1,5 @@
 from Wordclient import *
+from Hypers import alpha
 import operator
 
 class SentenceClient:
@@ -108,23 +109,69 @@ class SentenceClient:
 			self.pathacc[word] = []
 
 		for path in paths:
-			ls = []
+			packet = []
 			for edge in path:
+				ls = []
+				ls.append(edge.src)
 				ls.append(edge.weight)
 				ls.append(edge.kind)
 				ls.append(edge.dest)
-			if ls not in self.pathacc[word]:
-				self.pathacc[word].append(ls)
+				packet.append(ls)
+			if packet not in self.pathacc[word]:
+				self.pathacc[word].append(packet)
+
+	def Semantic_calc(self):
+		# Calcuating cosine Similarity of semantic vectors
+		vector1 = self.semantic_vectors[0]
+		vector2 = self.semantic_vectors[1]
+		cosine = Cosine_similarity(vector1, vector2)
+		return cosine
+
+	def Order_calc(self):
+		# Normalizing order vectors to a score
+		vector1 = [x - y for x, y in zip(self.order_vectors[0],self.order_vectors[1])]
+		vector2 = [x + y for x, y in zip(self.order_vectors[0],self.order_vectors[1])]
+		if vector2 == 0:
+			# prevent division by zero
+			return 1.0
+		numerator = Vectormag(vector1)
+		denominator = Vectormag(vector2)
+		normalize = 1 - (numerator/denominator)
+		return round(normalize,3)
+
+	def getmetric(self):
+
+		if self.semantic_vectors == []:
+			# Vectors haven't been created yet
+			self.Createvectors()
+
+		semantic_score = self.Semantic_calc()
+		order_score = self.Order_calc()
+
+		score = alpha*semantic_score + (1-alpha)*order_score
+
+		# File logging
+		log = '\n************************'
+		Filedump('SentenceComparison.log',log)
+		log = 'Sentence 1 : '+str(self.sent1)
+		Filedump('SentenceComparison.log',log)
+		log = 'Sentence 2 : '+str(self.sent2)
+		Filedump('SentenceComparison.log',log)
+		log = 'WordSet : '+str(self.wordset)
+		Filedump('SentenceComparison.log',log)
+		log = 'Semantic Vectors : '+str(self.semantic_vectors)
+		Filedump('SentenceComparison.log',log)
+		log = 'Order Vectors : '+str(self.order_vectors)
+		Filedump('SentenceComparison.log',log)
+		log = '####### Semantic Sentence Score : '+str(score)+' #######'
+		Filedump('SentenceComparison.log',log)
+		return round(score,4)
 
 if __name__ == '__main__':
 	start_time = time.time()
 	try:
-		ss = SentenceClient('I love dogs puppy',' I like puppies too ')
-		print 'WordSet : ',ss.wordset
-		ss.Getsemantics()	
-		print ss.pathacc
-		print ss.semantic_vectors
-		print ss.order_vectors
+		ss = SentenceClient('I love dogs boy',' I like lads too ')
+		score = ss.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
-		print ('Error Wordclient- ',e)
+		print ('Error Sentenceclient- ',e)
