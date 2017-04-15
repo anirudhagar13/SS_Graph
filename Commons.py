@@ -1,5 +1,7 @@
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer as WL
+from nltk.corpus import stopwords
+from nltk import ngrams
 import difflib
 import pickle
 import shelve
@@ -18,6 +20,30 @@ def Unicode(data):
             return str(data).lower()
         else:
             return [str(x).lower() for x in data]
+
+def Cosine_similarity(v1, v2):
+    # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
+    # Prevent division by zero condition
+    if not any(v1):
+        return 0.0
+    if not any(v2):
+        return 0.0
+    sumxx, sumxy, sumyy = 0, 0, 0
+    for i in range(len(v1)):
+        x = v1[i]; y = v2[i]
+        sumxx += x*x
+        sumyy += y*y
+        sumxy += x*y
+    return round(sumxy/math.sqrt(sumxx*sumyy),4)
+
+def Filedump(filename, content, appendflag=True):
+    if appendflag:
+        with open('Logs/'+filename,'a') as file:
+            file.write(content+'\n')
+    else:
+        # File Overwritten
+        with open('Logs/'+filename,'w') as file:
+            file.write(content+'\n')
 
 def Pickledump(data, file):
     '''
@@ -52,6 +78,56 @@ def computeMinMax(minVal,maxVal,ratio):
     else:
         return minVal + (maxVal - minVal) * (-1/math.log(ratio,2))
 
+def Ngrams(ls, wordhash):
+    # For now Bigram but can handle any Ngram
+    sentence = ' '.join(ls)
+    bigrams = ngrams(ls,2)
+    for i in bigrams:
+        st = i[0]+'_'+i[1] 
+        if st in wordhash:
+            # Double words Exists
+            # Replace its occurences in sentence with double word
+            spaced = i[0]+' '+i[1]
+            sentence = sentence.replace(spaced,st)
+    return sentence.split()
+
+def Removestopwords(sent):
+    '''
+    Removes a list of stop words and gives back rest of the sentence
+    '''
+    ls = [x for x in sent if x not in StopWords]    #US PTO stopwordlist
+    ls = [x for x in ls if x not in Unicode(stopwords.words('english'))]    #NLTK stopwordlist
+    return ls
+
+# System specific function, removes special characters, creates wordnet present bigrams and removes stopwords
+def Purify(sentence, wordhash):
+    morphohash = Shelveopen('Morpho.shelve')
+    sentence = sentence.strip().lower();
+    sentence = sentence.replace("'s","")
+    sentence = sentence.replace("'t","")    #Bad Hardcode to replace all apostrophies
+    ls = ''.join(e for e in sentence if e.isalpha() or e == ' ')    #To remove special characters/numbers from words
+    ls = ls.split() #list of words
+    ls = Removestopwords(ls)
+    ls = Ngrams(ls, wordhash)  #Get pair of words together
+    parsed_list = []
+    for key in ls:
+        if key not in wordhash:    # Not present in wordnet
+            if key not in morphohash:
+                # Morphological parsing
+                newkey = Morphoparse(key)
+                if newkey == key:
+                    # Word does not exist in WOrdnet & Our hash
+                    Filedump('NonMorphed.log',key+' : '+newkey, True)
+                    continue
+                else:
+                    morphohash[key] = newkey
+                    parsed_list.append(newkey)
+            else:
+                parsed_list.append(morphohash[key])
+        else:
+            parsed_list.append(key)
+    return parsed_list
+
 def Morphoparse(word):
     # To Give back root word existent in Wordnet
     lemmatizer = WL()
@@ -68,9 +144,7 @@ def Morphoparse(word):
             else: 
                 return lemmas[0]
         else:
-            # Can't Do Anything
-            # with open('Shelves/WordDump.txt','a') as file:
-            #     file.write(word + "\n")
+            # Can't Do Anything, word not found anywhere
             return word
 
 if __name__ == '__main__':

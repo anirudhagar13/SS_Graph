@@ -1,41 +1,51 @@
 from __future__ import print_function, division
-from Commons import *
 from Spider import *
 from Edge import *
 import time
 import copy
+import math
+
 
 # Needs words in lowercase, and if multiple words, join them using '_'
 
 class Wordclient:
-	def __init__(self, word, client):
+	def __init__(self, word):
 		'''
 		Constructor to crawl web for a word 
 		'''
+		self.alpha = 1 # To scale dimensions
+		self.beta = 100 # To scale dimensions
+		self.gamma = 100 # To scale dimensions
+		self.delta = 100 # To scale dimensions
+
 		self.word = word
 		sp = Spider(word, spread=2, limit=0.01)
 		self.web = sp.crawl('Graph.shelve')	# Crawled web
 		self.graph = Shelveopen('Graph.shelve')
 
-		self.client = client
 		self.paths = []	# To store all paths
 		self.scores = []	# To store corresponding pathscores
-		self.clientfeatures = []	# Feature vector for client
-		self.init_client() # To initialise all properties for clients
 
+		self.clientfeatures = []	# Feature vector for client
 		self.standardfeatures = []	# To compare against
 
-	def init_client(self):
+	# Reusable function for another client
+	def init_client(self, client=None):
 		'''
 		To initialize diff. parameters related to client
 		'''
-		self.paths, self.scores = self.calcmetric(self.client)
+		if client is None:
+			client = self.client 	#Takes previous client
+		else:
+			self.client = client
+
+		self.paths, self.scores = self.calcmetric(client)
 
 		#Initializing client features
-		i = self.getpathnum()
-		j = self.gethighestscore()
-		k = self.getmeanscore()
-		l = self.gettotalscore()
+		i = self.getpathnum() * self.alpha
+		j = self.gethighestscore() * self.beta
+		k = self.getmeanscore() * self.gamma
+		l = self.gettotalscore() * self.delta
 		self.clientfeatures = [i, j, k, l]
 
 	def init_standard(self):
@@ -45,10 +55,10 @@ class Wordclient:
 		paths, scores = self.calcmetric(self.word)
 
 		#Initializing client features
-		i = self.getpathnum(paths)
-		j = self.gethighestscore(scores)
-		k = self.getmeanscore(scores)
-		l = self.gettotalscore(scores)
+		i = self.getpathnum(paths) * self.alpha	# To scale to other dimensions
+		j = self.gethighestscore(scores) * self.beta
+		k = self.getmeanscore(scores) * self.gamma
+		l = self.gettotalscore(scores) * self.delta
 		self.standardfeatures = [i, j, k, l]
 
 	#Generic function for reuse
@@ -132,8 +142,18 @@ class Wordclient:
 		if self.standardfeatures == []:
 			self.init_standard()
 
-		# Perform client and standard vector comparison
-		return 1.0
+		score = Cosine_similarity(self.standardfeatures, self.clientfeatures)
+
+		# File Logging
+		log = '\n*******FROM : '+self.word+' TO : '+self.client+' *******'
+		Filedump('WordComparison.log',log)
+		log = 'Client Feature : '+str(self.clientfeatures)
+		Filedump('WordComparison.log',log)
+		log = 'Standard Feature : '+str(self.standardfeatures)
+		Filedump('WordComparison.log',log)
+		log = '#######Semantic Word Score : '+str(score)+' #######'
+		Filedump('WordComparison.log',log)
+		return score
 
 	def printweb(self):
 		'''
@@ -148,17 +168,21 @@ class Wordclient:
 					print (' |',edge, end='')
 				print ()
 
-	def printpaths(self):
+	def printpaths(self, paths=None, scores=None):
 		'''
-		To print paths to a sclient
+		To print paths to a client by default, else can print any paths and scores to them
 		'''
-		if self.paths:
-			for i, path in enumerate(self.paths):
+		if paths is None:
+			paths = self.paths
+		if scores is None:
+			scores = self.scores
+		if paths:
+			for i, path in enumerate(paths):
 				print ('PATH', i+1,' :',end='')
 				for edge in path:
 					print (' |',edge, end='')
 				print  ()
-				print ('PathScore : ',self.scores[i])
+				print ('PathScore : ',scores[i])
 		else:
 			print ('Word',dest,'is not reachable from Source')
 
@@ -203,13 +227,14 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'cock'
-	client = 'bird'
+	word = 'puppy'
+	client = 'dog'
 	try:
-		wc = Wordclient(word, client)
+		wc = Wordclient(word)
+		wc.init_client(client)
 		# wc.printweb()
 		# wc.printpaths()
-		print ('Final Score :',wc.getmetric())
+		score = wc.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)
