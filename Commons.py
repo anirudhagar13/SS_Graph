@@ -21,7 +21,7 @@ def Unicode(data):
         else:
             return [str(x).lower() for x in data]
 
-def cosine_similarity(v1, v2):
+def Cosine_similarity(v1, v2):
     # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
     # Prevent division by zero condition
     if not any(v1):
@@ -117,7 +117,7 @@ def Purify(sentence, wordhash):
                 newkey = Morphoparse(key)
                 if newkey == key:
                     # Word does not exist in WOrdnet & Our hash
-                    Filedump('NonMorphed.md',key+' : '+newkey, True)
+                    Filedump('NonMorphed.log',key+' : '+newkey, True)
                     continue
                 else:
                     morphohash[key] = newkey

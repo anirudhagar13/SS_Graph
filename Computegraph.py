@@ -129,7 +129,7 @@ if __name__ == '__main__':
 	hash3.clear()
 	hash4.clear()
 	morpho.clear()
-	Filedump('NonMorphed.md','',False)
+	Filedump('NonMorphed.log','',False)
 
 	# Showhash(hash3)
 	try:
@@ -138,7 +138,8 @@ if __name__ == '__main__':
 			synset = Synfactory(value)
 
 			if count_synsets % 10000 == 0:
-				Filedump('NonMorphed.md','******Synsets Computed : ',count_synsets,'******')
+				log = '******Synsets Computed : '+str(count_synsets)+' ******'
+				Filedump('NonMorphed.log',log)
 			
 			# Enter Into Hash4
 			hash4[key] = synset

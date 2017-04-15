@@ -35,7 +35,7 @@ class Wordclient:
 		To initialize diff. parameters related to client
 		'''
 		if client is None:
-			client = self.client
+			client = self.client 	#Takes previous client
 		else:
 			self.client = client
 
@@ -142,9 +142,18 @@ class Wordclient:
 		if self.standardfeatures == []:
 			self.init_standard()
 
-		print ('Client',self.client,':',self.clientfeatures)
-		print ('Standard',self.word,':',self.standardfeatures)
-		return cosine_similarity(self.standardfeatures, self.clientfeatures)
+		score = Cosine_similarity(self.standardfeatures, self.clientfeatures)
+
+		# File Logging
+		log = '\n*******FROM : '+self.word+' TO : '+self.client+' *******'
+		Filedump('WordComparison.log',log)
+		log = 'Client Feature : '+str(self.clientfeatures)
+		Filedump('WordComparison.log',log)
+		log = 'Standard Feature : '+str(self.standardfeatures)
+		Filedump('WordComparison.log',log)
+		log = '#######Semantic Word Score : '+str(score)+' #######'
+		Filedump('WordComparison.log',log)
+		return score
 
 	def printweb(self):
 		'''
@@ -161,7 +170,7 @@ class Wordclient:
 
 	def printpaths(self, paths=None, scores=None):
 		'''
-		To print paths to a sclient
+		To print paths to a client by default, else can print any paths and scores to them
 		'''
 		if paths is None:
 			paths = self.paths
@@ -225,7 +234,7 @@ if __name__ == '__main__':
 		wc.init_client(client)
 		# wc.printweb()
 		# wc.printpaths()
-		print ('Final Score :',wc.getmetric())
+		score = wc.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)
