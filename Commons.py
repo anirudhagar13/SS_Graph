@@ -36,6 +36,15 @@ def cosine_similarity(v1, v2):
         sumxy += x*y
     return round(sumxy/math.sqrt(sumxx*sumyy),4)
 
+def Filedump(filename, content, appendflag=True):
+    if appendflag:
+        with open('Logs/'+filename,'a') as file:
+            file.write(content+'\n')
+    else:
+        # File Overwritten
+        with open('Logs/'+filename,'w') as file:
+            file.write(content+'\n')
+
 def Pickledump(data, file):
     '''
     Store data (serialize)
@@ -108,14 +117,12 @@ def Purify(sentence, wordhash):
                 newkey = Morphoparse(key)
                 if newkey == key:
                     # Word does not exist in WOrdnet & Our hash
-                    print newkey, key
+                    Filedump('NonMorphed.md',key+' : '+newkey, True)
                     continue
                 else:
-                    print 'Entered in MorphoHash : ',key 
                     morphohash[key] = newkey
                     parsed_list.append(newkey)
             else:
-                print 'Found In MorphoHash : ',key
                 parsed_list.append(morphohash[key])
         else:
             parsed_list.append(key)
@@ -137,10 +144,8 @@ def Morphoparse(word):
             else: 
                 return lemmas[0]
         else:
-            # Can't Do Anything
-            # with open('Shelves/WordDump.txt','a') as file:
-            #     file.write(word + "\n")
+            # Can't Do Anything, word not found anywhere
             return word
 
 if __name__ == '__main__':
-    print Morphoparse('flowers')
+    print Morphoparse('happening')

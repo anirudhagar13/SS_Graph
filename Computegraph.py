@@ -124,15 +124,21 @@ if __name__ == '__main__':
 	hash3 = Shelveopen('Hash#3.shelve')
 	hash4 = Shelveopen('Hash#4.shelve')
 	morpho = Shelveopen('Morpho.shelve')
+
+	# Clearing all previous logs and data
 	hash3.clear()
-	hash4.clear()	# To Overwrite
+	hash4.clear()
 	morpho.clear()
+	Filedump('NonMorphed.md','',False)
 
 	# Showhash(hash3)
 	try:
 		for key, value in hash2.items():
 			count_synsets += 1
 			synset = Synfactory(value)
+
+			if count_synsets % 10000 == 0:
+				Filedump('NonMorphed.md','******Synsets Computed : ',count_synsets,'******')
 			
 			# Enter Into Hash4
 			hash4[key] = synset
