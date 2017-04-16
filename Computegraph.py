@@ -7,7 +7,6 @@ hash1 = {}
 hash2 = {}
 hash3 = {}
 hash4 = {}
-wordsnotinhsah = 0
 count_synsets = 0
 count_words = 0
 
@@ -43,7 +42,7 @@ def Createwords(word, kind, synset, count):
 	'''
 	To create and store words in hash, or add if words already exist
 	'''
-	global count_words, wordsnotinhsah
+	global count_words
 
 	if word in hash3:
 		# Word exists so just add property
@@ -54,12 +53,9 @@ def Createwords(word, kind, synset, count):
 		# Updated Shelve
 	else:
 		# Word does not exist so create a new one
-		# Just a check for morphological parsing later
-		if word not in hash1:
-			print 'WordNot in Hash : ',word
-			wordsnotinhsah += 1
-			# Obtain their morphological form present in wordnet to create same entry for that also
-		
+		# if word not in hash1:
+		# 	print 'WordNot in Hash : ',word
+
 		count_words += 1
 		dic = Wordfactory()
 		dic[kind][synset] = count
@@ -103,7 +99,6 @@ def Handle_error(e):
 	print 'Error - ',e
 	print 'Words Processed - ', count_words
 	print 'Synsets Processed - ', count_synsets
-	print 'Words More than Hash1 - ', wordsnotinhsah 
 	Shelveclose(hash1)
 	Shelveclose(hash2)
 	Shelveclose(hash3)
@@ -136,10 +131,6 @@ if __name__ == '__main__':
 		for key, value in hash2.items():
 			count_synsets += 1
 			synset = Synfactory(value)
-
-			if count_synsets % 10000 == 0:
-				log = '******Synsets Computed : '+str(count_synsets)+' ******'
-				Filedump('NonMorphed.log',log)
 			
 			# Enter Into Hash4
 			hash4[key] = synset

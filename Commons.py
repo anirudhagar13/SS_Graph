@@ -128,7 +128,7 @@ def Purify(sentence, wordhash):
                 newkey = Morphoparse(key)
                 if newkey == key:
                     # Word does not exist in WOrdnet & Our hash
-                    Filedump('NonMorphed.log',key+' : '+newkey, True)
+                    Filedump('NonMorphed.log',key, True)
                     continue
                 else:
                     morphohash[key] = newkey

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Word Trees</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="UILib/bootstrap.min.css">
+  <link rel="stylesheet" href="UILib/w3.css">
+  <link rel="stylesheet" href="UILib/custom.css">
+  <script src="UILib/jquery.min.js"></script>
+  <script src="UILib/bootstrap.min.js"></script>
+  <script src="UILib/springy.js"></script>
+  <script src="UILib/springyui.js"></script>
+  <script src="UILib/networkgraph.js"></script>
+  <script type="text/javascript">
+
+    var data = {'lad': [[['lad', 0.28571, 'W2S', 'cub.n.02'], ['cub.n.02', 0.1938, 'S2D', 'boy']], [['lad', 0.28571, 'W2S', 'cub.n.02'], ['cub.n.02', 0.8, 'Hypernym', 'male_child.n.01'], ['male_child.n.01', 0.12, 'S2E', 'boy']], [['lad', 0.71429, 'W2S', 'chap.n.01'], ['chap.n.01', 0.45, 'S2D', 'boy']]], 'boy': [[['boy', 0.01148, 'D2S', 'boyishly.r.01'], ['boyishly.r.01', 0.45, 'S2D', 'like']], [['boy', 0.20773, 'W2S', 'boy.n.02'], ['boy.n.02', 0.06, 'S2E', 'like']]], 'love': [[['love', 0.19286, 'W2S', 'love.v.02'], ['love.v.02', 0.8, 'Hypernym', 'like.v.02'], ['like.v.02', 0.12, 'S2E', 'like']]], 'like': [[['like', 0.34579, 'W2S', 'like.v.02'], ['like.v.02', 0.8, 'Hyponym', 'love.v.02'], ['love.v.02', 0.12, 'S2E', 'love']]], 'dog': [[['dog', 0.01923, 'W2S', 'dog.n.03'], ['dog.n.03', 0.8, 'Hypernym', 'chap.n.01'], ['chap.n.01', 1, 'S2W', 'lad']]]};
+
+    function Trigger(node){
+      Compact(node, data);
+    }
+
+  </script>
+</head>
+<body>
+
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" onclick="Trigger('lad');">Sample Similarity Graph</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">
+            <div class="w3-tag w3-round w3-indigo" style="padding:3px">
+              <div class="w3-tag w3-round w3-indigo w3-border w3-border-white">
+                Network Graph(Semantic Paths)
+              </div>
+            </div>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <canvas class="well well-lg" id="similaritygraph" width="620" height="500"></canvas>
+          <div class="panel panel-danger pull-right" id="edgeinfo">
+            <div class="panel-heading">Edge Description</div>
+            <div class="panel-body text-left" id="edgepanel">
+              <p><span class="w3-badge w3-red">W2S</span> Word To Senses It belongs to</p>
+              <p><span class="w3-badge w3-orange">D2S</span> Senses whose definition Word occurs In</p>
+              <p><span class="w3-badge w3-teal">S2W</span> Lemmas Of Senses</p>
+              <p><span class="w3-badge w3-pink">S2D</span> Words present In Senses Definition</p>
+              <p><span class="w3-badge w3-blue">S2E</span> Words present In Senses Examples</p>
+              <p><span class="w3-badge w3-brown">Hypernym</span> 'IS-A' Relationship</p>
+              <p><span class="w3-badge w3-indigo">Hyponym</span> 'Type Of' Relationship</p>
+              <p><span class="w3-badge w3-purple">Meronym</span> 'Part Of' Relationship</p>
+              <p><span class="w3-badge w3-cyan">Holonym</span> 'Whole Of' Relatioship</p>
+              <p><span class="w3-badge w3-green">Entailment</span> One Leads To Other</p>
+              <p><span class="w3-badge w3-gray">SimilarTo</span> Used In Substitution</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="w3-tag w3-padding w3-round-large w3-red w3-center pull-left">Node Selected</div><div>&nbsp;</div>
+          <div class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue text-left" id="Node"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
