@@ -2,7 +2,7 @@ from Wordclient import *
 from Hypers import alpha
 import operator
 
-class SentenceClient:
+class Sentenceclient:
 	def __init__(self, sentence1, sentence2):
 		wordhash = Shelveopen('Hash#1.shelve')
 		self.sent1 = Purify(sentence1, wordhash)	# Sending Hash from here as prevents opening and closing again n again
@@ -16,6 +16,7 @@ class SentenceClient:
 		self.order_vectors = [] # To store order vectors of both sentences
 		self.threshold = 0.005 # To decide if something is not at all similar
 		self.pathacc = {} # To accumulate all paths after crawling
+		self.wordmap = [[],[]] #  # Words of Sentence1 found in Sentence2 & vice-versa
 
 	def Getsemantics(self):
 		'''
@@ -27,6 +28,18 @@ class SentenceClient:
 
 		else:
 			return self.semantic_vectors
+
+	def getPathsacc(self):
+		'''
+		Getter for accumulation of paths
+		'''
+		return self.pathacc
+
+	def getWordmap(self):
+		'''
+		Getter for accumulation of paths
+		'''
+		return self.wordmap
 
 	def Getorder(self):
 		'''
@@ -69,6 +82,11 @@ class SentenceClient:
 					sem1.append(score)
 					ord1.append(act_index+1)
 					self.Updatepath(word, allpaths[index])
+
+					# Enter in wordmap, word from sentence2 to sentence1 map
+					phrase = word+'->'+self.sent1[index];
+					if phrase not in self.wordmap[1]:
+						self.wordmap[1].append(phrase)
 				else:
 					sem1.append(0)
 					ord1.append(0)
@@ -93,6 +111,11 @@ class SentenceClient:
 					sem2.append(score)
 					ord2.append(act_index+1)
 					self.Updatepath(word, allpaths[index])
+
+					# Enter in wordmap, word from sentence1 to sentence2 map
+					phrase = word+'->'+self.sent2[index]
+					if phrase not in self.wordmap[0]:
+						self.wordmap[0].append(phrase)
 				else:
 					sem2.append(0)
 					ord2.append(0)
@@ -170,7 +193,7 @@ class SentenceClient:
 if __name__ == '__main__':
 	start_time = time.time()
 	try:
-		ss = SentenceClient('I love dogs boy',' I like lads too ')
+		ss = Sentenceclient('I love United States',' Trump Is the president of United States ')
 		score = ss.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
