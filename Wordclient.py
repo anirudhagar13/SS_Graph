@@ -13,10 +13,7 @@ class Wordclient:
 		'''
 		Constructor to crawl web for a word 
 		'''
-		self.alpha = 1 # To scale dimensions
-		self.beta = 100 # To scale dimensions
-		self.gamma = 100 # To scale dimensions
-		self.delta = 100 # To scale dimensions
+		self.tuners = [1,100,100,100]
 
 		self.word = word
 		sp = Spider(word, spread=2, limit=0.01)
@@ -42,10 +39,10 @@ class Wordclient:
 		self.paths, self.scores = self.calcmetric(client)
 
 		#Initializing client features
-		i = self.getpathnum() * self.alpha
-		j = self.gethighestscore() * self.beta
-		k = self.getmeanscore() * self.gamma
-		l = self.gettotalscore() * self.delta
+		i = self.getpathnum()
+		j = self.gethighestscore()
+		k = self.getmeanscore()
+		l = self.gettotalscore()
 		self.clientfeatures = [i, j, k, l]
 
 	def init_standard(self):
@@ -55,10 +52,10 @@ class Wordclient:
 		paths, scores = self.calcmetric(self.word)
 
 		#Initializing client features
-		i = self.getpathnum(paths) * self.alpha	# To scale to other dimensions
-		j = self.gethighestscore(scores) * self.beta
-		k = self.getmeanscore(scores) * self.gamma
-		l = self.gettotalscore(scores) * self.delta
+		i = self.getpathnum(paths)
+		j = self.gethighestscore(scores)
+		k = self.getmeanscore(scores)
+		l = self.gettotalscore(scores)
 		self.standardfeatures = [i, j, k, l]
 
 	#Generic function for reuse
@@ -142,7 +139,14 @@ class Wordclient:
 		if self.standardfeatures == []:
 			self.init_standard()
 
-		score = Cosine_similarity(self.standardfeatures, self.clientfeatures)
+		#Scaling dimensions to get nearest results
+		standfeat = []
+		clientfeat = []
+		for i in range(len(self.clientfeatures)):
+			standfeat.append(self.standardfeatures[i] * self.tuners[i])
+			clientfeat.append(self.clientfeatures[i] * self.tuners[i])
+
+		score = Cosine_similarity(standfeat, clientfeat)
 
 		# File Logging
 		log = '\n*******FROM : '+self.word+' TO : '+self.client+' *******'
@@ -227,14 +231,14 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'puppy'
-	client = 'dog'
+	word = 'like'
+	client = 'love'
 	try:
 		wc = Wordclient(word)
 		wc.init_client(client)
 		# wc.printweb()
 		# wc.printpaths()
-		score = wc.getmetric()
+		# score = wc.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)

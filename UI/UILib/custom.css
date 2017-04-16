@@ -1,0 +1,11 @@
+#edgeinfo{
+   width:190px;
+   max-width:190px;
+   display: inline-block;
+}
+
+#edgepanel{
+	font-style: italic;
+  	font-size: smaller;
+  	font-family: Arial;
+}
