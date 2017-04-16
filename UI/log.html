@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>System Logs</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="UILib/bootstrap.min.css">
+    <link rel="stylesheet" href="UILib/w3.css">
+    <link rel="stylesheet" href="UILib/custom.css">
+    <script src="UILib/jquery.min.js"></script>
+    <script src="UILib/bootstrap.min.js"></script>
+    <script src="UILib/logread.js"></script>
+    <script type="text/javascript">
+        function w3_open() {
+          document.getElementById("main").style.marginLeft = "25%";
+          document.getElementById("mySidebar").style.width = "25%";
+          document.getElementById("mySidebar").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("main").style.marginLeft = "0%";
+          document.getElementById("mySidebar").style.display = "none";
+        }
+
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-bar-block" style="display:none" id="mySidebar">
+      <button onclick="w3_close()" class="w3-bar-item w3-button w3-large">Close &times;</button>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/DocumentComparison.log')">Document Comparison</button><br/>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/SentenceComparison.log')">Sentence Comparison</button><br/>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/WordComparison.log')">Word Comparison</button><br/>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/NonMorphed.log')">Words Not In Graph</button><br/>
+    </div>
+
+      <!-- Page Content -->
+    <div class="w3-main" id="main">
+
+        <div class="w3-light-gray">
+            <button class="w3-button w3-teal w3-xlarge w3-text-light-gray" onclick="w3_open()">☰</button>
+            <div class="w3-tag w3-round w3-red" style="padding:5px">
+              <div class="w3-tag w3-round w3-red w3-border w3-border-white">
+                <h3>System Logs</h3>
+              </div>
+            </div>
+        </div>
+
+        <div id='logs' class="w3-card-4 w3-black"><em>No Logs Available</em></div>
+    </div>
+
+</body>
+</html>
