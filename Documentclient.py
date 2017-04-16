@@ -12,7 +12,7 @@ class Documentclient:
 		self.doc_2 = sent_tokenize(doc_2)
 		self.sem_matrix = [[0 for col in range(len(self.doc_2))] for row in range(len(self.doc_1))] # Fill matrix with zeros
 		self.allpaths = {}
-		self.wordmap = [[],[]] # Words of Doc1 found in Doc2 & vice-versa
+		self.wordmap = [{},{}] # Words of Doc1 found in Doc2 & vice-versa
 		self.score = 0	# Final document score
 
 	def wordmapacc(self, wordmap):
@@ -20,12 +20,18 @@ class Documentclient:
 		Create Mapping of words found in other Document
 		'''
 		for phrase in wordmap[0]:
-			if phrase not in self.wordmap[0]:
-				self.wordmap[0].append(phrase)
+			key, dest = phrase.split('->')
+			if key not in self.wordmap[0]:
+				self.wordmap[0][key] = []
+			if dest not in self.wordmap[0][key]:
+				self.wordmap[0][key].append(dest)
 
 		for phrase in wordmap[1]:
+			key, dest = phrase.split('->')
 			if phrase not in self.wordmap[1]:
-				self.wordmap[1].append(phrase)
+				self.wordmap[1][key] = []
+			if dest not in self.wordmap[1][key]:
+				self.wordmap[1][key].append(dest)
 
 	def pathaccumulation(self, pathacc):
 		'''

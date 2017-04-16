@@ -1,0 +1,46 @@
+   <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="UILib/bootstrap.min.css">
+    <link rel="stylesheet" href="UILib/w3.css">
+    <script src="UILib/jquery.min.js"></script>
+    <script src="UILib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="UILib/loader.js"></script>
+    <script type="text/javascript" src="UILib/wordtree.js"></script>
+    <script type="text/javascript">
+        var data = {'dog': ['puppy','dalmatian']};
+
+        function Trigger(node){
+            Drawtree(node, data);
+        }
+    </script>
+  </head>
+  <body>
+
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" onclick="Trigger('dog');">Sample WordTree</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">
+            <div class="w3-tag w3-round w3-indigo" style="padding:3px">
+              <div class="w3-tag w3-round w3-indigo w3-border w3-border-white">
+                Cross Document Semantic Matches
+              </div>
+            </div>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div id="wordtree"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
+   
