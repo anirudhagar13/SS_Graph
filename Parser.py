@@ -39,7 +39,7 @@ class Patent:
 		'''
 		if self.patent == '':
 			# Need to open file
-			if '.doc' in self.file or '.docx' in file:
+			if '.docx' in file:
 				# Open doc file differently
 				self.patent = docx2txt.process(self.file).split('\n')
 			else:
@@ -61,5 +61,5 @@ class Patent:
 			self.template[curr_key] += line
 
 if __name__ == '__main__':
-	p = Patent(file='Berthing (Provisional).docx')
-	print p.getTemplate('BACKGROUND')
+	provisional = Patent(file="sample.docx")
+	print provisional.getTemplate('BACKGROUND')

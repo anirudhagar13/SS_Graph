@@ -11,4 +11,4 @@ Hyper10 = 0.6   #For Verb Entailments
 DMax = 0.9	#Definition to example MaXval in ComputeMinMax
 EMax = 0.3	#Sense to example MaXval in ComputeMinMax
 alpha = 0.6 #Metric to get final Sentence semantic score, decides weightage between order and semantics
-tuners = [1,100,100,150]	#Tune dimenational vectors of Wordclient
+tuners = [5,100,100,80]	#Tune dimenational vectors of Wordclient
