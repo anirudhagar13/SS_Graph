@@ -7,8 +7,15 @@ import pickle
 import shelve
 import sys
 import math
+import os
 
 
+uipath = os.getcwd()
+if 'ssgraph' in uipath: # Running from UI
+    uipath = '/'.join(uipath.split("\\")[:-1])
+else:
+    uipath = '/'.join(uipath.split("\\"))
+    
 StopWords = ['a', 'has', 'such', 'accordance', 'have', 'suitable', 'according', 'having', 'than', 'all', 'herein', 'that', 'also', 'however', 'the', 'an', 'if', 'their', 'and', 'in', 'then', 'another', 'into', 'there', 'are', 'invention', 'thereby', 'as', 'is', 'therefore', 'at', 'it', 'thereof', 'be', 'its', 'thereto', 'because', 'means', 'these', 'been', 'not', 'they', 'being', 'now', 'this', 'by', 'of', 'those', 'claim', 'on', 'thus', 'comprises', 'onto', 'to', 'corresponding', 'or', 'use', 'could', 'other', 'various', 'described', 'particularly', 'was', 'desired', 'preferably', 'were', 'do', 'preferred', 'what', 'does', 'present', 'when', 'each', 'provide', 'where', 'embodiment', 'provided', 'whereby', 'fig', 'provides', 'wherein', 'figs', 'relatively', 'which', 'for', 'respectively', 'while', 'from', 'said', 'who', 'further', 'should', 'will', 'generally', 'since', 'with', 'had', 'some', 'would']
 
 def Unicode(data):
@@ -49,11 +56,11 @@ def Vectormag(v1):
 def Filedump(filename, content, appendflag=True):
     # Appends/Overwrites data to files
     if appendflag:
-        with open('Logs/'+filename,'a') as file:
+        with open(uipath+'/Logs/'+filename,'a') as file:
             file.write(content+'\n')
     else:
         # File Overwritten
-        with open('Logs/'+filename,'w') as file:
+        with open(uipath+'/Logs/'+filename,'w') as file:
             file.write(content+'\n')
 
 def Pickledump(data, file):
@@ -75,7 +82,7 @@ def Shelveopen(filename):
     '''
     Open shelve dictionary
     '''
-    return shelve.open('Shelves/'+filename)
+    return shelve.open(uipath+'/Shelves/'+filename)
 
 def Shelveclose(shelve):
     '''

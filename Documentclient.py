@@ -13,6 +13,24 @@ class Documentclient:
 		self.wordmap = [{},{}] # Words of Doc1 found in Doc2 & vice-versa
 		self.score = 0	# Final document score
 
+	def getWordMap(self):
+		'''
+		Getter for wordmap
+		'''
+		return self.wordmap
+
+	def getPaths(self):
+		'''
+		Getter for allpaths
+		'''
+		return self.allpaths
+
+	def getScore(self):
+		'''
+		Getter for score
+		'''
+		return self.score
+
 	def wordmapacc(self, wordmap):
 		'''
 		Create Mapping of words found in other Document
