@@ -6,8 +6,6 @@ class Documentclient:
 	def __init__(self, weight_1=1, weight_2=1, doc_1='', doc_2=''):
 		self.weight_1 = weight_1
 		self.weight_2 = weight_2
-		self.document_1 = doc_1
-		self.document_2 = doc_2
 		self.doc_1 = sent_tokenize(doc_1)	# tokenizes into list of sentences
 		self.doc_2 = sent_tokenize(doc_2)
 		self.sem_matrix = [[0 for col in range(len(self.doc_2))] for row in range(len(self.doc_1))] # Fill matrix with zeros
@@ -81,8 +79,11 @@ class Documentclient:
 		# Initialize Similarity Matrix
 		self.calcmetric()
 
-		# Calculate score from Matrix here
-
+		# Calculate score from Matrix here, sum of all matrix elements
+		total_sum = sum([sum(i) for i in self.sem_matrix])
+		total_comp = len(self.doc_1)*len(self.doc_2)
+		self.score = round(total_sum/total_comp,5)
+		
 		# File Logging
 		log = '\n************************'
 		Filedump('DocumentComparison.log',log)
@@ -92,9 +93,9 @@ class Documentclient:
 		Filedump('DocumentComparison.log',log)
 		log = 'Semantic Matrix : '+str(self.sem_matrix)
 		Filedump('DocumentComparison.log',log)
-		log = 'Words Mapped Doc 1 to Doc 2 : '+str(self.wordmap[0])
+		log = 'Words Semantically Mapped Doc 1 to Doc 2 : '+str(self.wordmap[0])
 		Filedump('DocumentComparison.log',log)
-		log = 'Words Mapped Doc 2 to Doc 1 : '+str(self.wordmap[1])
+		log = 'Words Semantically Mapped Doc 2 to Doc 1 : '+str(self.wordmap[1])
 		Filedump('DocumentComparison.log',log)
 		log = '####### Document Similarity Score : '+str(self.score)+' #######'
 		Filedump('DocumentComparison.log',log)
@@ -102,7 +103,7 @@ class Documentclient:
 if __name__ == '__main__':
 	try:
 		start_time = time.time()
-		dd = Documentclient(doc_1='I Like Dogs. Do you like dogs too ?',doc_2='I like puppies. I hate dogs. They are disgusting creatures !')
+		dd = Documentclient(doc_1='I Like Dogs. Do you like dogs too ?',doc_2="I don't like dogs. Puppies are cuter !")
 		dd.getmetric()
 		print 'Execution Time : ',time.time() - start_time
 	except Exception as e:
