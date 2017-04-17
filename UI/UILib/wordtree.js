@@ -2,24 +2,29 @@ google.charts.load('current', {packages:['wordtree']});
 
 function Drawtree(word, data){
 
-	destinations = data[word]
-	var datatable = [['Phrases']];
-	for(var i in destinations){
-		var node = [];
-		node.push(word+" "+destinations[i]);
-		datatable.push(node);
-	}
-	console.log(datatable)
-
-    var data = google.visualization.arrayToDataTable(datatable);
-
+    var data = addNodes(word, data[word])
     var options = {
-      wordtree: {
-        format: 'implicit',
-        word: word
-      }
+        wordtree: {
+        format: 'explicit',
+        type: 'suffix'
+        }
     };
 
     var chart = new google.visualization.WordTree(document.getElementById('wordtree'));
     chart.draw(data, options);
+}
+
+function addNodes(word, dests){
+
+    var nodeListData = new google.visualization.arrayToDataTable([
+          ['id', 'childLabel', 'parent', 'size', { role: 'style' }],
+          [0, word, -1, 1, '#009688']
+        ]);
+
+    for(var i = 0 ; i < dests.length ; ++i){
+        var node = [];
+        node.push(i+1,dests[i],0,1,'#2196F3');
+        nodeListData.addRow(node);
+    }
+    return nodeListData
 }
