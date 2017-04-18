@@ -230,8 +230,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'food'
-	client = 'fruit'
+	word = 'dog'
+	client = 'labrador'
 	try:
 		wc = Wordclient(word)
 		wc.init_client(client)

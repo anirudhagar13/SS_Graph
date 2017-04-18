@@ -65,8 +65,8 @@ class Patent:
 if __name__ == '__main__':
 	try:
 		start_time = time.time()
-		patent1 = Patent(file="Present/smartphone_1_2")
-		patent2 = Patent(file="Present/cooking")
+		patent1 = Patent(file="Patent_extracts/smartphone_1_2")
+		patent2 = Patent(file="Patent_extracts/cooking")
 		print patent2.getTemplate('ABSTRACT')
 		dd = Documentclient(doc_1=patent1.getTemplate('ABSTRACT'),doc_2=patent2.getTemplate('ABSTRACT'))
 		dd.getmetric()

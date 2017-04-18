@@ -9,7 +9,7 @@ class Documentclient:
 
 		tokenized_1 = sent_tokenize(doc_1)
 		tokenized_2 = sent_tokenize(doc_2)
-		self.doc_1 = tokenized_1 if len(tokenized_1) < len(tokenized_2) else tokenized_2	# Smaller doc
+		self.doc_1 = tokenized_1 if len(tokenized_1) <= len(tokenized_2) else tokenized_2	# Smaller doc
 		self.doc_2 = tokenized_1 if self.doc_1 == tokenized_2 else tokenized_2	# Bigger doc
 
 		# Initializing smaller document as rows

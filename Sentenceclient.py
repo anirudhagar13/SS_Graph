@@ -74,6 +74,16 @@ class Sentenceclient:
 				for key in self.sent1:
 					wc.init_client(key)
 					score = wc.getmetric()
+
+					if score > 0:
+						# Some Semantic Match
+						self.Updatepath(word, wc.getpaths())
+
+						# Enter in wordmap, word from sentence2 to sentence1 map
+						phrase = word+'->'+key
+						if phrase not in self.wordmap[0]:
+							self.wordmap[0].append(phrase)
+
 					allscores.append(score)
 					allpaths.append(wc.getpaths())
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
@@ -81,12 +91,6 @@ class Sentenceclient:
 					act_index = self.wordset.index(self.sent1[index])
 					sem1.append(score)
 					ord1.append(act_index+1)
-					self.Updatepath(word, allpaths[index])
-
-					# Enter in wordmap, word from sentence2 to sentence1 map
-					phrase = word+'->'+self.sent1[index];
-					if phrase not in self.wordmap[1]:
-						self.wordmap[1].append(phrase)
 				else:
 					sem1.append(0)
 					ord1.append(0)
@@ -103,6 +107,16 @@ class Sentenceclient:
 				for key in self.sent2:
 					wc.init_client(key)
 					score = wc.getmetric()
+
+					if score > 0:
+						# Some Semantic Match
+						self.Updatepath(word, wc.getpaths())
+
+						# Enter in wordmap, word from sentence2 to sentence1 map
+						phrase = word+'->'+key
+						if phrase not in self.wordmap[1]:
+							self.wordmap[1].append(phrase)
+
 					allscores.append(score)
 					allpaths.append(wc.getpaths())
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
@@ -110,12 +124,6 @@ class Sentenceclient:
 					act_index = self.wordset.index(self.sent2[index])
 					sem2.append(score)
 					ord2.append(act_index+1)
-					self.Updatepath(word, allpaths[index])
-
-					# Enter in wordmap, word from sentence1 to sentence2 map
-					phrase = word+'->'+self.sent2[index]
-					if phrase not in self.wordmap[0]:
-						self.wordmap[0].append(phrase)
 				else:
 					sem2.append(0)
 					ord2.append(0)
@@ -186,6 +194,8 @@ class Sentenceclient:
 		Filedump('SentenceComparison.log',log)
 		log = 'Order Vectors : '+str(self.order_vectors)
 		Filedump('SentenceComparison.log',log)
+		log = 'All Paths : '+str(self.wordmap)
+		Filedump('SentenceComparison.log',log)
 		log = '####### Semantic Sentence Score : '+str(score)+' #######'
 		Filedump('SentenceComparison.log',log)
 		return round(score,4)
@@ -193,7 +203,7 @@ class Sentenceclient:
 if __name__ == '__main__':
 	start_time = time.time()
 	try:
-		ss = Sentenceclient('I love United States',' Trump Is the president of United States ')
+		ss = Sentenceclient('dog',' frump domestic dog ')
 		score = ss.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
