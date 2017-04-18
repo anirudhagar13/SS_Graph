@@ -6,10 +6,12 @@ Custom Semantic Graph based on Wordnet
 
 #Steps to Create:
 -------------------
-	> Install python2.7
-	> Download nltk package in python using pip-install/easy-install
-    > Get wordnet, penntreebank from nltk corpus in python, incase any dependency missed get it using nltk.download() > dependency 
-    > Run Creator.sh to create graphdata, it is a shell file
-    > If using Powershell run 'Measure-Command {start-process sh Creator.sh -Wait}', if bash run 'time Creator.sh'
-    > Incase of any failures, clear Shelves folder and rerun Creator.sh
-    > The System is now good to go, Open UI and have fun :)
+	1. Install python2.7
+	2. Download nltk package in python using pip-install/easy-install
+    3. Get wordnet, penntreebank from nltk corpus in python, incase any dependency missed get it using nltk.download() > dependency 
+    4. Run Creator.sh to create graphdata, it is a shell file
+    5. If using Powershell run 'Measure-Command {start-process sh Creator.sh -Wait}', if bash run 'time Creator.sh'
+    6. Incase of any failures, clear Shelves folder and rerun Creator.sh
+    7. The System is now good to go, Open UI.
+    8. Go inside ssgraph folder. Run server using 'python manage.py runserver'
+    9. Open link displayed on cosole, have fun with the system.

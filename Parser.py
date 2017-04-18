@@ -65,9 +65,10 @@ class Patent:
 if __name__ == '__main__':
 	try:
 		start_time = time.time()
-		patent1 = Patent(file="Present/smartphone_1")
-		patent2 = Patent(file="Present/smartphone_2")
-		dd = Documentclient(doc_1=patent1.getTemplate('ABSTRACT'),doc_2=patent1.getTemplate('ABSTRACT'))
+		patent1 = Patent(file="Present/smartphone_1_2")
+		patent2 = Patent(file="Present/cooking")
+		print patent2.getTemplate('ABSTRACT')
+		dd = Documentclient(doc_1=patent1.getTemplate('ABSTRACT'),doc_2=patent2.getTemplate('ABSTRACT'))
 		dd.getmetric()
 		print 'Execution Time : ',time.time() - start_time
 	except Exception as e:
