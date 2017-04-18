@@ -2,6 +2,13 @@ google.charts.load('current', {packages:['wordtree']});
 
 function Drawtree(word, data){
 
+    setTimeout(Draw, 300, word,data);
+}
+
+function Draw(word, data){
+
+    console.log(word);
+    console.log(JSON.stringify(data));
     var data = addNodes(word, data[word])
     var options = {
         wordtree: {
