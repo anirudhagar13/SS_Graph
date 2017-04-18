@@ -1,4 +1,5 @@
 import docx2txt
+from Documentclient import *
 
 class Patent:
 	def __init__(self, file, patent=''):
@@ -8,10 +9,10 @@ class Patent:
 		self.file = file
 		self.patent = patent
 		self.template = {'TITLE':'','INVENTOR':'',
-					'FIELD':'','BACKGROUND':'',
-					'CLAIMS':'','SUMMARY':'',
+					'BACKGROUND':'','CLAIMS':'',
+					'SUMMARY':'','ABSTRACT':'',
 					'DRAWINGS':'','DETAILED':'',
-					'ABSTRACT':''}
+					'FIELD':''}
 		self.Initialise()
 
 	def getTemplate(self,part):
@@ -27,6 +28,7 @@ class Patent:
 		'''
 		Checks if new heading has started
 		'''
+		line = line.upper()
 		for heading in self.template:
 			if heading in line:
 				# Heading has changed
@@ -39,7 +41,7 @@ class Patent:
 		'''
 		if self.patent == '':
 			# Need to open file
-			if '.docx' in file:
+			if '.docx' in self.file:
 				# Open doc file differently
 				self.patent = docx2txt.process(self.file).split('\n')
 			else:
@@ -61,5 +63,12 @@ class Patent:
 			self.template[curr_key] += line
 
 if __name__ == '__main__':
-	provisional = Patent(file="sample.docx")
-	print provisional.getTemplate('BACKGROUND')
+	try:
+		start_time = time.time()
+		patent1 = Patent(file="Present/smartphone_1")
+		patent2 = Patent(file="Present/smartphone_2")
+		dd = Documentclient(doc_1=patent1.getTemplate('ABSTRACT'),doc_2=patent1.getTemplate('ABSTRACT'))
+		dd.getmetric()
+		print 'Execution Time : ',time.time() - start_time
+	except Exception as e:
+		print 'Document Client Exception : ',e

@@ -1,0 +1,2 @@
+Abstract
+There is disclosed an information input/output control device and a method for controlling the same which supervises a working condition of an information terminal device connected to the information input/output control device under a network circumstance executing various functional operations, memorizes status informations in a manner enabling to be restarted and executes the functional operations in the information terminal devices other than the preceding one in response to an input of an operation cease information of the preceding information terminal device.

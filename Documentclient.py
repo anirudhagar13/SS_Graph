@@ -6,8 +6,13 @@ class Documentclient:
 	def __init__(self, weight_1=1, weight_2=1, doc_1='', doc_2=''):
 		self.weight_1 = weight_1
 		self.weight_2 = weight_2
-		self.doc_1 = sent_tokenize(doc_1)	# tokenizes into list of sentences
-		self.doc_2 = sent_tokenize(doc_2)
+
+		tokenized_1 = sent_tokenize(doc_1)
+		tokenized_2 = sent_tokenize(doc_2)
+		self.doc_1 = tokenized_1 if len(tokenized_1) < len(tokenized_2) else tokenized_2	# Smaller doc
+		self.doc_2 = tokenized_1 if len(tokenized_1) > len(tokenized_2) else tokenized_2	# Bigger doc
+
+		# Initializing smaller document as rows
 		self.sem_matrix = [[0 for col in range(len(self.doc_2))] for row in range(len(self.doc_1))] # Fill matrix with zeros
 		self.allpaths = {}
 		self.wordmap = [{},{}] # Words of Doc1 found in Doc2 & vice-versa
@@ -73,12 +78,13 @@ class Documentclient:
 		Filedump('SentenceComparison.log','', False)
 		Filedump('DocumentComparison.log','', False)
 
-	def calcmetric(self):
+	def makemaps(self):
 		'''
 		Initialize semantic Matrix
 		'''		
 		# Clear Logs
 		self.clearlogs()
+
 		for i, sent1 in enumerate(self.doc_1):
 			for j, sent2 in enumerate(self.doc_2):
 				ss = Sentenceclient(sent1, sent2)
@@ -90,17 +96,29 @@ class Documentclient:
 				self.pathaccumulation(paths)
 				self.wordmapacc(wordmap)
 
+				if score == 1:
+					# Has Found match, no point is searching for more
+					break
+					
+	def calcmetric(self):
+		'''
+		To give similarity matrix score between documents
+		'''
+		score = 0
+		for row in self.sem_matrix:
+			score += max(row) # Get Highest score from each row
+
+		return round(score/len(self.sem_matrix),4)
+
 	def getmetric(self):
 		'''
 		Obtain final Document Similarity Score
 		'''
 		# Initialize Similarity Matrix
-		self.calcmetric()
+		self.makemaps()
 
 		# Calculate score from Matrix here, sum of all matrix elements
-		total_sum = sum([sum(i) for i in self.sem_matrix])
-		total_comp = len(self.doc_1)*len(self.doc_2)
-		self.score = round(total_sum/total_comp,5)
+		self.score = self.calcmetric()
 		
 		# File Logging
 		log = '\n************************'
@@ -121,7 +139,7 @@ class Documentclient:
 if __name__ == '__main__':
 	try:
 		start_time = time.time()
-		dd = Documentclient(doc_1='I Like Dogs. Do you like dogs too ?',doc_2="I don't like dogs. Puppies are cuter !")
+		dd = Documentclient(doc_1='I Like Dogs. I Hate you. I love puppies too ? I hate balloons',doc_2="I hate you. i like dogs. I adore dalmatians!")
 		dd.getmetric()
 		print 'Execution Time : ',time.time() - start_time
 	except Exception as e:
