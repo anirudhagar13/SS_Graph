@@ -1,6 +1,10 @@
 from Sentenceclient import *
 from nltk.tokenize import sent_tokenize
 import numpy
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 class Documentclient:
 	def __init__(self, weight_1=1, weight_2=1, doc_1='', doc_2=''):
@@ -49,7 +53,7 @@ class Documentclient:
 
 		for phrase in wordmap[1]:
 			key, dest = phrase.split('->')
-			if phrase not in self.wordmap[1]:
+			if key not in self.wordmap[1]:
 				self.wordmap[1][key] = []
 			if dest not in self.wordmap[1][key]:
 				self.wordmap[1][key].append(dest)
@@ -135,6 +139,8 @@ class Documentclient:
 		Filedump('DocumentComparison.log',log)
 		log = '####### Document Similarity Score : '+str(self.score)+' #######'
 		Filedump('DocumentComparison.log',log)
+
+		return self.score
 
 if __name__ == '__main__':
 	try:

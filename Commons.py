@@ -24,9 +24,9 @@ def Unicode(data):
         '''
         #Check if received is string
         if isinstance(data, (str, unicode)):
-            return str(data).lower()
+            return data.encode('utf-8').lower()
         else:
-            return [str(x).lower() for x in data]
+            return [x.encode('utf-8').lower() for x in data]
 
 def Cosine_similarity(v1, v2):
     # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
@@ -56,11 +56,11 @@ def Vectormag(v1):
 def Filedump(filename, content, appendflag=True):
     # Appends/Overwrites data to files
     if appendflag:
-        with open(uipath+'/Logs/'+filename,'a') as file:
+        with open(uipath+'/ssgraph/helloapp/Logs/'+filename,'a') as file:
             file.write(content+'\n')
     else:
         # File Overwritten
-        with open(uipath+'/Logs/'+filename,'w') as file:
+        with open(uipath+'/ssgraph/helloapp/Logs/'+filename,'w') as file:
             file.write(content+'\n')
 
 def Pickledump(data, file):
