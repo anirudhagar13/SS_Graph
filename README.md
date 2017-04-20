@@ -13,5 +13,6 @@ Custom Semantic Graph based on Wordnet
     5. If using Powershell run 'Measure-Command {start-process sh Creator.sh -Wait}', if bash run 'time Creator.sh'
     6. Incase of any failures, clear Shelves folder and rerun Creator.sh
     7. The System is now good to go, Open UI.
-    8. Go inside ssgraph folder. Run server using 'python manage.py runserver'
+    8. Set paths in Commons and views.py inside ssgraph/graph
+    8. Run server using 'python manage.py runserver'
     9. Open link displayed on cosole, have fun with the system.

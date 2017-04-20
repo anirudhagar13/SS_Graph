@@ -4,12 +4,12 @@
     <title>System Logs</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="UILib/bootstrap.min.css">
-    <link rel="stylesheet" href="UILib/w3.css">
-    <link rel="stylesheet" href="UILib/custom.css">
-    <script src="UILib/jquery.min.js"></script>
-    <script src="UILib/bootstrap.min.js"></script>
-    <script src="UILib/logread.js"></script>
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/w3.css">
+    <link rel="stylesheet" href="/static/custom.css">
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/logread.js"></script>
     <script type="text/javascript">
         function w3_open() {
           document.getElementById("main").style.marginLeft = "25%";
@@ -25,6 +25,18 @@
     </script>
 </head>
 <body>
+    <div id="upper-container">
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div id="navbar_div">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#"><h3>Patent Similarity Using Semantic Graph</h3></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
     <!-- Sidebar -->
     <div class="w3-sidebar w3-bar-block" style="display:none" id="mySidebar">
       <button onclick="w3_close()" class="w3-bar-item w3-button w3-large">Close &times;</button>
@@ -48,6 +60,12 @@
 
         <div id='logs' class="w3-card-4 w3-black"><em>No Logs Available</em></div>
     </div>
+
+    <div id="footer" class="panel-footer">
+          <div class="text-center" id="footer-one">
+            <p><h3><i>Similarity Graph is created from Wordnet which is a powerful semantic tool developed in Princeton.<i><h3></p>
+          </div>
+        </div>
 
 </body>
 </html>

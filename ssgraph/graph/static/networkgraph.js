@@ -13,7 +13,21 @@ function Synsetfetch(label){
 	var label = "<p>Name : <em>"+label+"</em></p>";
 	var type = "<p>Type : <em>Synset</em></p>";
 	$("#Node")
-	.html(label+type)
+	.html(label+type);
+
+	/*$.ajax({
+    url: '/process_synset/',
+    data:{'synset':label},
+    dataType:'json',
+    success:function(data){
+    	console.log(JSON.stringify(data));
+      console.log(data.definition);
+    },
+    failure:function(){
+      sweetAlert("Oops...", "Something went wrong!", "error");
+    }
+  });*/
+	
 }
 
 function Includes(biglist, list){
@@ -110,6 +124,9 @@ function Compact(word, data){
 	}
 
 	jQuery(function(){
+		var canvas = document.getElementById('similaritygraph');
+		canvas.width = canvas.width;	// To clear canvas
+		
 		var springy = window.springy = jQuery('#similaritygraph').springy({
 			graph: graph,
 			nodeSelected: function(node){

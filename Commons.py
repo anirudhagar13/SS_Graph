@@ -56,11 +56,11 @@ def Vectormag(v1):
 def Filedump(filename, content, appendflag=True):
     # Appends/Overwrites data to files
     if appendflag:
-        with open(uipath+'/ssgraph/helloapp/Logs/'+filename,'a') as file:
+        with open(uipath+'/ssgraph/mainapp/Logs/'+filename,'a') as file:
             file.write(content+'\n')
     else:
         # File Overwritten
-        with open(uipath+'/ssgraph/helloapp/Logs/'+filename,'w') as file:
+        with open(uipath+'/ssgraph/mainapp/Logs/'+filename,'w') as file:
             file.write(content+'\n')
 
 def Pickledump(data, file):
