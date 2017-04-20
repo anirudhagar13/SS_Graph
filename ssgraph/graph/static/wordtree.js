@@ -7,8 +7,6 @@ function Drawtree(word, data){
 
 function Draw(word, data){
 
-    console.log(word);
-    console.log(JSON.stringify(data));
     var data = addNodes(word, data[word])
     var options = {
         wordtree: {
@@ -22,7 +20,6 @@ function Draw(word, data){
 }
 
 function addNodes(word, dests){
-
     var nodeListData = new google.visualization.arrayToDataTable([
           ['id', 'childLabel', 'parent', 'size', { role: 'style' }],
           [0, word, -1, 1, '#009688']

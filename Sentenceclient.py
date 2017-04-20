@@ -81,8 +81,8 @@ class Sentenceclient:
 
 						# Enter in wordmap, word from sentence2 to sentence1 map
 						phrase = word+'->'+key
-						if phrase not in self.wordmap[0]:
-							self.wordmap[0].append(phrase)
+						if phrase not in self.wordmap[1]:
+							self.wordmap[1].append(phrase)
 
 					allscores.append(score)
 					allpaths.append(wc.getpaths())
@@ -114,8 +114,8 @@ class Sentenceclient:
 
 						# Enter in wordmap, word from sentence2 to sentence1 map
 						phrase = word+'->'+key
-						if phrase not in self.wordmap[1]:
-							self.wordmap[1].append(phrase)
+						if phrase not in self.wordmap[0]:
+							self.wordmap[0].append(phrase)
 
 					allscores.append(score)
 					allpaths.append(wc.getpaths())

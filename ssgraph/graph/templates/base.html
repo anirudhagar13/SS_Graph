@@ -41,209 +41,183 @@
   patent1 = '';
   patent2 = '';
 
-  function init()
-  {
-        //set_footer_position();
-        define_element_positions();
-      }
+  function logs_page(){
+    window.location.href = '/logspage/';
+  }
+  function foo1(word_, data_){
+      // Call for radio buttons
+      var radio1 = document.getElementById('radio_network');
+      var radio2 = document.getElementById('radio_tree');
 
-      function logs_page(){
-        window.location.href = '/logspage/';
-      }
-      function define_element_positions()
-      {
-        //query_results_div
-        query_results_div = document.getElementById('query_results_div');
-        user_inp_div_outer = document.getElementById('user_inp_div_outer');
-        //query_results_div.style.top = user_inp_div_outer.offsetHeight + "px";
-        //console.log(user_inp_div_outer.offsetHeight);
-        //footer
-        footer = document.getElementById('footer');
-        footer.style.top = query_results_div.offsetTop + query_results_div.offsetHeight + "px";
-      }
-      function foo1(word_, data_)
-      {
-          // Call for radio buttons
-          var radio1 = document.getElementById('radio_network');
-          var radio2 = document.getElementById('radio_tree');
+      if(radio1.checked){
+        $('#NetworkModal').modal('show');
+        Compact(word_,data_.allpaths);
+      }  
+      if(radio2.checked){
+        $('#TreeModal').modal('show');
+        Drawtree(word_, data_.dict1);
+      }   
+    }
 
-          if(radio1.checked){
-            $('#NetworkModal').modal('show');
-            Compact(word_,data_.allpaths);
-          }  
-          if(radio2.checked){
-            $('#TreeModal').modal('show');
-            Drawtree(word_, data_.dict1);
-          }   
-        }
-        function foo2(word_, data_)
-        {
-          // Call for radio buttons
-          var radio1 = document.getElementById('radio_network');
-          var radio2 = document.getElementById('radio_tree');
+  function foo2(word_, data_){
+    // Call for radio buttons
+    var radio1 = document.getElementById('radio_network');
+    var radio2 = document.getElementById('radio_tree');
 
-          if(radio1.checked){
-            $('#NetworkModal').modal('show');
-            Compact(word_,data_.allpaths);
-          }  
-          if(radio2.checked){
-            $('#TreeModal').modal('show');
-            Drawtree(word_, data_.dict2);
-          }  
-        }
+    if(radio1.checked){
+      $('#NetworkModal').modal('show');
+      Compact(word_,data_.allpaths);
+    }  
+    if(radio2.checked){
+      $('#TreeModal').modal('show');
+      Drawtree(word_, data_.dict2);
+    }  
+  }
 
-        function Filesread(){
-          upload1 = document.getElementById('fileupload1');
-          upload2 = document.getElementById('fileupload2');
-          if(upload1.files[0] == undefined || upload2.files[0] == undefined){
-            return false;
+  function Filesread(){
+    upload1 = document.getElementById('fileupload1');
+    upload2 = document.getElementById('fileupload2');
+    if(upload1.files[0] == undefined || upload2.files[0] == undefined){
+      return false;
+    }
+    return true;
+  }
+
+  function Comparepatents(){
+    if(patent1 != '' && patent2 != ''){
+      swal({
+        title: "Patent semantic comparison",
+        type: 'info',
+        showCancelButton: true,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+        confirmButtonText: "Compare",
+      },
+      function() {
+        $('.sweet-alert > p').text("Please wait, crunching the latest data just for you!");
+        patentpart = document.getElementById('patentpart');
+        part = patentpart.options[patentpart.selectedIndex].text;
+        $.ajax({
+          url: '/patentparser/',
+          data:{'patent1':patent1, 'patent2':patent2, 'patentpart':part},
+          dataType:'json',
+          success:function(data){
+            var score_ = data.score;
+            var score = score_.toString();
+            swal("Patent Similarity Completed !", 'Semantic Score : '+score, "success");
+            
+            // Show logs button
+            var result_div = document.createElement('results_div');
+            results_div.style.display = "block";
+            $('#compscore').html(score);
+          },
+          failure:function(){
+            sweetAlert("Oops...", "Something went wrong!", "error");
           }
-          return true;
-        }
+        });
+      });
+    }
+  }
 
-        function Comparepatents(){
-          if(patent1 != '' && patent2 != ''){
-            swal({
-              title: "Patent semantic comparison",
-              type: 'info',
-              showCancelButton: true,
-              closeOnConfirm: false,
-              showLoaderOnConfirm: true,
-              confirmButtonText: "Compare",
-            },
-            function() {
-              $('.sweet-alert > p').text("Please wait, crunching the latest data just for you!");
-              patentpart = document.getElementById('patentpart');
-              part = patentpart.options[patentpart.selectedIndex].text;
-              $.ajax({
-                url: '/patentparser/',
-                data:{'patent1':patent1, 'patent2':patent2, 'patentpart':part},
-                dataType:'json',
-                success:function(data){
-                  var score_ = data.score;
-                  var score = score_.toString();
-                  if (upload2.files[0].name == 'cooking' || upload1.files[0].name == 'cooking'){
-                    score = '0.4635'
-                  }
-                  if (upload2.files[0].name == 'ecommerce' || upload1.files[0].name == 'ecommerce'){
-                    score = '0.6842'
-                  }
-                  if (upload2.files[0].name == 'seating' || upload1.files[0].name == 'seating'){
-                    score = '0.5912'
-                  }
-                  swal("Patent Similarity Completed !", 'Semantic Score : '+score, "success");
-                  var result_div = document.createElement('results_div');
-                  results_div.style.display = "block";
-                },
-                failure:function(){
-                  sweetAlert("Oops...", "Something went wrong!", "error");
-                }
-              });
+  $(document).ready(function(){
+
+    $("#compare_btn").click(function(e){
+      e.preventDefault();
+
+      if(Filesread()){
+
+        var reader1 = new FileReader();
+        reader1.onload = function(){
+          patent1 = reader1.result;
+          Comparepatents();
+        };
+        reader1.readAsText(upload1.files[0]);
+
+        var reader2 = new FileReader();
+        reader2.onload = function(){
+          patent2 = reader2.result;
+          Comparepatents();
+        };
+        reader2.readAsText(upload2.files[0]);
+
+      }
+      else{
+        var input_data1 = $("#textarea1").val();
+        var input_data2 = $("#textarea2").val();
+        swal({
+          title: "Do a semantic comparison",
+      //text: "Please wait, crunching the latest data just for you!",
+      type: 'info',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true,
+      confirmButtonText: "Compare",
+    },
+    function() {
+      $('.sweet-alert > p').text("Please wait, crunching the latest data just for you!");
+      $.ajax({
+        url: '/ajax/debug_ajax/',
+        data: { 'input_data1' : input_data1,
+        'input_data2' : input_data2 },
+        dataType: 'json',
+        success: function(data){
+          if(data.working) {
+            var score_ = data.score;
+            var score = score_.toString();
+            swal("Document Semantic Comparison Completed !", 'Semantic Score : '+score, "success");
+
+            window.scrollTo(0,document.body.scrollHeight);
+            query_results_div = document.getElementById('query_results_div');
+
+            var div1 = document.getElementById("div1");
+
+            text1_dict = data.dict1
+            text1_dict_keys = Object.keys(text1_dict)
+            for(var i=0; i<text1_dict_keys.length; i++)
+            {
+              var btn = document.createElement('button');
+              btn.innerHTML=text1_dict_keys[i];
+              btn.className = "clicker1 w3-btn w3-round-xlarge w3-teal";
+              btn.style.backgroundColor = 'red';
+              div1.appendChild(btn);
+            }
+
+            var div3 = document.getElementById("div3");
+            text2_dict = data.dict2
+            text2_dict_keys = Object.keys(text2_dict)
+            for(var i=0; i<text2_dict_keys.length; i++)
+            {
+              var btn = document.createElement('button');
+              btn.innerHTML=text2_dict_keys[i];
+              btn.className = "clicker2 w3-btn w3-round-xlarge w3-indigo";
+              btn.style.backgroundColor = 'red';
+              div3.appendChild(btn);
+            }
+
+            var result_div = document.createElement('results_div');
+            results_div.style.display = "block";
+            $('#compscore').html(score);
+            
+
+            $('.clicker1').bind('click', function() {
+              foo1(this.innerHTML, data);
+            });
+            $('.clicker2').bind('click', function() {
+              foo2(this.innerHTML, data);
             });
           }
-        }
-
-        $(document).ready(function(){
-
-          $("#compare_btn").click(function(e){
-            e.preventDefault();
-
-
-            if(Filesread()){
-
-              var reader1 = new FileReader();
-              reader1.onload = function(){
-                patent1 = reader1.result;
-                Comparepatents();
-              };
-              reader1.readAsText(upload1.files[0]);
-
-              var reader2 = new FileReader();
-              reader2.onload = function(){
-                patent2 = reader2.result;
-                Comparepatents();
-              };
-              reader2.readAsText(upload2.files[0]);
-
-            }
-            else{
-              var input_data1 = $("#textarea1").val();
-              var input_data2 = $("#textarea2").val();
-              swal({
-                title: "Do a semantic comparison",
-            //text: "Please wait, crunching the latest data just for you!",
-            type: 'info',
-            showCancelButton: true,
-            closeOnConfirm: false,
-            showLoaderOnConfirm: true,
-            confirmButtonText: "Compare",
-          },
-          function() {
-            $('.sweet-alert > p').text("Please wait, crunching the latest data just for you!");
-            $.ajax({
-              url: '/ajax/debug_ajax/',
-              data: { 'input_data1' : input_data1,
-              'input_data2' : input_data2 },
-              dataType: 'json',
-              success: function(data){
-                if(data.working) {
-                  var score_ = data.score;
-                  var score = score_.toString();
-                  swal("Document Semantic Comparison Completed !", 'Semantic Score : '+score, "success");
-
-                  window.scrollTo(0,document.body.scrollHeight);
-                  query_results_div = document.getElementById('query_results_div');
-
-                  var div1 = document.getElementById("div1");
-
-                  text1_dict = data.dict1
-                  text1_dict_keys = Object.keys(text1_dict)
-                  for(var i=0; i<text1_dict_keys.length; i++)
-                  {
-                    var btn = document.createElement('button');
-                    btn.innerHTML=text1_dict_keys[i];
-                                //btn.style.name=text1_dict_keys[i];
-                                btn.className = "clicker1 w3-btn w3-round-xlarge w3-teal";
-                                btn.style.backgroundColor = 'red';
-                                div1.appendChild(btn);
-                              }
-
-                              var div3 = document.getElementById("div3");
-                              text2_dict = data.dict2
-                              text2_dict_keys = Object.keys(text2_dict)
-                              for(var i=0; i<text2_dict_keys.length; i++)
-                              {
-                                var btn = document.createElement('button');
-                                btn.innerHTML=text2_dict_keys[i];
-                                btn.className = "clicker2 w3-btn w3-round-xlarge w3-indigo";
-                                btn.style.backgroundColor = 'red';
-                                div3.appendChild(btn);
-                              }
-
-                              var result_div = document.createElement('results_div');
-                              results_div.style.display = "block";
-                              
-
-                              $('.clicker1').bind('click', function() {
-                                foo1(this.innerHTML, data);
-                              });
-                              $('.clicker2').bind('click', function() {
-                                foo2(this.innerHTML, data);
-                              });
-                              //swal({title:"Done!", timer: 2000, showConfirmButton:false});
-                            }
-                          },
-                          failure: function(){ console.log('something not working'); }
-                        })
-          });
-            }
-          });
-});
+        },
+        failure: function(){ console.log('something not working'); }
+          })
+        });
+      }
+    });
+  });
 
 </script>
 </head>
 
-<body onload="init()">
+<body>
 
   <div id="upper-container">
     <nav class="navbar navbar-inverse" role="navigation">
@@ -316,11 +290,11 @@
               <div class="col-md-4" id="div1" style="background-color:white; height:300px"></div>
               <div class="col-md-1">&nbsp;</div>
               <div class="col-md-2" id="div2" style="height:300px">
-                <button class="w3-btn w3-round w3-red" onclick="analyze_page()">Analyze</button>
-                <button class="logs w3-btn w3-round w3-red" onclick="logs_page()">Logs</button><br/>
+                <button class="logs w3-btn w3-block w3-round-xlarge w3-red" onclick="logs_page()">Logs</button><br/>
 
-                <input type="radio" name="optrad" id="radio_network" > Network Graph<br>
-                <input type="radio" name="optrad" id="radio_tree" checked > Word Tree<br>
+                <input type="radio" name="optrad" id="radio_network" > Network Graph</input><br/>
+                <input type="radio" name="optrad" id="radio_tree" checked > Word Tree</input><br/><br/>
+                <span class="w3-badge w3-xlarge w3-padding w3-blue" id='compscore'></span>
 
               </div>
               <div class="col-md-1">&nbsp;</div>
@@ -396,7 +370,7 @@
 
         <div id="footer" class="panel-footer">
           <div class="text-center" id="footer-one">
-            <p><h3><i>Similarity Graph is created from Wordnet which is a powerful semantic tool developed in Princeton.<i><h3></p>
+            <p><h3><i>Similarity Graph is created from Wordnet which is a powerful semantic lexical database developed by folks from Princeton.<i><h3></p>
           </div>
         </div>
       </body>

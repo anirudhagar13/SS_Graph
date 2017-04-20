@@ -15,13 +15,12 @@ function Synsetfetch(label){
 	$("#Node")
 	.html(label+type);
 
-	/*$.ajax({
+/*	$.ajax({
     url: '/process_synset/',
     data:{'synset':label},
     dataType:'json',
     success:function(data){
     	console.log(JSON.stringify(data));
-      console.log(data.definition);
     },
     failure:function(){
       sweetAlert("Oops...", "Something went wrong!", "error");
@@ -49,6 +48,10 @@ function Issynset(node){
 }
 
 function Compact(word, data){
+	// Clear Early Canvas
+	var canvas = document.getElementById('similaritygraph');
+	canvas.width = canvas.width;
+
 	// Styling
 	var root_font = 'bold 26px Verdana';
 	var root_color = '#4169E1';
@@ -123,10 +126,7 @@ function Compact(word, data){
 		}
 	}
 
-	jQuery(function(){
-		var canvas = document.getElementById('similaritygraph');
-		canvas.width = canvas.width;	// To clear canvas
-		
+	jQuery(function(){		
 		var springy = window.springy = jQuery('#similaritygraph').springy({
 			graph: graph,
 			nodeSelected: function(node){

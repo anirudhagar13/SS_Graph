@@ -38,6 +38,9 @@ button{
         width:auto;
       }
       textarea {
+      font-family: "Droid Serif",
+      font-size: 30px;
+      font-style: italic;
       border: none;
       overflow: auto;
       outline: none;
