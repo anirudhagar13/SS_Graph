@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>System Logs</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/w3.css">
+    <link rel="stylesheet" href="/static/custom.css">
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/logread.js"></script>
+    <script type="text/javascript">
+        function w3_open() {
+          document.getElementById("main").style.marginLeft = "25%";
+          document.getElementById("mySidebar").style.width = "25%";
+          document.getElementById("mySidebar").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("main").style.marginLeft = "0%";
+          document.getElementById("mySidebar").style.display = "none";
+        }
+
+    </script>
+</head>
+<body>
+    <div id="upper-container">
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div id="navbar_div">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#"><h3>Patent Similarity Using Semantic Graph</h3></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-bar-block" style="display:none" id="mySidebar">
+      <button onclick="w3_close()" class="w3-bar-item w3-button w3-large">Close &times;</button>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/DocumentComparison.log')">Document Comparison</button><br/>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/SentenceComparison.log')">Sentence Comparison</button><br/>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/WordComparison.log')">Word Comparison</button><br/>
+      <button class="w3-button w3-ripple w3-indigo w3-round-xlarge" onclick="Readfile('Logs/NonMorphed.log')">Words Not In Graph</button><br/>
+    </div>
+
+      <!-- Page Content -->
+    <div class="w3-main" id="main">
+
+        <div class="w3-light-gray">
+            <button class="w3-button w3-teal w3-xlarge w3-text-light-gray" onclick="w3_open()">☰</button>
+            <div class="w3-tag w3-round w3-red" style="padding:5px">
+              <div class="w3-tag w3-round w3-red w3-border w3-border-white">
+                <h3>System Logs</h3>
+              </div>
+            </div>
+        </div>
+
+        <div id='logs' class="w3-card-4 w3-black"><em>No Logs Available</em></div>
+    </div>
+
+    <div id="footer" class="panel-footer">
+          <div class="text-center" id="footer-one">
+            <p><h3><i>Similarity Graph is created from Wordnet which is a powerful semantic lexical database developed by folks from Princeton.<i><h3></p>
+          </div>
+        </div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+IN THE UNITED STATES PATENT AND TRADEMARK OFFICE
+
+Utility Patent Application (Provisional)
+
+
+e-Commerce Method
+
+Charles Chan, Los Angeles, California, Jane Smith, Portland, Maine
+
+
+SPECIFICATION
+
+
+BACKGROUND OF THE INVENTION
+[001]	The present invention is in the technical field of e-commerce. More particularly, the present invention is in the technical field of computer-implemented customer-preference filter displays.
+[002]	Many e-commerce sites permit customers to select preferences and thereby narrow the options that are displayed via filters that exclude options which do not match the preferences. When customer-preference selections are based on inclination rather than necessity, perusing beyond the narrowed filter-driven options might also be desired but is not possible without resetting or removing the preference filters. A customer must choose between the convenience of a narrow filter-driven display of options or the frustration of viewing too many options.
+SUMMARY OF THE INVENTION
+[003]	The present invention is a computer-implemented e-commerce method of providing a display of both matching options (options which have been filtered to match the preference(s) selected by a customer) and nonmatching options (options outside of the matching option) without displaying too many options or confusing the customer regarding which is, and which is not, a matching option. The nonmatching options displayed are limited in number to no more than 30 percent of the number of matching options in the display, and the nonmatching options are readily discernable as nonmatching, preferably by a clear (but not distracting) visual indicator.
+BRIEF DESCRIPTION OF THE DRAWING
+[004]	Fig. 1 is a plan view of a partially-diagrammatic webpage display produced by the method of the present invention;
+[005]	Fig. 2 is a flow-diagram of steps of a method of the present invention.
+DETAILED DESCRIPTION OF THE INVENTION
+[006]	Referring now to the invention in more detail, shown in Fig. 1 is an Internet webpage display 10 on which is displayed a plurality of matched-options 12 and a plurality of unmatched-options 14. In this example there are ten matched-options 12, each of which is embodied in a circular frame, and there are two unmatched-options 14, each of which is embodied in a square frame. The unmatched-options 14 options shown in Fig. 1 therefore comprise in number 20 percent of the number of matched-options 12, which is within the preferred embodiment wherein the number of unmatched options is 5 to 30 percent of the number of unmatched options.
+[007]	As is conventional in e-commerce, both the matched-options 12 and unmatched-options 14 illustrate an option and comprise live links to more detailed information regarding the option illustrated.
+[008]	The visual indicator in this embodiment that specifies whether an option is matched or unmatched to the customer’s preferences is the shape of the frame. The visual indicator could of course be some other visual signal, such as the background color of the option, the placement of the option on the page and the like, provided that it is sufficiently discernable as an unmatched-option to avoid customer confusion.
+[009]	In preferred embodiments, each unmatched-option 14 is an option that would match all of a customer’s preferences except one, in more preferred embodiment the preference not matched is different for each of the unmatched-options 14 displayed.
+[0010]	 Referring now to Fig. 2 wherein the steps of a method of the present invention are shown in flow-diagram 40, the method begins with a customer-preference-input reception 42, wherein the input preferably comprises a plurality of preferences, which customer-preference-input reception 42 triggers a matched-options filtering-selection 42 and an unmatched-options filtering-selection 44, which generates an option-display 50 wherein both matched and unmatched options are displayed. The step of option display 50 might or might not lead to the step of a purchase-selection reception 52.
+[0011]	In more detail regarding the programs/applications/software required to implement the method of the present invention, ….
+[0012]	 While the foregoing written description of the invention enables one of ordinary skill to make and use what is considered presently to be the best mode thereof, those of ordinary skill will understand and appreciate the existence of variations, combinations, and equivalents of the specific embodiment, method, and examples herein. The invention should therefore not be limited by the above described embodiment, method, and examples, but by all embodiments and methods within the scope and spirit of the invention as claimed.
+ABSTRACT OF THE DISCLOSURE
+An e-commerce method of presenting options that match a customer’s preference cooking and options outside of those preferences uses at least one visual indicator to avoid confusion.

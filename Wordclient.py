@@ -1,4 +1,5 @@
 from __future__ import print_function, division
+from Hypers import tuners
 from Spider import *
 from Edge import *
 import time
@@ -13,8 +14,6 @@ class Wordclient:
 		'''
 		Constructor to crawl web for a word 
 		'''
-		self.tuners = [1,100,100,100]
-
 		self.word = word
 		sp = Spider(word, spread=2, limit=0.01)
 		self.web = sp.crawl('Graph.shelve')	# Crawled web
@@ -143,8 +142,8 @@ class Wordclient:
 		standfeat = []
 		clientfeat = []
 		for i in range(len(self.clientfeatures)):
-			standfeat.append(self.standardfeatures[i] * self.tuners[i])
-			clientfeat.append(self.clientfeatures[i] * self.tuners[i])
+			standfeat.append(self.standardfeatures[i] * tuners[i])
+			clientfeat.append(self.clientfeatures[i] * tuners[i])
 
 		score = Cosine_similarity(standfeat, clientfeat)
 
@@ -231,14 +230,14 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'like'
-	client = 'love'
+	word = 'dog'
+	client = 'labrador'
 	try:
 		wc = Wordclient(word)
 		wc.init_client(client)
 		# wc.printweb()
 		# wc.printpaths()
-		# score = wc.getmetric()
+		score = wc.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:
 		print ('Error Wordclient- ',e)

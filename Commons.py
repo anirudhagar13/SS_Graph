@@ -7,8 +7,15 @@ import pickle
 import shelve
 import sys
 import math
+import os
 
 
+uipath = os.getcwd()
+if 'ssgraph' in uipath: # Running from UI
+    uipath = '/'.join(uipath.split("\\")[:-1])
+else:
+    uipath = '/'.join(uipath.split("\\"))
+    
 StopWords = ['a', 'has', 'such', 'accordance', 'have', 'suitable', 'according', 'having', 'than', 'all', 'herein', 'that', 'also', 'however', 'the', 'an', 'if', 'their', 'and', 'in', 'then', 'another', 'into', 'there', 'are', 'invention', 'thereby', 'as', 'is', 'therefore', 'at', 'it', 'thereof', 'be', 'its', 'thereto', 'because', 'means', 'these', 'been', 'not', 'they', 'being', 'now', 'this', 'by', 'of', 'those', 'claim', 'on', 'thus', 'comprises', 'onto', 'to', 'corresponding', 'or', 'use', 'could', 'other', 'various', 'described', 'particularly', 'was', 'desired', 'preferably', 'were', 'do', 'preferred', 'what', 'does', 'present', 'when', 'each', 'provide', 'where', 'embodiment', 'provided', 'whereby', 'fig', 'provides', 'wherein', 'figs', 'relatively', 'which', 'for', 'respectively', 'while', 'from', 'said', 'who', 'further', 'should', 'will', 'generally', 'since', 'with', 'had', 'some', 'would']
 
 def Unicode(data):
@@ -17,9 +24,9 @@ def Unicode(data):
         '''
         #Check if received is string
         if isinstance(data, (str, unicode)):
-            return str(data).lower()
+            return data.encode('utf-8').lower()
         else:
-            return [str(x).lower() for x in data]
+            return [x.encode('utf-8').lower() for x in data]
 
 def Cosine_similarity(v1, v2):
     # compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)
@@ -49,11 +56,11 @@ def Vectormag(v1):
 def Filedump(filename, content, appendflag=True):
     # Appends/Overwrites data to files
     if appendflag:
-        with open('Logs/'+filename,'a') as file:
+        with open(uipath+'/ssgraph/mainapp/Logs/'+filename,'a') as file:
             file.write(content+'\n')
     else:
         # File Overwritten
-        with open('Logs/'+filename,'w') as file:
+        with open(uipath+'/ssgraph/mainapp/Logs/'+filename,'w') as file:
             file.write(content+'\n')
 
 def Pickledump(data, file):
@@ -75,7 +82,7 @@ def Shelveopen(filename):
     '''
     Open shelve dictionary
     '''
-    return shelve.open('Shelves/'+filename)
+    return shelve.open(uipath+'/Shelves/'+filename)
 
 def Shelveclose(shelve):
     '''
@@ -115,7 +122,7 @@ def Purify(sentence, wordhash):
     morphohash = Shelveopen('Morpho.shelve')
     sentence = sentence.strip().lower();
     sentence = sentence.replace("'s","")
-    sentence = sentence.replace("'t","")    #Bad Hardcode to replace all apostrophies
+    sentence = sentence.replace("n't"," not")    #Bad Hardcode to replace all apostrophies
     ls = ''.join(e for e in sentence if e.isalpha() or e == ' ')    #To remove special characters/numbers from words
     ls = ls.split() #list of words
     ls = Removestopwords(ls)

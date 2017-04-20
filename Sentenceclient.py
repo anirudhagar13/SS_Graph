@@ -2,7 +2,7 @@ from Wordclient import *
 from Hypers import alpha
 import operator
 
-class SentenceClient:
+class Sentenceclient:
 	def __init__(self, sentence1, sentence2):
 		wordhash = Shelveopen('Hash#1.shelve')
 		self.sent1 = Purify(sentence1, wordhash)	# Sending Hash from here as prevents opening and closing again n again
@@ -16,6 +16,7 @@ class SentenceClient:
 		self.order_vectors = [] # To store order vectors of both sentences
 		self.threshold = 0.005 # To decide if something is not at all similar
 		self.pathacc = {} # To accumulate all paths after crawling
+		self.wordmap = [[],[]] #  # Words of Sentence1 found in Sentence2 & vice-versa
 
 	def Getsemantics(self):
 		'''
@@ -27,6 +28,18 @@ class SentenceClient:
 
 		else:
 			return self.semantic_vectors
+
+	def getPathsacc(self):
+		'''
+		Getter for accumulation of paths
+		'''
+		return self.pathacc
+
+	def getWordmap(self):
+		'''
+		Getter for accumulation of paths
+		'''
+		return self.wordmap
 
 	def Getorder(self):
 		'''
@@ -61,6 +74,16 @@ class SentenceClient:
 				for key in self.sent1:
 					wc.init_client(key)
 					score = wc.getmetric()
+
+					if score > 0:
+						# Some Semantic Match
+						self.Updatepath(word, wc.getpaths())
+
+						# Enter in wordmap, word from sentence2 to sentence1 map
+						phrase = word+'->'+key
+						if phrase not in self.wordmap[1]:
+							self.wordmap[1].append(phrase)
+
 					allscores.append(score)
 					allpaths.append(wc.getpaths())
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
@@ -68,7 +91,6 @@ class SentenceClient:
 					act_index = self.wordset.index(self.sent1[index])
 					sem1.append(score)
 					ord1.append(act_index+1)
-					self.Updatepath(word, allpaths[index])
 				else:
 					sem1.append(0)
 					ord1.append(0)
@@ -85,6 +107,16 @@ class SentenceClient:
 				for key in self.sent2:
 					wc.init_client(key)
 					score = wc.getmetric()
+
+					if score > 0:
+						# Some Semantic Match
+						self.Updatepath(word, wc.getpaths())
+
+						# Enter in wordmap, word from sentence2 to sentence1 map
+						phrase = word+'->'+key
+						if phrase not in self.wordmap[0]:
+							self.wordmap[0].append(phrase)
+
 					allscores.append(score)
 					allpaths.append(wc.getpaths())
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
@@ -92,7 +124,6 @@ class SentenceClient:
 					act_index = self.wordset.index(self.sent2[index])
 					sem2.append(score)
 					ord2.append(act_index+1)
-					self.Updatepath(word, allpaths[index])
 				else:
 					sem2.append(0)
 					ord2.append(0)
@@ -163,6 +194,8 @@ class SentenceClient:
 		Filedump('SentenceComparison.log',log)
 		log = 'Order Vectors : '+str(self.order_vectors)
 		Filedump('SentenceComparison.log',log)
+		log = 'All Paths : '+str(self.wordmap)
+		Filedump('SentenceComparison.log',log)
 		log = '####### Semantic Sentence Score : '+str(score)+' #######'
 		Filedump('SentenceComparison.log',log)
 		return round(score,4)
@@ -170,7 +203,7 @@ class SentenceClient:
 if __name__ == '__main__':
 	start_time = time.time()
 	try:
-		ss = SentenceClient('I love dogs boy',' I like lads too ')
+		ss = Sentenceclient('dog',' frump domestic dog ')
 		score = ss.getmetric()
 		print ('Execution Time : ',time.time() - start_time)
 	except Exception as e:

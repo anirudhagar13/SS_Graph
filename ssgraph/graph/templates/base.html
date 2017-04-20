@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Semantic patent matching</title>
+
+  <!-- Bootstrap Core CSS -->
+  <!-- <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet"> --><!--TODO make STATIC_URL work here-->
+  <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="/static/w3.css" rel="stylesheet">
+  <link href="/static/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+  <script src="/static/jquery-3.2.1.js"></script>
+  <script src="/static/jquery-linedtextarea.js"></script>
+  <script src="/static/sweetalert-master/dist/sweetalert.min.js"></script>
+  <link rel="stylesheet" href="/static/custom.css">
+  <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/static/springy.js"></script>
+  <script src="/static/springyui.js"></script>
+  <script src="/static/networkgraph.js"></script>
+  <script src="/static/loader.js"></script>
+  <script src="/static/wordtree.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/sweetalert-master/dist/sweetalert.css">
+
+  <script>
+    $(function() {
+     $(".lined").linedtextarea(
+       {selectedLine: 1}
+       );
+   });
+ </script>
+
+ <script type='text/javaScript'>
+
+  patent1 = '';
+  patent2 = '';
+
+  function logs_page(){
+    window.location.href = '/logspage/';
+  }
+  function foo1(word_, data_){
+      // Call for radio buttons
+      var radio1 = document.getElementById('radio_network');
+      var radio2 = document.getElementById('radio_tree');
+
+      if(radio1.checked){
+        $('#NetworkModal').modal('show');
+        Compact(word_,data_.allpaths);
+      }  
+      if(radio2.checked){
+        $('#TreeModal').modal('show');
+        Drawtree(word_, data_.dict1);
+      }   
+    }
+
+  function foo2(word_, data_){
+    // Call for radio buttons
+    var radio1 = document.getElementById('radio_network');
+    var radio2 = document.getElementById('radio_tree');
+
+    if(radio1.checked){
+      $('#NetworkModal').modal('show');
+      Compact(word_,data_.allpaths);
+    }  
+    if(radio2.checked){
+      $('#TreeModal').modal('show');
+      Drawtree(word_, data_.dict2);
+    }  
+  }
+
+  function Filesread(){
+    upload1 = document.getElementById('fileupload1');
+    upload2 = document.getElementById('fileupload2');
+    if(upload1.files[0] == undefined || upload2.files[0] == undefined){
+      return false;
+    }
+    return true;
+  }
+
+  function Comparepatents(){
+    if(patent1 != '' && patent2 != ''){
+      swal({
+        title: "Patent semantic comparison",
+        type: 'info',
+        showCancelButton: true,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+        confirmButtonText: "Compare",
+      },
+      function() {
+        $('.sweet-alert > p').text("Please wait, crunching the latest data just for you!");
+        patentpart = document.getElementById('patentpart');
+        part = patentpart.options[patentpart.selectedIndex].text;
+        $.ajax({
+          url: '/patentparser/',
+          data:{'patent1':patent1, 'patent2':patent2, 'patentpart':part},
+          dataType:'json',
+          success:function(data){
+            var score_ = data.score;
+            var score = score_.toString();
+            swal("Patent Similarity Completed !", 'Semantic Score : '+score, "success");
+            
+            // Show logs button
+            var result_div = document.createElement('results_div');
+            results_div.style.display = "block";
+            $('#compscore').html(score);
+          },
+          failure:function(){
+            sweetAlert("Oops...", "Something went wrong!", "error");
+          }
+        });
+      });
+    }
+  }
+
+  $(document).ready(function(){
+
+    $("#compare_btn").click(function(e){
+      e.preventDefault();
+
+      if(Filesread()){
+
+        var reader1 = new FileReader();
+        reader1.onload = function(){
+          patent1 = reader1.result;
+          Comparepatents();
+        };
+        reader1.readAsText(upload1.files[0]);
+
+        var reader2 = new FileReader();
+        reader2.onload = function(){
+          patent2 = reader2.result;
+          Comparepatents();
+        };
+        reader2.readAsText(upload2.files[0]);
+
+      }
+      else{
+        var input_data1 = $("#textarea1").val();
+        var input_data2 = $("#textarea2").val();
+        swal({
+          title: "Do a semantic comparison",
+      //text: "Please wait, crunching the latest data just for you!",
+      type: 'info',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true,
+      confirmButtonText: "Compare",
+    },
+    function() {
+      $('.sweet-alert > p').text("Please wait, crunching the latest data just for you!");
+      $.ajax({
+        url: '/ajax/debug_ajax/',
+        data: { 'input_data1' : input_data1,
+        'input_data2' : input_data2 },
+        dataType: 'json',
+        success: function(data){
+          if(data.working) {
+            var score_ = data.score;
+            var score = score_.toString();
+            swal("Document Semantic Comparison Completed !", 'Semantic Score : '+score, "success");
+
+            window.scrollTo(0,document.body.scrollHeight);
+            query_results_div = document.getElementById('query_results_div');
+
+            var div1 = document.getElementById("div1");
+
+            text1_dict = data.dict1
+            text1_dict_keys = Object.keys(text1_dict)
+            for(var i=0; i<text1_dict_keys.length; i++)
+            {
+              var btn = document.createElement('button');
+              btn.innerHTML=text1_dict_keys[i];
+              btn.className = "clicker1 w3-btn w3-round-xlarge w3-teal";
+              btn.style.backgroundColor = 'red';
+              div1.appendChild(btn);
+            }
+
+            var div3 = document.getElementById("div3");
+            text2_dict = data.dict2
+            text2_dict_keys = Object.keys(text2_dict)
+            for(var i=0; i<text2_dict_keys.length; i++)
+            {
+              var btn = document.createElement('button');
+              btn.innerHTML=text2_dict_keys[i];
+              btn.className = "clicker2 w3-btn w3-round-xlarge w3-indigo";
+              btn.style.backgroundColor = 'red';
+              div3.appendChild(btn);
+            }
+
+            var result_div = document.createElement('results_div');
+            results_div.style.display = "block";
+            $('#compscore').html(score);
+            
+
+            $('.clicker1').bind('click', function() {
+              foo1(this.innerHTML, data);
+            });
+            $('.clicker2').bind('click', function() {
+              foo2(this.innerHTML, data);
+            });
+          }
+        },
+        failure: function(){ console.log('something not working'); }
+          })
+        });
+      }
+    });
+  });
+
+</script>
+</head>
+
+<body>
+
+  <div id="upper-container">
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div id="navbar_div">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#"><h3>Patent Similarity Using Semantic Graph</h3></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+    <div class="jumbotron text-center">
+      <h1>SemDoc</h1>      
+      <p>A platform for semantic comparison of documents using wordnet based Similarity Graph.</p>
+    </div>     
+
+  <!-- Page Content-->
+  <div id="main-container">
+
+    <div id="user_inp_div_outer">
+      <h1>Enter Your Input.</h1>
+      <div class="row" id="user_input_div">
+        <div class="w3-card-4 col-md-5" style="height:320px;">
+          <textarea id="textarea1" class="lined" rows="18" cols="50">
+          </textarea>
+        </div>
+        <div class="col-md-2">&nbsp;</div>
+        <div class="w3-card-4 col-md-5" style="height:320px;">
+          <textarea id="textarea2" class="lined" rows="18" cols="50">
+          </textarea>
+        </div>
+        <p><p>
+          <div id="compare_btn_div" class="w3-panel col-sm-12" style="width:20%">
+            {% csrf_token %}
+            <button id="compare_btn" class="w3-btn w3-ripple w3-block w3-wide w3-round w3-red" style="height:50px;">Compare</button>
+          </div>
+
+          <div class='col-md-1'>&nbsp;</div>
+          <div id="upload_btn_div" class="col-md-10">
+            <div class='col-md-1'>&nbsp;</div>
+            <div class='col-md-3'>
+              <input type="file" class="w3-btn w3-round w3-red" name="file1" id="fileupload1">
+            </div>
+            <div class='col-md-4'>
+              <label for="patentpart" style="margin: 10px;">Section:</label>
+              <select id="patentpart">
+                <option>ABSTRACT</option>
+                <option>BACKGROUND</option>
+                <option>FIELD</option>
+                <option>DETAILED</option>
+                <option>SUMMARY</option>
+                <option>TITLE</option>
+              </select>
+            </div>
+            <div class='col-md-3'>
+              <input type="file" class="w3-btn w3-round w3-red" name="file1" id="fileupload2">
+            </div>
+            <div class='col-md-1'>&nbsp;</div>
+
+          </div>
+          <div class='col-md-1'>&nbsp;</div>
+
+        </div>
+      </div>
+
+      <div id="query_results_div">
+            <div class="col-md-1">&nbsp;</div>
+            <div id="results_div" class='col-md-10' style="width:1300px;height:80%;margin-left:100px;margin-bottom:50px;margin-top:50px;display:none" class="col-md-10">
+              <div class="col-md-4" id="div1" style="background-color:white; height:300px"></div>
+              <div class="col-md-1">&nbsp;</div>
+              <div class="col-md-2" id="div2" style="height:300px">
+                <button class="logs w3-btn w3-block w3-round-xlarge w3-red" onclick="logs_page()">Logs</button><br/>
+
+                <input type="radio" name="optrad" id="radio_network" > Network Graph</input><br/>
+                <input type="radio" name="optrad" id="radio_tree" checked > Word Tree</input><br/><br/>
+                <span class="w3-badge w3-xlarge w3-padding w3-blue" id='compscore'></span>
+
+              </div>
+              <div class="col-md-1">&nbsp;</div>
+              <div class="col-md-4" id="div3" style="background-color:white; height:300px"></div>
+            </div>
+            <div class="col-md-1">&nbsp;</div>
+          </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="NetworkModal" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                  <div class="w3-tag w3-round w3-indigo" style="padding:3px">
+                    <div class="w3-tag w3-round w3-indigo w3-border w3-border-white">
+                      Network Graph(Semantic Paths)
+                    </div>
+                  </div>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <canvas class="well well-lg" id="similaritygraph" width="620" height="500"></canvas>
+                <div class="panel panel-danger pull-right" id="edgeinfo">
+                  <div class="panel-heading">Edge Description</div>
+                  <div class="panel-body text-left" id="edgepanel">
+                    <p><span class="w3-badge w3-red">W2S</span> Word To Senses It belongs to</p>
+                    <p><span class="w3-badge w3-orange">D2S</span> Senses whose definition Word occurs In</p>
+                    <p><span class="w3-badge w3-teal">S2W</span> Lemmas Of Senses</p>
+                    <p><span class="w3-badge w3-pink">S2D</span> Words present In Senses Definition</p>
+                    <p><span class="w3-badge w3-blue">S2E</span> Words present In Senses Examples</p>
+                    <p><span class="w3-badge w3-brown">Hypernym</span> 'IS-A' Relationship</p>
+                    <p><span class="w3-badge w3-indigo">Hyponym</span> 'Type Of' Relationship</p>
+                    <p><span class="w3-badge w3-purple">Meronym</span> 'Part Of' Relationship</p>
+                    <p><span class="w3-badge w3-cyan">Holonym</span> 'Whole Of' Relatioship</p>
+                    <p><span class="w3-badge w3-green">Entailment</span> One Leads To Other</p>
+                    <p><span class="w3-badge w3-gray">SimilarTo</span> Used In Substitution</p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="w3-tag w3-padding w3-round-large w3-red w3-center pull-left">Node Selected</div><div>&nbsp;</div>
+                <div class="w3-panel w3-pale-blue w3-leftbar w3-rightbar w3-border-blue text-left" id="Node"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/Modal-->
+
+        <!-- Modal -->
+        <div class="modal fade" id="TreeModal" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                  <div class="w3-tag w3-round w3-indigo" style="padding:3px">
+                    <div class="w3-tag w3-round w3-indigo w3-border w3-border-white">
+                      Cross Document Semantic Matches
+                    </div>
+                  </div>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <div id="wordtree"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="footer" class="panel-footer">
+          <div class="text-center" id="footer-one">
+            <p><h3><i>Similarity Graph is created from Wordnet which is a powerful semantic lexical database developed by folks from Princeton.<i><h3></p>
+          </div>
+        </div>
+      </body>
+      </html>
