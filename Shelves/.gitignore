@@ -1,0 +1,4 @@
+# Ignore all files except .gitignore
+# To create empty shelves folder, required for solution
+*
+!.gitignore
