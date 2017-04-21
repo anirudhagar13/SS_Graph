@@ -27,13 +27,15 @@ def debug_ajax(request):
     input_data1 = request.GET.get('input_data1', None)
     input_data2 = request.GET.get('input_data2', None)
 
-    print input_data1, input_data2
+    print 'Input Sent to Pipeline :',input_data1, input_data2
+    start_time = time.time()
     dd = Documentclient(doc_1=Unicode(input_data1),doc_2=Unicode(input_data2))
     dd.getmetric()
 
     wordmap = dd.getWordMap()
     score = dd.getScore()
     allpaths = dd.getPaths()
+    end_time = time.time()
 
     dict1 = wordmap[0]
     dict2 = wordmap[1]
@@ -42,7 +44,8 @@ def debug_ajax(request):
                  'score' : score,
                  'dict1' : dict1,
                  'dict2' : dict2,
-                 'allpaths' : allpaths
+                 'allpaths' : allpaths,
+                 'time' : round(end_time-start_time,3)
                }
     time.sleep(2)
     return JsonResponse(ret_data)
@@ -75,6 +78,7 @@ def analyze_page(request):
     return render(request, 'analyze.html', context=None)
 
 def patent_parser(request):
+    start_time = time.time()
     patent1 = Unicode(request.GET.get('patent1',None))
     patent2 = Unicode(request.GET.get('patent2',None))
     patentpart = Unicode(request.GET.get('patentpart',None)).upper()
@@ -82,5 +86,6 @@ def patent_parser(request):
     doc2 = Patent(patent=patent2)
     dd = Documentclient(doc_1=doc1.getTemplate(patentpart),doc_2=doc2.getTemplate(patentpart))
     score = dd.getmetric()
-    dic = {'score':score}
+    end_time = time.time()
+    dic = {'score':score,'time':round(end_time-start_time,3)}
     return JsonResponse(dic)

@@ -102,9 +102,9 @@
           data:{'patent1':patent1, 'patent2':patent2, 'patentpart':part},
           dataType:'json',
           success:function(data){
-            var score_ = data.score;
-            var score = score_.toString();
-            swal("Patent Similarity Completed !", 'Semantic Score : '+score, "success");
+            var score = data.score.toString();
+            var time = data.time.toString();
+            swal("Patent Comparison Completed ! \n Semantic Score : "+score,"Run Time : "+time+' sec', "success");
             
             // Show logs button
             var result_div = document.createElement('results_div');
@@ -146,7 +146,6 @@
         var input_data2 = $("#textarea2").val();
         swal({
           title: "Do a semantic comparison",
-      //text: "Please wait, crunching the latest data just for you!",
       type: 'info',
       showCancelButton: true,
       closeOnConfirm: false,
@@ -162,9 +161,9 @@
         dataType: 'json',
         success: function(data){
           if(data.working) {
-            var score_ = data.score;
-            var score = score_.toString();
-            swal("Document Semantic Comparison Completed !", 'Semantic Score : '+score, "success");
+            var score = data.score.toString();
+            var time = data.time.toString();
+            swal("Document Comparison Completed ! \n Semantic Score : "+score,"Run Time : "+time+' sec', "success");
 
             window.scrollTo(0,document.body.scrollHeight);
             query_results_div = document.getElementById('query_results_div');
