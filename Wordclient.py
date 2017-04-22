@@ -77,10 +77,12 @@ class Wordclient:
 		extrapath = {}
 		for node in common_points:
 			edges = self.graph[node]
+			maxweight = -1
 			for edge in edges:
 				if edge.dest == client:
-					extrapath[node] = edge
-					break
+					if maxweight < edge.weight:
+						maxweight = edge.weight
+						extrapath[node] = edge
 
 		for node in common_points:
 			paths = self.web[node]
@@ -145,7 +147,8 @@ class Wordclient:
 			standfeat.append(self.standardfeatures[i] * tuners[i])
 			clientfeat.append(self.clientfeatures[i] * tuners[i])
 
-		score = Cosine_similarity(standfeat, clientfeat)
+		#score = Cosine_similarity(standfeat, clientfeat)
+		score = self.clientfeatures[1]/self.standardfeatures[1]
 
 		# File Logging
 		log = '\n*******FROM : '+self.word+' TO : '+self.client+' *******'
@@ -230,8 +233,8 @@ class Wordclient:
 
 if __name__ == '__main__':
 	start_time = time.time()
-	word = 'dog'
-	client = 'labrador'
+	word = 'midday'
+	client = 'noon'
 	try:
 		wc = Wordclient(word)
 		wc.init_client(client)
