@@ -26,7 +26,7 @@ class Patent:
 			return self.template['DRAWING']+self.template['DRAWINGS']
 
 		if part not in self.template or self.template[part] == '':
-			return 'Part Not Found'
+			return ''
 
 		return self.template[part]
 

@@ -29,3 +29,4 @@ Custom Semantic Graph based on Wordnet
     8. Can be used to compare patents by uploading files, .txt or .docx only.
     9. Select the section of patent you want to compare and click on compare.
     10. Read logs to know the intricacies of patent comparison.
+    11. No Network graph and wordtree created for file uploads to avoid cluttering.
