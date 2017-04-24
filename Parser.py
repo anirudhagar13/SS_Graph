@@ -60,6 +60,8 @@ class Patent:
 
 		curr_key = ''
 		for line in self.patent:
+			if line == '' or line == '\n':
+				continue
 			new_key = self.Checkfix(line, curr_key)
 			if new_key != curr_key:
 				# Change of heading has happened
