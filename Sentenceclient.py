@@ -14,7 +14,7 @@ class Sentenceclient:
 				self.wordset.append(word)
 		self.semantic_vectors = [] # To store of both sentences
 		self.order_vectors = [] # To store order vectors of both sentences
-		self.threshold = 0.005 # To decide if something is not at all similar
+		self.threshold = 0.001 # To decide if something is not at all similar
 		self.pathacc = {} # To accumulate all paths after crawling
 		self.wordmap = [[],[]] #  # Words of Sentence1 found in Sentence2 & vice-versa
 

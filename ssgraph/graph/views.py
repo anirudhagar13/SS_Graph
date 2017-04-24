@@ -67,7 +67,7 @@ def process_synset(request):
 
 def log_reader(request):
     filename = request.GET.get('name', None)
-    file_ = open(os.path.join(PROJECT_ROOT, Unicode(filename)))
+    file_ = open(os.path.join(PROJECT_ROOT, str(filename)))
     dic = {'data':file_.readlines()}
     return JsonResponse(dic)
 
