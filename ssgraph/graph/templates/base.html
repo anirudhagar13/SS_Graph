@@ -104,7 +104,13 @@
           success:function(data){
             var score = data.score.toString();
             var time = data.time.toString();
-            swal("Patent Comparison Completed ! \n Semantic Score : "+score,"Run Time : "+time+' sec', "success");
+            var msg = 'Part Not found :(';  //By default part not found 
+            if (score != '-1'){
+              msg = 'Semantic Score : '+score;
+            }
+
+            swal("Patent Comparison Completed ! \n"+msg,"Run Time : "+time+' sec', "success");
+            window.scrollTo(0,document.body.scrollHeight);
             
             // Show logs button
             var result_div = document.createElement('results_div');

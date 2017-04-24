@@ -147,7 +147,7 @@ class Wordclient:
 			standfeat.append(self.standardfeatures[i] * tuners[i])
 			clientfeat.append(self.clientfeatures[i] * tuners[i])
 
-		#score = Cosine_similarity(standfeat, clientfeat)
+		# score = Cosine_similarity(standfeat, clientfeat)
 		score = self.clientfeatures[1]/self.standardfeatures[1]
 
 		# File Logging
