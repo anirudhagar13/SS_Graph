@@ -172,12 +172,14 @@ class Sentenceclient:
 
 	def getmetric(self):
 
-		if self.semantic_vectors == []:
+		semantic_score = 0
+		order_score = 0
+
+		if self.semantic_vectors == [] and self.sent1 != [] and self.sent2 != []:
 			# Vectors haven't been created yet
 			self.Createvectors()
-
-		semantic_score = self.Semantic_calc()
-		order_score = self.Order_calc()
+			semantic_score = self.Semantic_calc()
+			order_score = self.Order_calc()
 
 		score = alpha*semantic_score + (1-alpha)*order_score
 
