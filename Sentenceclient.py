@@ -119,10 +119,6 @@ class Sentenceclient:
 
 					allscores.append(score)
 					allpaths.append(wc.getpaths())
-				if allscores == []:
-					print '**********'
-					print self.sent2
-					print self.wordset
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
 				if score > self.threshold:
 					act_index = self.wordset.index(self.sent2[index])
