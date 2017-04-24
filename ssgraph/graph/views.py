@@ -79,13 +79,20 @@ def analyze_page(request):
 
 def patent_parser(request):
     start_time = time.time()
+    score = -1 # By default part not found
     patent1 = Unicode(request.GET.get('patent1',None))
     patent2 = Unicode(request.GET.get('patent2',None))
     patentpart = Unicode(request.GET.get('patentpart',None)).upper()
     doc1 = Patent(patent=patent1)
     doc2 = Patent(patent=patent2)
-    dd = Documentclient(doc_1=doc1.getTemplate(patentpart),doc_2=doc2.getTemplate(patentpart))
-    score = dd.getmetric()
+    patent_doc1 = doc1.getTemplate(patentpart)
+    patent_doc2 = doc2.getTemplate(patentpart)
+    print 'Patent-1 Part :',patent_doc1
+    print 'Patent-2 Part :',patent_doc2
+    if patent_doc1 != '' and patent_doc2 != '':
+        # Part not found in patent
+        dd = Documentclient(doc_1=patent_doc1,doc_2=patent_doc2)
+        score = dd.getmetric()
     end_time = time.time()
     dic = {'score':score,'time':round(end_time-start_time,3)}
     return JsonResponse(dic)
