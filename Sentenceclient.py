@@ -88,9 +88,10 @@ class Sentenceclient:
 					allpaths.append(wc.getpaths())
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
 				if score > self.threshold:
-					act_index = self.wordset.index(self.sent1[index])
+					# act_index = self.wordset.index(self.sent1[index])
 					sem1.append(score)
-					ord1.append(act_index+1)
+					# ord1.append(act_index+1)
+					ord1.append(index+1)
 				else:
 					sem1.append(0)
 					ord1.append(0)
@@ -121,9 +122,10 @@ class Sentenceclient:
 					allpaths.append(wc.getpaths())
 				index, score = max(enumerate(allscores), key=operator.itemgetter(1))
 				if score > self.threshold:
-					act_index = self.wordset.index(self.sent2[index])
+					# act_index = self.wordset.index(self.sent2[index])
 					sem2.append(score)
-					ord2.append(act_index+1)
+					# ord2.append(act_index+1)
+					ord2.append(index+1)
 				else:
 					sem2.append(0)
 					ord2.append(0)
