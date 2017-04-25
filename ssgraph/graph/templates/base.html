@@ -175,6 +175,7 @@
             query_results_div = document.getElementById('query_results_div');
 
             var div1 = document.getElementById("div1");
+            div1.innerHTML = '';
 
             text1_dict = data.dict1
             text1_dict_keys = Object.keys(text1_dict)
@@ -188,6 +189,8 @@
             }
 
             var div3 = document.getElementById("div3");
+            div3.innerHTML = '';
+            
             text2_dict = data.dict2
             text2_dict_keys = Object.keys(text2_dict)
             for(var i=0; i<text2_dict_keys.length; i++)

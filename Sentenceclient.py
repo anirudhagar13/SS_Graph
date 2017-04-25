@@ -68,7 +68,7 @@ class Sentenceclient:
 			allscores = []
 			if word in self.sent1:
 				sem1.append(1) # No Semantic Match needed
-				ord1.append(i+1)
+				ord1.append(self.sent1.index(word)+1)
 			else:
 				wc = Wordclient(word)
 				for key in self.sent1:
@@ -101,7 +101,7 @@ class Sentenceclient:
 			allscores = []
 			if word in self.sent2:
 				sem2.append(1) # No Semantic Match needed
-				ord2.append(i+1)
+				ord2.append(self.sent2.index(word)+1)
 			else:
 				wc = Wordclient(word)
 				for key in self.sent2:
