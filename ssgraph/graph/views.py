@@ -28,7 +28,9 @@ def debug_ajax(request):
     input_data1 = request.GET.get('input_data1', None)
     input_data2 = request.GET.get('input_data2', None)
 
-    print 'Input Sent to Pipeline :',input_data1, input_data2
+    print 'Box 1 :',input_data1
+    print 'Box 2 :',input_data2
+    
     start_time = time.time()
     dd = Documentclient(doc_1=Unicode(input_data1),doc_2=Unicode(input_data2))
     dd.getmetric()
@@ -56,8 +58,12 @@ def process_synset(request):
     synset = wn.synset(label)
     lemmas = [str(x) for x in synset.lemma_names()]
     lemmas = ", ".join(lemmas)
+    example = "None"
+    if synset.examples():
+        example = str(synset.examples()[0])
     dic = {'definition':synset.definition(),
-            'lemmas': lemmas
+            'lemmas': lemmas,
+            'example': example
         }
     return JsonResponse(dic)
 

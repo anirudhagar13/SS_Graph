@@ -20,10 +20,11 @@ function Synsetfetch(clicked){
     success:function(data){
     	var definition = "<p>Definition : <em>"+data['definition']+"</em></p>";
     	var lemmas = "<p>Lemmas : <em>"+data['lemmas']+"</em></p>";
+    	var example = "<p>Example : <em>"+data['example']+"</em></p>";
 
     	// Dynamically adding data into paragraph
 	    	$("#Node")
-		.html(label+type+definition+lemmas);
+		.html(label+type+definition+lemmas+example);
     },
     failure:function(){
       sweetAlert("Oops...", "Something went wrong!", "error");
