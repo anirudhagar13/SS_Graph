@@ -75,8 +75,12 @@ button{
       #results_div
       {
         position: absolute;
-        margin-left:15%;
-        width:400px;
+        width:1300px;
+        height:80%;
+        margin-left:200px;
+        margin-bottom:50px;
+        margin-top:50px;
+        display:none
       }
       .query_results_inner_div
       {
