@@ -1,32 +1,34 @@
 'use strict';
 
-function Wordfetch(label){
+function Wordfetch(clicked){
 	//Fetch word data
-	var label = "<p>Name : <em>"+label+"</em></p>";
+	var label = "<p>Name : <em>"+clicked+"</em></p>";
 	var type = "<p>Type : <em>Word</em></p>";
 	$("#Node")
 	.html(label+type);
 }
 
-function Synsetfetch(label){
+function Synsetfetch(clicked){
 	//Fetch synset data
-	var label = "<p>Name : <em>"+label+"</em></p>";
+	var label = "<p>Name : <em>"+clicked+"</em></p>";
 	var type = "<p>Type : <em>Synset</em></p>";
-	$("#Node")
-	.html(label+type);
 
-/*	$.ajax({
+	$.ajax({
     url: '/process_synset/',
-    data:{'synset':label},
+    data:{'synset':clicked},
     dataType:'json',
     success:function(data){
-    	console.log(JSON.stringify(data));
+    	var definition = "<p>Definition : <em>"+data['definition']+"</em></p>";
+    	var lemmas = "<p>Lemmas : <em>"+data['lemmas']+"</em></p>";
+
+    	// Dynamically adding data into paragraph
+	    	$("#Node")
+		.html(label+type+definition+lemmas);
     },
     failure:function(){
       sweetAlert("Oops...", "Something went wrong!", "error");
     }
-  });*/
-	
+  });	
 }
 
 function Includes(biglist, list){

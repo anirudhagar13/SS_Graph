@@ -121,7 +121,10 @@ def Removestopwords(sent):
 def Purify(sentence, wordhash):
     morphohash = Shelveopen('Morpho.shelve')
     sentence = sentence.strip().lower();
+    # Special cases
     sentence = sentence.replace("'s","")
+    sentence = sentence.replace("I'm","I am")
+    sentence = sentence.replace("can't","can not")
     sentence = sentence.replace("n't"," not")    #Bad Hardcode to replace all apostrophies
     ls = ''.join(e for e in sentence if e.isalpha() or e == ' ')    #To remove special characters/numbers from words
     ls = ls.split() #list of words

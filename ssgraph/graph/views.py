@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import sys, time
+from nltk.corpus import wordnet as wn
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -50,19 +51,14 @@ def debug_ajax(request):
     time.sleep(2)
     return JsonResponse(ret_data)
 
-def process_wordhash(request):
-    Shelveopen('Hash#1.shelve')
-    input_data = request.GET.get('label', None)
-    print input_data
-
 def process_synset(request):
     label = Unicode(request.GET.get('synset',None))
-    hash2 = Shelveopen('Hash#2.shelve')
-    synset = hash2[label]
-    dic = {}
-    if synset.definition():
-        dic['definition'] = synset.definition()
-
+    synset = wn.synset(label)
+    lemmas = [str(x) for x in synset.lemma_names()]
+    lemmas = ", ".join(lemmas)
+    dic = {'definition':synset.definition(),
+            'lemmas': lemmas
+        }
     return JsonResponse(dic)
 
 def log_reader(request):
