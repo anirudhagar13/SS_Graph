@@ -58,8 +58,12 @@ def process_synset(request):
     synset = wn.synset(label)
     lemmas = [str(x) for x in synset.lemma_names()]
     lemmas = ", ".join(lemmas)
+    example = "None"
+    if synset.examples():
+        example = str(synset.examples()[0])
     dic = {'definition':synset.definition(),
-            'lemmas': lemmas
+            'lemmas': lemmas,
+            'example': example
         }
     return JsonResponse(dic)
 
