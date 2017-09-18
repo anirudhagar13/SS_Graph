@@ -1,8 +1,9 @@
 # SS(Semantic Similarity)-Graph
 Custom Semantic Graph based on Wordnet
+--------------------------------------
 
--The System leverages this graph to semantically compare two documents and give back a similarity score.
--User can view paths over UI as to how words are related to each other in our custom semantic graph
+> The system leverages this graph to semantically compare two documents and gives back a similarity score.
+> User can view paths over UI as to how words are related to each other in our custom semantic graph.
 
 #Steps to Create:
 -------------------
