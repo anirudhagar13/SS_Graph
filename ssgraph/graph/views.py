@@ -8,14 +8,14 @@ from django.http import JsonResponse
 import os
 import sys
 
-sys.path.insert(0, 'C:/Users/aniragar/Documents/School/SS_Graph/ssgraph/mainapp')
+sys.path.insert(0, os.getcwd() + '/mainapp')
 from settings import PROJECT_ROOT
 
 
 # Create your views here.
 from django.views.generic import TemplateView
 
-sys.path.append('C:/Users/aniragar/Documents/School/SS_Graph')
+sys.path.append(os.getcwd() + '/..')
 from Parser import *
 
 # Create your views here.
