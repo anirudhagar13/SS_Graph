@@ -6,8 +6,8 @@ Custom Semantic Graph based on Wordnet
 
 #Steps to Create:
 -------------------
-	1. Install python2.7.
-	2. Download nltk package in python via pip-install/easy-install.
+	  1. Install python2.7 and django 1.7.11 or higher.
+	  2. Download nltk package in python using pip-install/easy-install.
     3. Get wordnet, penntreebank from nltk corpus in python, incase any dependency missed get it using nltk.download() > dependency.
     4. Run Creator.sh to create graphdata.
     5. If using Powershell, run the above file as 'Measure-Command {start-process sh Creator.sh -Wait}', if bash, run 'time Creator.sh'
